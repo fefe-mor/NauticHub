@@ -1,0 +1,181 @@
+/* client/css/style-landing.css */
+
+/* reset e variabili */
+:root { 
+    --navy-blue: #0a192f; 
+    --navy-light: #172a45; 
+    --gold: #d4af37; 
+    --gold-hover: #b5952f; 
+    --white: #ffffff; 
+    --bg-light: #f8f9fa; 
+    --text-muted: #555555;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+body { font-family: 'Montserrat', sans-serif; background-color: var(--white); color: var(--navy-blue); line-height: 1.6; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+.gold-text { color: var(--gold); font-style: italic; }
+.text-center { text-align: center; }
+
+/* bottoni */
+.btn-gold { 
+    background-color: var(--gold); color: var(--navy-blue); 
+    padding: 0.8rem 2rem; border-radius: 30px; font-weight: 700; 
+    border: none; cursor: pointer; transition: all 0.3s ease; 
+    text-decoration: none; display: inline-block; 
+}
+.btn-gold:hover { 
+    background-color: var(--gold-hover); transform: translateY(-3px); 
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); 
+}
+.btn-large { padding: 1rem 3rem; font-size: 1.1rem; }
+
+.btn-outline-dark { 
+    border: 2px solid var(--navy-blue); color: var(--navy-blue); 
+    background: transparent; padding: 0.8rem 2rem; border-radius: 30px; 
+    font-weight: 600; cursor: pointer; text-decoration: none; 
+    transition: all 0.3s ease; display: inline-block; 
+}
+.btn-outline-dark:hover { 
+    background-color: var(--navy-blue); color: var(--white); 
+}
+
+/* navbar */
+.navbar-landing { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 2%; 
+    position: fixed; top: 0; left: 0; width: 100%; 
+    z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+}
+.nav-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.logo-img { height: 200px; object-fit: contain; transition: transform 0.3s; }
+.logo-img:hover { transform: scale(1.05); }
+.main-nav { display: flex; gap: 2.5rem; }
+.main-nav a { color: var(--navy-blue); text-decoration: none; font-weight: 600; transition: 0.3s; }
+.main-nav a:hover { color: var(--gold); }
+
+/* hero section */
+.hero-section { 
+    position: relative;
+    padding: 12rem 2rem 8rem; 
+    background: var(--navy-blue);
+    text-align: center; color: var(--white); 
+    min-height: 80vh;
+    display: flex; align-items: center; justify-content: center;
+}
+.hero-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(10, 25, 47, 0.9), rgba(23, 42, 69, 0.8));
+    z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeInUp 1s ease-out; }
+.hero-content h1 { font-size: 4rem; line-height: 1.2; margin-bottom: 1.5rem; }
+.hero-content p { font-size: 1.25rem; margin-bottom: 3rem; color: #e2e8f0; font-weight: 300; }
+
+@keyframes fadeInUp { 
+    from { opacity: 0; transform: translateY(30px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* sezioni generali */
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-title { font-size: 2.8rem; color: var(--navy-blue); margin-bottom: 1rem; }
+.section-subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+/* caratteristiche (griglia a 3) */
+.features-section { padding: 8rem 0; background-color: var(--bg-light); }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; }
+.feature-card { 
+    background: var(--white); padding: 3rem 2rem; border-radius: 16px; 
+    text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-bottom: 4px solid transparent; transition: all 0.4s ease;
+}
+.feature-card:hover { transform: translateY(-10px); border-bottom-color: var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.feature-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+.feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--navy-blue); }
+.feature-card p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
+
+/* chi siamo */
+.chi-siamo-section { padding: 8rem 0; background-color: var(--white); }
+.chi-siamo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.chi-siamo-text p { margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; }
+.image-placeholder { 
+    background: linear-gradient(135deg, var(--navy-light), var(--navy-blue)); 
+    color: var(--gold); height: 450px; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; text-align: center; 
+    border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+    border: 1px solid rgba(212, 175, 55, 0.2); 
+}
+.image-placeholder h3 { margin-top: 1rem; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 2px; }
+
+/* cta finale */
+.cta-section { padding: 6rem 0; background: var(--navy-blue); color: var(--white); }
+.cta-section h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+.cta-section p { font-size: 1.2rem; color: #a8b8d0; }
+
+/* footer */
+.site-footer { background-color: #05101f; color: var(--white); padding: 4rem 0 0 0; }
+.footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem; }
+.footer-logo-img { height: 200px; object-fit: contain; margin-bottom: 1rem; }
+.footer-brand p { color: #8892b0; font-size: 0.95rem; }
+.footer-links { display: flex; gap: 2.5rem; }
+.footer-links a { color: #8892b0; text-decoration: none; transition: color 0.3s; font-weight: 500; }
+.footer-links a:hover { color: var(--gold); }
+.footer-bottom { text-align: center; padding: 1.5rem; color: #5a6a8a; font-size: 0.9rem; }
+
+/* 
+   REGOLE SMARTPHONE  */
+@media (max-width: 900px) {
+    /* 1. Barra bianca in alto: resa sottile e proporzionata */
+    .navbar-landing { 
+        padding: 10px 15px !important; 
+        height: 70px !important; /* Forza l'altezza massima della barra */
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .nav-content { 
+        display: flex !important;
+        flex-direction: row !important; /* Tiene logo e bottone sulla stessa riga */
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    /* 2. Logo: rimpicciolito per un look da App */
+    .logo-img { 
+        height: 40px !important; /* Rimpicciolisce il logo drasticamente */
+        width: auto !important;
+        margin: 0 !important;
+    }
+    
+    .main-nav { display: none !important; } /* Nasconde le scritte del menu */
+
+    /* 3. Bottone: niente testo a capo e dimensioni ridotte */
+    .btn-outline-dark { 
+        padding: 8px 14px !important; 
+        font-size: 12px !important; 
+        white-space: nowrap !important; /* IMPEDISCE al testo di andare a capo */
+        border-width: 1.5px !important;
+        line-height: 1 !important;
+    }
+
+    /* 4. Testo Blu Sotto: Spaziatura perfetta sotto la barra */
+    .hero-section { 
+        padding-top: 100px !important; /* Scivola perfettamente sotto la barra di 70px */
+        padding-bottom: 3rem !important; 
+        min-height: auto !important; 
+    }
+    .hero-content h1 { font-size: 2.2rem !important; margin-bottom: 1rem !important; }
+    .hero-content p { font-size: 1rem !important; margin-bottom: 2rem !important; }
+
+    /* 5. Altre sezioni ridimensionate */
+    .section-title { font-size: 2rem !important; }
+    .chi-siamo-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .image-placeholder { height: 250px !important; }
+    .footer-content { flex-direction: column !important; text-align: center !important; gap: 1.5rem !important; }
+    .footer-logo-img { height: 60px !important; }
+    .footer-links { flex-direction: column !important; gap: 1rem !important; }
+}
