@@ -17,7 +17,7 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
     <title>NauticHub | Il Tuo Ormeggio Smart</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Montserrat:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/index.css?v=6.0">
 </head>
 <body>
 
@@ -118,6 +118,5 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
         </div>
     </footer>
 
-    <script src="js/index.js"></script>
-</body>
+    </body>
 </html>

@@ -39,7 +39,7 @@ $(document).ready(function() {
     // --- 2. GESTIONE MAPPA LEAFLET (Vanilla JS) ---
     // Inizializziamo la mappa solo se l'elemento esiste
     if (document.getElementById('mappa-vera')) {
-        window.mappaPorti = L.map('mappa-vera').setView([41.8719, 12.5674], 6);
+        window.mappaPorti = L.map('mappa-vera').setView([44.4056, 8.9463], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(window.mappaPorti);
         
         const iconaPorto = L.icon({
@@ -49,12 +49,12 @@ $(document).ready(function() {
         });
 
         // Porto Attivo
-        L.marker([41.13, 16.85], {icon: iconaPorto}).addTo(window.mappaPorti)
-            .bindPopup(`<div class="popup-title">Smart Marina Bari</div><div class="popup-desc">Puglia • 150 Posti • 380V Disponibile</div><a href="mappa-porto.php" class="btn-prenota-popup">Vedi e Prenota</a>`, {className: 'custom-popup'})
+        L.marker([44.4056, 8.9463], {icon: iconaPorto}).addTo(window.mappaPorti)
+            .bindPopup(`<div class="popup-title">Smart Marina Genova</div><div class="popup-desc">Liguria • 150 Posti • 380V Disponibile</div><a href="mappa-porto.php" class="btn-prenota-popup">Vedi e Prenota</a>`, {className: 'custom-popup'})
             .openPopup();
         
         // Porti futuri
-        L.marker([44.4056, 8.9463]).addTo(window.mappaPorti).bindPopup(`<div class="popup-title" style="color:#7f8c8d;">Marina di Genova</div><div class="popup-desc">Prossimamente disponibile</div>`, {className: 'custom-popup'});
+        L.marker([41.13, 16.85]).addTo(window.mappaPorti).bindPopup('<div class="popup-title" style="color:#7f8c8d;">Marina di Bari</div><div class="popup-desc">Prossimamente disponibile</div>', {className: 'custom-popup'});
         L.marker([41.1325, 9.5317]).addTo(window.mappaPorti).bindPopup(`<div class="popup-title" style="color:#7f8c8d;">Porto Cervo</div><div class="popup-desc">Prossimamente disponibile</div>`, {className: 'custom-popup'});
     }
 
@@ -99,4 +99,44 @@ $(document).ready(function() {
             apriModalBarca(id, nome, tipo, lunghezza);
         });
     }
+    // --- GESTIONE MODALE DI CONFERMA CUSTOM (Addio Alert nativi!) ---
+    const modalConferma = document.getElementById('modal-conferma');
+    const btnConfermaNo = document.getElementById('btn-conferma-no');
+    const btnConfermaSi = document.getElementById('btn-conferma-si');
+    const testoConferma = document.getElementById('testo-conferma');
+    let formDaInviare = null;
+
+    // 1. Intercetta il click sui pulsanti di eliminazione
+    document.querySelectorAll('.btn-elimina-custom').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            formDaInviare = this.closest('form'); // Salva in memoria quale form volevi inviare
+            let messaggio = this.getAttribute('data-messaggio'); // Legge il messaggio personalizzato
+            
+            if(messaggio) testoConferma.innerText = messaggio;
+            
+            modalConferma.classList.add('active'); // Mostra il modale elegante
+        });
+    });
+
+    // 2. Se clicca NO, chiudi tutto e annulla
+    if(btnConfermaNo) {
+        btnConfermaNo.addEventListener('click', () => {
+            modalConferma.classList.remove('active');
+            formDaInviare = null; // Svuota la memoria
+        });
+    }
+
+    // 3. Se clicca SI, invia realmente il modulo a PHP
+    if(btnConfermaSi) {
+        btnConfermaSi.addEventListener('click', () => {
+            if(formDaInviare) {
+                // Per evitare doppi click, disabilita il bottone
+                btnConfermaSi.innerText = "Attendere...";
+                btnConfermaSi.style.opacity = "0.7";
+                formDaInviare.submit(); 
+            }
+        });
+    }
+
 });

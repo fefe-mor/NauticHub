@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterePontili = document.querySelectorAll('.lettera-pontile');
     const btnIndietro = document.getElementById('btn-indietro');
     
-    // Nuovi input date
     const inputDal = document.getElementById('filtro-dal');
     const inputAl = document.getElementById('filtro-al');
     
@@ -14,50 +13,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAnnulla = document.getElementById('btn-annulla');
     const formPrenotazione = document.getElementById('form-prenotazione');
 
-    // Funzione per impostare la data di oggi come minimo
-    const oggi = new Date().toISOString().split('T')[0];
-    inputDal.min = oggi;
-    inputAl.min = oggi;
+    // --- FUNZIONE PER LE NOTIFICHE (Addio Alert!) ---
+    const mostraNotifica = (messaggio, tipo = 'errore', targetId = 'notifica-sidebar') => {
+        const box = document.getElementById(targetId);
+        if(!box) return;
+        
+        box.className = `notifica-toast ${tipo}`;
+        box.innerText = messaggio;
+        box.style.display = 'block';
+        
+        // Sparisce da solo dopo 4 secondi
+        setTimeout(() => {
+            box.style.opacity = '0';
+            setTimeout(() => { 
+                box.style.display = 'none'; 
+                box.style.opacity = '1'; 
+            }, 300); // Tempo dell'animazione
+        }, 4000);
+    };
 
-    // --- MAGIA AJAX PER LE DATE ---
+    // Helper Date
+    const formattaData = (date) => date.toISOString().split('T')[0];
+    const oggiObj = new Date();
+    const oggiStr = formattaData(oggiObj);
+    
+    const getGiornoDopo = (dataStr) => {
+        let data = new Date(dataStr);
+        data.setDate(data.getDate() + 1);
+        return formattaData(data);
+    }
+
+    inputDal.min = oggiStr;
+    inputAl.min = getGiornoDopo(oggiStr); 
+
+    // --- AJAX DATE ---
     const aggiornaDisponibilitaMappa = async () => {
         let dal = inputDal.value;
         let al = inputAl.value;
-        
-        // Se mancano le date, non facciamo nulla
         if (!dal || !al) return;
 
         try {
             const response = await fetch(`../server/check_disponibilita.php?dal=${dal}&al=${al}`);
             const occupati = await response.json();
 
-            // Aggiorniamo tutti i posti della mappa in tempo reale
             document.querySelectorAll('.posto-ui').forEach(posto => {
                 let codice = posto.getAttribute('data-codice');
-                
-                // Resettiamo a libero
                 posto.classList.remove('occupato');
                 posto.classList.add('libero', 'posto-cliccabile');
                 
-                // Se il server dice che è occupato in quelle date, lo rendiamo rosso
                 if (occupati.includes(codice)) {
                     posto.classList.remove('libero', 'posto-cliccabile');
                     posto.classList.add('occupato');
                 }
             });
         } catch (error) {
-            console.error('Errore durante la verifica della disponibilità:', error);
+            console.error('Errore aggiornamento mappa:', error);
         }
     };
 
-    // Ascoltiamo i cambiamenti sulle date
     inputDal.addEventListener('change', () => {
-        if(inputAl.value && inputAl.value < inputDal.value) inputAl.value = inputDal.value;
+        if(inputDal.value) {
+            let giornoDopo = getGiornoDopo(inputDal.value);
+            inputAl.min = giornoDopo;
+            if(inputAl.value && inputAl.value <= inputDal.value) {
+                inputAl.value = giornoDopo;
+            }
+        }
         aggiornaDisponibilitaMappa();
     });
-    inputAl.addEventListener('change', aggiornaDisponibilitaMappa);
+    
+    inputAl.addEventListener('change', () => {
+        if(inputDal.value && inputAl.value && inputAl.value <= inputDal.value) {
+            mostraNotifica("Il pernottamento minimo è di 1 notte.", "errore");
+            inputAl.value = getGiornoDopo(inputDal.value);
+        }
+        aggiornaDisponibilitaMappa();
+    });
 
-    // --- FILTRO BARCHE E SERVIZI (Identico a prima) ---
+    // --- FILTRI INTELLIGENTI ---
     const eseguiFiltroIntelligente = () => {
         let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
         if (!barcaSelezionata) return;
@@ -92,14 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
     radiosBarca.forEach(radio => radio.addEventListener('change', eseguiFiltroIntelligente));
     checkboxServizi.forEach(chk => chk.addEventListener('change', eseguiFiltroIntelligente));
 
-    // --- NAVIGAZIONE MAPPA ---
+    // --- CLIC SULLA MAPPA ---
     letterePontili.forEach(lettera => {
         lettera.addEventListener('click', function() {
             if(!inputDal.value || !inputAl.value) {
-                alert("Per favore, seleziona le date di Arrivo e Partenza prima di scegliere il molo.");
+                mostraNotifica("Per favore, seleziona le date di Arrivo e Partenza prima di scegliere il molo.", "errore");
                 return;
             }
-
             if (this.classList.contains('compatibile')) {
                 document.getElementById('vista-immagine-porto').style.display = 'none';
                 document.getElementById('dettaglio-molo-container').style.display = 'block';
@@ -115,16 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('vista-immagine-porto').style.display = 'block';
     });
 
-    // --- APERTURA MODALE PRENOTAZIONE ---
-    // Usiamo event delegation perché i posti si aggiornano dinamicamente
+    // --- APERTURA MODALE ---
     document.addEventListener('click', function(e) {
-        // Cerca se l'elemento cliccato (o i suoi genitori) ha la classe 'posto-cliccabile'
         let postoDiv = e.target.closest('.posto-cliccabile');
-        
         if (postoDiv) {
             let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
             if (!barcaSelezionata) { 
-                alert("Seleziona prima la barca dalla tendina a sinistra!"); 
+                mostraNotifica("Seleziona prima la barca dalla tendina a sinistra!", "errore"); 
                 return; 
             }
             
@@ -135,6 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('posto-selezionato-id').innerText = idPosto;
             document.getElementById('input-posto-prenotato').value = idPosto;
             
+            // Svuota il campo persone ogni volta che apri il modale
+            document.getElementById('input-numero-persone').value = '';
+            
+            // Resetta eventuali notifiche rimaste nel modale
+            document.getElementById('notifica-modal').style.display = 'none';
             modal.classList.remove('nascosto');
         }
     });
@@ -151,8 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let idBarca = document.getElementById('input-barca-id').value;
         let dal = inputDal.value;
         let al = inputAl.value;
+        let numeroPersone = document.getElementById('input-numero-persone').value; // <-- RECUPERO DATO
         let btnConferma = document.getElementById('btn-conferma');
         
+        if(new Date(al) <= new Date(dal)) {
+             mostraNotifica("Errore: Il pernottamento minimo è di una notte.", "errore", "notifica-modal");
+             return;
+        }
+
         btnConferma.innerText = "Attendere...";
         btnConferma.disabled = true;
 
@@ -160,24 +200,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('../server/prenota.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ posto: posto, barca_id: idBarca, dal: dal, al: al })
+                // AGGIUNTO IL NUMERO DI PERSONE NEL PAYLOAD JSON
+                body: JSON.stringify({ posto: posto, barca_id: idBarca, dal: dal, al: al, numero_persone: numeroPersone })
             });
-
-            if (!response.ok) throw new Error(`Errore di rete: HTTP ${response.status}`);
 
             const data = await response.json();
 
             if (data.success) {
-                alert(data.message);
+                // Modale chiuso e successo verde sulla sidebar
                 modal.classList.add('nascosto');
-                // Aggiorniamo subito la mappa visivamente ricaricando le disponibilità per le date attuali
+                mostraNotifica(data.message, "successo", "notifica-sidebar");
                 aggiornaDisponibilitaMappa();
             } else {
-                alert("Errore: " + data.message);
+                // Errore server mostrato DENTRO il modale in rosso
+                mostraNotifica(data.message, "errore", "notifica-modal");
             }
 
         } catch (error) {
-            alert("Si è verificato un errore di connessione: " + error.message);
+            mostraNotifica("Si è verificato un errore di connessione.", "errore", "notifica-modal");
         } finally {
             btnConferma.innerText = "Conferma";
             btnConferma.disabled = false;
