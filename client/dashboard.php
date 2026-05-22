@@ -29,6 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $numero_immatricolazione = ($ha_immatricolazione === 'si') ? strtoupper(trim($_POST['numero_immatricolazione'])) : null;
         $id_barca = trim($_POST['id_barca']);
 
+        if ($lunghezza < 5) {
+            $_SESSION['toast_msg'] = "La lunghezza dell'imbarcazione deve essere di almeno 5 metri.";
+            $_SESSION['toast_type'] = "errore";
+            header("Location: dashboard.php");
+            exit;
+        }
+
         if (empty($id_barca) || $id_barca === 'nuovo') {
             $stmt = $pdo->prepare("INSERT INTO barche (utente_id, nome, tipo, lunghezza, larghezza, pescaggio, altezza, numero_immatricolazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$utente_id, $nome, $tipo, $lunghezza, $larghezza, $pescaggio, $altezza, $numero_immatricolazione]);
@@ -108,15 +115,6 @@ $mie_prenotazioni = $stmt->fetchAll();
         <i class="fa-solid <?php echo $tipo_toast === 'successo' ? 'fa-circle-check' : 'fa-circle-exclamation'; ?>"></i>
         <span><?php echo htmlspecialchars($messaggio_toast); ?></span>
     </div>
-    <script>
-        setTimeout(() => {
-            const toast = document.getElementById('toast-sistema');
-            if(toast) { 
-                toast.classList.add('nascondi');
-                setTimeout(() => toast.remove(), 500); 
-            }
-        }, 4000);
-    </script>
     <?php endif; ?>
 
     <header class="dash-header">
@@ -160,7 +158,6 @@ $mie_prenotazioni = $stmt->fetchAll();
             </div>
             <div class="griglia-barche">
                 <?php foreach($mie_barche as $barca): 
-                    // Assegnazione delle tue immagini locali salvate nella cartella img/
                     $img_barca = 'img/vela.jpeg'; // Default / Barca a Vela
                     if($barca['tipo'] == 'Gommone') $img_barca = 'img/gommone.jpeg';
                     if($barca['tipo'] == 'Barca a Motore') $img_barca = 'img/motore.jpeg';
@@ -178,6 +175,13 @@ $mie_prenotazioni = $stmt->fetchAll();
                             <div class="spec-block"><span class="spec-label">Lunghezza</span><span class="spec-value"><i class="fa-solid fa-ruler-horizontal"></i> <?php echo htmlspecialchars($barca['lunghezza']); ?>m</span></div>
                             <div class="spec-block"><span class="spec-label">Larghezza</span><span class="spec-value"><i class="fa-solid fa-expand"></i> <?php echo htmlspecialchars($barca['larghezza']); ?>m</span></div>
                             <div class="spec-block"><span class="spec-label">Pescaggio</span><span class="spec-value"><i class="fa-solid fa-arrow-down"></i> <?php echo htmlspecialchars($barca['pescaggio']); ?>m</span></div>
+                            
+                            <?php if(!empty($barca['numero_immatricolazione'])): ?>
+                            <div class="spec-block" style="grid-column: span 2; background: rgba(0, 242, 254, 0.05); border-color: rgba(0, 242, 254, 0.2);">
+                                <span class="spec-label" style="color: var(--cyan-glow);">Immatricolazione</span>
+                                <span class="spec-value" style="letter-spacing: 1px;"><i class="fa-solid fa-hashtag"></i> <?php echo htmlspecialchars($barca['numero_immatricolazione']); ?></span>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="boat-actions-panel">
                             <button class="btn-panel btn-modifica" 
@@ -302,7 +306,7 @@ $mie_prenotazioni = $stmt->fetchAll();
                         <label>Lunghezza (m)</label>
                         <div class="input-glass">
                             <i class="fa-solid fa-arrows-left-right"></i>
-                            <input type="number" id="boat-length" name="lunghezza" step="0.01" required min="1" placeholder="Es. 12.5">
+                            <input type="number" id="boat-length" name="lunghezza" step="0.01" required min="5" placeholder="Es. 12.5">
                         </div>
                     </div>
                 </div>
@@ -335,8 +339,8 @@ $mie_prenotazioni = $stmt->fetchAll();
                 <div class="form-group-modal full-width box-immatricolazione-container">
                     <label class="toggle-label">Hai un numero di immatricolazione?</label>
                     <div class="radio-group">
-                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" value="no" checked onchange="toggleImmatricolazione(this.value)"> <span>No</span></label>
-                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" value="si" onchange="toggleImmatricolazione(this.value)"> <span>Sì</span></label>
+                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" class="radio-immatricolazione" value="no" checked> <span>No</span></label>
+                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" class="radio-immatricolazione" value="si"> <span>Sì</span></label>
                     </div>
                     <div id="box-immatricolazione" style="display: none; margin-top: 15px;">
                         <label>Numero Immatricolazione</label>
@@ -390,7 +394,7 @@ $mie_prenotazioni = $stmt->fetchAll();
                     <label>Persone a bordo previste</label>
                     <div class="input-glass">
                         <i class="fa-solid fa-users"></i>
-                        <input type="number" id="edit-booking-persone" required min="1" placeholder="Es. 4">
+                        <input type="number" id="edit-booking-persone" placeholder="Comunicabile all'arrivo">
                     </div>
                 </div>
 
@@ -412,136 +416,5 @@ $mie_prenotazioni = $stmt->fetchAll();
     </div>
 
     <script src="js/dashboard.js"></script>
-    <script>
-    function toggleImmatricolazione(valore) {
-        const box = document.getElementById('box-immatricolazione');
-        const input = document.getElementById('boat-immatricolazione');
-        
-        if (valore === 'si') {
-            box.style.display = 'block';
-            input.required = true; 
-        } else {
-            box.style.display = 'none';
-            input.required = false; 
-            input.value = ''; 
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. TOAST PREVENTIVATO AJAX ---
-        const savedSuccessToast = sessionStorage.getItem('ajax_toast_success');
-        if (savedSuccessToast) {
-            sessionStorage.removeItem('ajax_toast_success');
-            const toast = document.createElement('div');
-            toast.className = 'toast-premium successo';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${savedSuccessToast}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('nascondi');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
-        }
-
-        // --- 2. MODALE ELIMINAZIONE CONFERMA ---
-        const modalConferma = document.getElementById('modal-conferma');
-        const btnConfermaNo = document.getElementById('btn-conferma-no');
-        const btnConfermaSi = document.getElementById('btn-conferma-si');
-        const testoConferma = document.getElementById('testo-conferma');
-        let formDaInviare = null;
-
-        document.querySelectorAll('.btn-elimina-custom').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                formDaInviare = this.closest('form'); 
-                let messaggio = this.getAttribute('data-messaggio');
-                if(messaggio) testoConferma.innerText = messaggio;
-                modalConferma.classList.add('active'); 
-            });
-        });
-
-        if(btnConfermaNo) {
-            btnConfermaNo.addEventListener('click', () => {
-                modalConferma.classList.remove('active');
-                formDaInviare = null;
-            });
-        }
-
-        if(btnConfermaSi) {
-            btnConfermaSi.addEventListener('click', () => {
-                if(formDaInviare) {
-                    btnConfermaSi.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
-                    formDaInviare.submit(); 
-                }
-            });
-        }
-
-        // --- 3. AJAX MODIFICA PRENOTAZIONE ---
-        const modalEditBooking = document.getElementById('editBookingModal');
-        const btnChiudiEditBooking = document.getElementById('btn-chiudi-edit-booking');
-        const formEditBooking = document.getElementById('form-edit-booking');
-        const notificaEdit = document.getElementById('notifica-edit-modal');
-        const btnSalvaEdit = document.getElementById('btn-salva-edit');
-
-        document.querySelectorAll('.btn-apri-modifica-prenotazione').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.getElementById('edit-booking-id').value = this.getAttribute('data-id');
-                document.getElementById('lbl-edit-posto').innerText = this.getAttribute('data-posto');
-                document.getElementById('lbl-edit-barca').innerText = this.getAttribute('data-barca');
-                document.getElementById('edit-booking-dal').value = this.getAttribute('data-dal');
-                document.getElementById('edit-booking-al').value = this.getAttribute('data-al');
-                document.getElementById('edit-booking-persone').value = this.getAttribute('data-persone');
-                
-                notificaEdit.style.display = 'none';
-                modalEditBooking.classList.add('active');
-            });
-        });
-
-        if (btnChiudiEditBooking) {
-            btnChiudiEditBooking.addEventListener('click', () => {
-                modalEditBooking.classList.remove('active');
-            });
-        }
-
-        if(formEditBooking) {
-            formEditBooking.addEventListener('submit', async (e) => {
-                e.preventDefault(); 
-                notificaEdit.style.display = 'none';
-                btnSalvaEdit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
-                btnSalvaEdit.disabled = true;
-
-                const payload = {
-                    id_prenotazione: document.getElementById('edit-booking-id').value,
-                    data_inizio: document.getElementById('edit-booking-dal').value,
-                    data_fine: document.getElementById('edit-booking-al').value,
-                    numero_persone: document.getElementById('edit-booking-persone').value
-                };
-
-                try {
-                    const response = await fetch('../server/modifica-prenotazione.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const data = await response.json();
-                    if(data.success) {
-                        sessionStorage.setItem('ajax_toast_success', data.message);
-                        window.location.reload(); 
-                    } else {
-                        notificaEdit.style.display = 'block';
-                        notificaEdit.className = 'sys-msg sys-error';
-                        notificaEdit.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message}`;
-                    }
-                } catch (error) {
-                    notificaEdit.style.display = 'block';
-                    notificaEdit.className = 'sys-msg sys-error';
-                    notificaEdit.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di connessione al server.';
-                } finally {
-                    btnSalvaEdit.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione';
-                    btnSalvaEdit.disabled = false;
-                }
-            });
-        }
-    });
-    </script>
 </body>
 </html>

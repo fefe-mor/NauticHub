@@ -13,15 +13,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAnnulla = document.getElementById('btn-annulla');
     const formPrenotazione = document.getElementById('form-prenotazione');
 
-    // --- GESTIONE MOBILE DRAWER ---
+    // --- GESTIONE MOBILE DRAWER CON BLOCCO SCORRIMENTO ---
     const btnOpenDrawer = document.getElementById('fab-open-filters');
     const btnCloseDrawer = document.getElementById('btn-close-drawer');
     const drawer = document.getElementById('mobile-filter-drawer');
     const btnApplyFilters = document.getElementById('btn-apply-filters');
 
-    if(btnOpenDrawer) btnOpenDrawer.addEventListener('click', () => drawer.classList.add('drawer-open'));
-    if(btnCloseDrawer) btnCloseDrawer.addEventListener('click', () => drawer.classList.remove('drawer-open'));
-    if(btnApplyFilters) btnApplyFilters.addEventListener('click', () => drawer.classList.remove('drawer-open'));
+    if(btnOpenDrawer) {
+        btnOpenDrawer.addEventListener('click', () => {
+            drawer.classList.add('drawer-open');
+            document.body.classList.add('no-scroll'); // Blocca lo sfondo
+        });
+    }
+    if(btnCloseDrawer) {
+        btnCloseDrawer.addEventListener('click', () => {
+            drawer.classList.remove('drawer-open');
+            document.body.classList.remove('no-scroll'); // Sblocca lo sfondo
+        });
+    }
+    if(btnApplyFilters) {
+        btnApplyFilters.addEventListener('click', () => {
+            drawer.classList.remove('drawer-open');
+            document.body.classList.remove('no-scroll'); // Sblocca lo sfondo
+        });
+    }
+
+    // Controlli Date e attivazione dinamica moli
+    inputDal.addEventListener('change', () => {
+        if(inputDal.value) {
+            // FIX MOBILE: Se il browser del telefono forza una data passata, la azzeriamo a oggi
+            if (inputDal.value < oggiStr) {
+                mostraNotifica("Non puoi selezionare una data passata.", "errore");
+                inputDal.value = oggiStr;
+            }
+            let giornoDopo = getGiornoDopo(inputDal.value);
+            inputAl.min = giornoDopo;
+            if(inputAl.value && inputAl.value <= inputDal.value) {
+                inputAl.value = giornoDopo;
+            }
+        }
+        aggiornaDisponibilitaMappa();
+        eseguiFiltroIntelligente(); // Attiva le lettere solo se i dati sono completi
+    });
+    
+    inputAl.addEventListener('change', () => {
+        if(inputDal.value && inputAl.value && inputAl.value <= inputDal.value) {
+            mostraNotifica("Il pernottamento minimo è di 1 notte.", "errore");
+            inputAl.value = getGiornoDopo(inputDal.value);
+        }
+        aggiornaDisponibilitaMappa();
+        eseguiFiltroIntelligente(); // Attiva le lettere solo se i dati sono completi
+    });
+
 
     // --- FUNZIONE PER LE NOTIFICHE ---
     const mostraNotifica = (messaggio, tipo = 'errore', targetId = 'notifica-sidebar') => {
@@ -41,8 +84,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     };
 
-    // Helper Date
-    const formattaData = (date) => date.toISOString().split('T')[0];
+    // Helper Date (Timezone sicuro per fuso orario locale, evita il bug UTC su iOS)
+    const formattaData = (date) => {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    
     const oggiObj = new Date();
     const oggiStr = formattaData(oggiObj);
     
@@ -106,10 +156,28 @@ document.addEventListener('DOMContentLoaded', () => {
         aggiornaDisponibilitaMappa();
     });
 
-    // --- FILTRI INTELLIGENTI ---
+   // --- FILTRI INTELLIGENTI CON ATTIVAZIONE DOPO LE DATE ---
     const eseguiFiltroIntelligente = () => {
+        let dal = inputDal.value;
+        let al = inputAl.value;
+        
+        // Se le date non sono impostate, spegni preventivamente tutti i moli
+        if (!dal || !al) {
+            letterePontili.forEach(lettera => {
+                lettera.classList.remove('compatibile');
+                lettera.classList.add('incompatibile');
+            });
+            return;
+        }
+
         let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
-        if (!barcaSelezionata) return;
+        if (!barcaSelezionata) {
+            letterePontili.forEach(lettera => {
+                lettera.classList.remove('compatibile');
+                lettera.classList.add('incompatibile');
+            });
+            return;
+        }
         
         let lunghezzaBarca = parseFloat(barcaSelezionata.getAttribute('data-lunghezza'));
         let vuole380v = document.getElementById('filtro-corrente').checked;
@@ -117,13 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let vuoleLavaggio = document.getElementById('filtro-lavaggio').checked;
         
         letterePontili.forEach(lettera => {
+            let minLenMolo = parseFloat(lettera.getAttribute('data-min'));
             let maxLenMolo = parseFloat(lettera.getAttribute('data-max'));
+            
             let moloHa380v = lettera.getAttribute('data-380v') === 'true';
             let moloHaAcqua = lettera.getAttribute('data-acqua') === 'true';
             let moloHaLavaggio = lettera.getAttribute('data-lavaggio') === 'true';
             
             let compatibile = true;
-            if (lunghezzaBarca > maxLenMolo) compatibile = false;
+            
+            // Verifica le fasce di dimensione impostate (Piccoli, Medi, Grandi)
+            if (lunghezzaBarca < minLenMolo || lunghezzaBarca > maxLenMolo) compatibile = false;
+            
+            // Verifica i servizi accessori richiesti
             if (vuole380v && !moloHa380v) compatibile = false;
             if (vuoleAcqua && !moloHaAcqua) compatibile = false;
             if (vuoleLavaggio && !moloHaLavaggio) compatibile = false;

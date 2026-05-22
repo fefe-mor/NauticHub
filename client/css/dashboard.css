@@ -336,6 +336,13 @@ body.dashboard-theme {
 .input-glass select { appearance: none; cursor: pointer; }
 .input-glass input:focus, .input-glass select:focus { outline: none; border-color: var(--cyan-glow); background: rgba(0,242,254,0.05); box-shadow: 0 0 20px rgba(0, 242, 254, 0.15); }
 
+/* --- AGGIUNGI QUESTO BLOCCO QUI --- */
+.input-glass select option {
+    background-color: var(--bg-deep); 
+    color: var(--text-main);          
+    padding: 10px;                    
+}
+
 /* Sezione immatricolazione e radio */
 .box-immatricolazione-container { background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 16px; }
 .radio-group { display: flex; gap: 25px; margin-top: 10px; }
@@ -420,4 +427,10 @@ body.dashboard-theme {
     .booking-info-grid { grid-template-columns: 1fr; gap: 8px; }
     .people-count { grid-column: span 1; }
     .booking-card { padding: 1.8rem 1.5rem; }
+
+    /* Rimpicciolisce il pop-up della mappa su mobile */
+    .custom-popup { padding: 2px; text-align: center; }
+    .custom-popup .popup-title { font-size: 1.05rem; margin-bottom: 2px; }
+    .custom-popup .popup-desc { font-size: 0.8rem; margin-bottom: 10px; }
+    .btn-prenota-popup { padding: 6px 14px; font-size: 0.75rem; width: 100%; box-sizing: border-box; }
 }

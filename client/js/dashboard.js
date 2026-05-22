@@ -1,7 +1,36 @@
 // js/dashboard.js
 // Riscritto interamente in Vanilla JS (JS Puro) per un codice accademico impeccabile ed efficiente
 
+
 document.addEventListener('DOMContentLoaded', () => {
+    // =========================================
+    // 0. GESTIONE DINAMICA IMMATRICOLAZIONE
+    // =========================================
+    const boxImmatricolazione = document.getElementById('box-immatricolazione');
+    const inputImmatricolazione = document.getElementById('boat-immatricolazione');
+    const radioImmatricolazione = document.querySelectorAll('.radio-immatricolazione');
+
+    const gestisciImmatricolazione = (valore) => {
+        if (!boxImmatricolazione || !inputImmatricolazione) return;
+        if (valore === 'si') {
+            boxImmatricolazione.style.display = 'block';
+            inputImmatricolazione.required = true; 
+        } else {
+            boxImmatricolazione.style.display = 'none';
+            inputImmatricolazione.required = false; 
+            inputImmatricolazione.value = ''; 
+        }
+    };
+
+    // Ascolto il cambio di selezione dall'utente (FIX iPhone/iOS Safari)
+    radioImmatricolazione.forEach(radio => {
+        // Ascoltiamo sia 'change' che 'click' per aggirare il blocco di iOS
+        ['change', 'click', 'touchstart'].forEach(evento => {
+            radio.addEventListener(evento, (e) => {
+                gestisciImmatricolazione(e.target.value);
+            });
+        });
+    });
     
     // =========================================
     // 1. GESTIONE TAB CON SESSION STORAGE
@@ -42,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetId === 'tab-prenota' && window.mappaPorti) {
                 setTimeout(() => { 
                     window.mappaPorti.invalidateSize(); 
-                }, 150);
+                }, 450);
             }
         });
     });
@@ -69,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
             shadowSize: [41, 41]
         });
 
+        // Calcola una larghezza minima dinamica: più piccola sui telefoni
+        const larghezzaPopUp = window.innerWidth <= 768 ? 200 : 260;
+        
         // Marker Porto di Genova (Attivo)
         L.marker([44.4056, 8.9463], { icon: iconaPorto }).addTo(window.mappaPorti)
             .bindPopup(`
@@ -77,7 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="popup-desc">Liguria • 150 Posti • 380V Disponibile</div>
                     <a href="presentazione-genova.php" class="btn-prenota-popup">Vedi e Prenota</a>
                 </div>
-            `, { className: 'custom-popup' })
+            `, { className: 'custom-popup',
+                 minWidth: larghezzaPopUp
+             })
             .openPopup();
         
         // Porti futuri (Coming Soon)
@@ -108,16 +142,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if(document.getElementById('boat-draft')) document.getElementById('boat-draft').value = pescaggio || '';
         if(document.getElementById('boat-height')) document.getElementById('boat-height').value = altezza || '';
         
-        // Gestione Radio Button Immatricolazione
+
+        // Gestione Radio Button Immatricolazione (Fix affidabile)
         const radioNo = document.querySelector('input[name="ha_immatricolazione"][value="no"]');
         const radioSi = document.querySelector('input[name="ha_immatricolazione"][value="si"]');
         
         if (immatricolazione && immatricolazione !== '') {
-            if(radioSi) radioSi.click();
-            if(document.getElementById('boat-immatricolazione')) document.getElementById('boat-immatricolazione').value = immatricolazione;
+            if(radioSi) { 
+                radioSi.checked = true; 
+                gestisciImmatricolazione('si'); 
+            }
+            if(document.getElementById('boat-immatricolazione')) {
+                document.getElementById('boat-immatricolazione').value = immatricolazione;
+            }
         } else {
-            if(radioNo) radioNo.click();
-            if(document.getElementById('boat-immatricolazione')) document.getElementById('boat-immatricolazione').value = '';
+            if(radioNo) { 
+                radioNo.checked = true; 
+                gestisciImmatricolazione('no'); 
+            }
+            if(document.getElementById('boat-immatricolazione')) {
+                document.getElementById('boat-immatricolazione').value = '';
+            }
         }
 
         modal.classList.add('active');
@@ -147,12 +192,136 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Chiusura modali cliccando all'esterno del box di vetro
+    // =========================================
+    // 4. GESTIONE TOAST NOTIFICHE
+    // =========================================
+    // Toast da PHP (Salvataggio/Eliminazione base)
+    const toastSistema = document.getElementById('toast-sistema');
+    if (toastSistema) {
+        setTimeout(() => {
+            toastSistema.classList.add('nascondi');
+            setTimeout(() => toastSistema.remove(), 500);
+        }, 4000);
+    }
+
+    // Toast da AJAX (Salvato in cache dalla mappa)
+    const savedSuccessToast = sessionStorage.getItem('ajax_toast_success');
+    if (savedSuccessToast) {
+        sessionStorage.removeItem('ajax_toast_success');
+        const toast = document.createElement('div');
+        toast.className = 'toast-premium successo';
+        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${savedSuccessToast}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('nascondi');
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
+    }
+
+    // =========================================
+    // 5. MODALE ELIMINAZIONE CONFERMA
+    // =========================================
+    const modalConferma = document.getElementById('modal-conferma');
+    const btnConfermaNo = document.getElementById('btn-conferma-no');
+    const btnConfermaSi = document.getElementById('btn-conferma-si');
+    const testoConferma = document.getElementById('testo-conferma');
+    let formDaInviare = null;
+
+    document.querySelectorAll('.btn-elimina-custom').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            formDaInviare = this.closest('form'); 
+            let messaggio = this.getAttribute('data-messaggio');
+            if(messaggio) testoConferma.innerText = messaggio;
+            modalConferma.classList.add('active'); 
+        });
+    });
+
+    if(btnConfermaNo) {
+        btnConfermaNo.addEventListener('click', () => {
+            modalConferma.classList.remove('active');
+            formDaInviare = null;
+        });
+    }
+
+    if(btnConfermaSi) {
+        btnConfermaSi.addEventListener('click', () => {
+            if(formDaInviare) {
+                btnConfermaSi.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
+                formDaInviare.submit(); 
+            }
+        });
+    }
+
+    // =========================================
+    // 6. AJAX MODIFICA PRENOTAZIONE
+    // =========================================
+    const modalEditBooking = document.getElementById('editBookingModal');
+    const btnChiudiEditBooking = document.getElementById('btn-chiudi-edit-booking');
+    const formEditBooking = document.getElementById('form-edit-booking');
+    const notificaEdit = document.getElementById('notifica-edit-modal');
+    const btnSalvaEdit = document.getElementById('btn-salva-edit');
+
+    document.querySelectorAll('.btn-apri-modifica-prenotazione').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('edit-booking-id').value = this.getAttribute('data-id');
+            document.getElementById('lbl-edit-posto').innerText = this.getAttribute('data-posto');
+            document.getElementById('lbl-edit-barca').innerText = this.getAttribute('data-barca');
+            document.getElementById('edit-booking-dal').value = this.getAttribute('data-dal');
+            document.getElementById('edit-booking-al').value = this.getAttribute('data-al');
+            document.getElementById('edit-booking-persone').value = this.getAttribute('data-persone');
+            
+            notificaEdit.style.display = 'none';
+            modalEditBooking.classList.add('active');
+        });
+    });
+
+    if (btnChiudiEditBooking) btnChiudiEditBooking.addEventListener('click', () => modalEditBooking.classList.remove('active'));
+
+    if(formEditBooking) {
+        formEditBooking.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            notificaEdit.style.display = 'none';
+            btnSalvaEdit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
+            btnSalvaEdit.disabled = true;
+
+            const payload = {
+                id_prenotazione: document.getElementById('edit-booking-id').value,
+                data_inizio: document.getElementById('edit-booking-dal').value,
+                data_fine: document.getElementById('edit-booking-al').value,
+                numero_persone: document.getElementById('edit-booking-persone').value || "1" 
+            };
+
+            try {
+                const response = await fetch('../server/modifica-prenotazione.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if(data.success) {
+                    sessionStorage.setItem('ajax_toast_success', data.message);
+                    window.location.reload(); 
+                } else {
+                    notificaEdit.style.display = 'block';
+                    notificaEdit.className = 'sys-msg sys-error';
+                    notificaEdit.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message}`;
+                }
+            } catch (error) {
+                notificaEdit.style.display = 'block';
+                notificaEdit.className = 'sys-msg sys-error';
+                notificaEdit.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di connessione al server.';
+            } finally {
+                btnSalvaEdit.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione';
+                btnSalvaEdit.disabled = false;
+            }
+        });
+    }
+
+    // Chiusura di tutti i modali cliccando all'esterno del box di vetro
     window.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
-        const modalEdit = document.getElementById('editBookingModal');
-        if (e.target === modalEdit) modalEdit.classList.remove('active');
-        const modalConf = document.getElementById('modal-conferma');
-        if (e.target === modalConf) modalConf.classList.remove('active');
+        if (e.target === modalEditBooking) modalEditBooking.classList.remove('active');
+        if (e.target === modalConferma) modalConferma.classList.remove('active');
     });
 });

@@ -20,25 +20,33 @@ $posti_occupati = $stmtPren->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
 // Reintegrato il molo F come normale molo prenotabile per Maxi Yacht
 $struttura_moli = [
-    'A' => ['tipo' => 'Transito Veloce (Max 8m)', 'posti' => 6, 'dimensione' => 'posto-piccola'],
-    'B' => ['tipo' => 'Barche Medie (Max 15m)', 'posti' => 4, 'dimensione' => 'posto-media'],
-    'C' => ['tipo' => 'Transito Veloce (Max 8m)', 'posti' => 6, 'dimensione' => 'posto-piccola'],
-    'D' => ['tipo' => 'Maxi Yacht (Max 30m)', 'posti' => 4, 'dimensione' => 'posto-yacht'],
-    'E' => ['tipo' => 'Barche Medie (Max 15m)', 'posti' => 8, 'dimensione' => 'posto-media'],
-    'F' => ['tipo' => 'Maxi Yacht (Max 30m)', 'posti' => 8, 'dimensione' => 'posto-yacht'],
-    'G' => ['tipo' => 'Maxi Yacht (Max 30m)', 'posti' => 5, 'dimensione' => 'posto-yacht'],
-    'H' => ['tipo' => 'Maxi Yacht (Max 30m)', 'posti' => 5, 'dimensione' => 'posto-yacht'],
-    'I' => ['tipo' => 'Barche Medie (Max 15m)', 'posti' => 6, 'dimensione' => 'posto-media'],
-    'J' => ['tipo' => 'Transito Veloce (Max 8m)', 'posti' => 10, 'dimensione' => 'posto-piccola'],
-    'K' => ['tipo' => 'Transito Veloce (Max 8m)', 'posti' => 10, 'dimensione' => 'posto-piccola'],
-    'L' => ['tipo' => 'Transito Veloce (Max 8m)', 'posti' => 8, 'dimensione' => 'posto-piccola'],
-    'M' => ['tipo' => 'Barche Medie (Max 15m)', 'posti' => 6, 'dimensione' => 'posto-media'],
-    'N' => ['tipo' => 'Barche Medie (Max 15m)', 'posti' => 6, 'dimensione' => 'posto-media']
+    // --- GRANDI (Dai 21m in poi) ---
+    'A' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 6, 'dimensione' => 'posto-yacht'],
+    'B' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 4, 'dimensione' => 'posto-yacht'],
+    'D' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 4, 'dimensione' => 'posto-yacht'],
+    'G' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 5, 'dimensione' => 'posto-yacht'],
+    
+    // --- MEDI (Dai 13 ai 20m) ---
+    'C' => ['tipo' => 'Barche Medie (13-20m)', 'posti' => 6, 'dimensione' => 'posto-media'],
+    'E' => ['tipo' => 'Barche Medie (13-20m)', 'posti' => 8, 'dimensione' => 'posto-media'],
+    'F' => ['tipo' => 'Barche Medie (13-20m)', 'posti' => 8, 'dimensione' => 'posto-media'],
+    'H' => ['tipo' => 'Barche Medie (13-20m)', 'posti' => 5, 'dimensione' => 'posto-media'],
+    
+    // --- PICCOLI (Dai 5 ai 12m) ---
+    'I' => ['tipo' => 'Natanti (5-12m)', 'posti' => 6, 'dimensione' => 'posto-piccola'],
+    'J' => ['tipo' => 'Natanti (5-12m)', 'posti' => 10, 'dimensione' => 'posto-piccola'],
+    'K' => ['tipo' => 'Natanti (5-12m)', 'posti' => 10, 'dimensione' => 'posto-piccola'],
+    'L' => ['tipo' => 'Natanti (5-12m)', 'posti' => 8, 'dimensione' => 'posto-piccola'],
+    'M' => ['tipo' => 'Natanti (5-12m)', 'posti' => 6, 'dimensione' => 'posto-piccola'],
+    'N' => ['tipo' => 'Natanti (5-12m)', 'posti' => 6, 'dimensione' => 'posto-piccola']
 ];
 
 function statoPosto($codice, $occupati, $classe_dimensione) {
-    return in_array($codice, $occupati) ? "occupato $classe_dimensione" : 'libero'; 
+    // FIX: Ora la classe dimensione viene assegnata SEMPRE, sia da libero che da occupato
+    $stato = in_array($codice, $occupati) ? 'occupato' : 'libero';
+    return "$stato $classe_dimensione"; 
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -85,22 +93,25 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                 
                 <div class="filter-section">
                     <h3 class="filter-title">1. Periodo di Sosta</h3>
+                    
+
                     <div class="date-grid">
                         <div class="input-glass-premium">
                             <label>Arrivo</label>
                             <div class="input-with-icon">
                                 <i class="fa-regular fa-calendar-check cyan-text"></i>
-                                <input type="date" id="filtro-dal" required>
+                                <input type="date" id="filtro-dal" min="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                         </div>
                         <div class="input-glass-premium">
                             <label>Partenza</label>
                             <div class="input-with-icon">
                                 <i class="fa-regular fa-calendar-xmark cyan-text"></i>
-                                <input type="date" id="filtro-al" required>
+                                <input type="date" id="filtro-al" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="filter-section">
@@ -163,20 +174,23 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                     <div class="responsive-map-container">
                         <img src="img/mappa-porto.webp" alt="Planimetria Porto NauticHub" class="porto-base-image" onerror="this.src='img/mappa-porto.jpeg'">
                         
-                        <div class="letter-pin" id="lettera-A" data-max="8"  data-380v="false" data-acqua="true"  data-lavaggio="false" data-target="Molo-A">A</div>
-                        <div class="letter-pin" id="lettera-B" data-max="15" data-380v="false" data-acqua="true"  data-lavaggio="true"  data-target="Molo-B">B</div>
-                        <div class="letter-pin" id="lettera-C" data-max="8"  data-380v="false" data-acqua="false" data-lavaggio="false" data-target="Molo-C">C</div>
-                        <div class="letter-pin" id="lettera-D" data-max="30" data-380v="true"  data-acqua="true"  data-lavaggio="false" data-target="Molo-D">D</div>
-                        <div class="letter-pin" id="lettera-E" data-max="15" data-380v="false" data-acqua="true"  data-lavaggio="false" data-target="Molo-E">E</div>
-                        <div class="letter-pin" id="lettera-F" data-max="30" data-380v="true"  data-acqua="true"  data-lavaggio="true"  data-target="Molo-F">F</div>
-                        <div class="letter-pin" id="lettera-G" data-max="30" data-380v="true"  data-acqua="true"  data-lavaggio="false" data-target="Molo-G">G</div>
-                        <div class="letter-pin" id="lettera-H" data-max="30" data-380v="true"  data-acqua="false" data-lavaggio="false" data-target="Molo-H">H</div>
-                        <div class="letter-pin" id="lettera-I" data-max="15" data-380v="false" data-acqua="true"  data-lavaggio="false" data-target="Molo-I">I</div>
-                        <div class="letter-pin" id="lettera-J" data-max="8"  data-380v="false" data-acqua="false" data-lavaggio="false" data-target="Molo-J">J</div>
-                        <div class="letter-pin" id="lettera-K" data-max="8"  data-380v="false" data-acqua="false" data-lavaggio="false" data-target="Molo-K">K</div>
-                        <div class="letter-pin" id="lettera-L" data-max="8"  data-380v="false" data-acqua="false" data-lavaggio="false" data-target="Molo-L">L</div>
-                        <div class="letter-pin" id="lettera-M" data-max="15" data-380v="false" data-acqua="true"  data-lavaggio="true"  data-target="Molo-M">M</div>
-                        <div class="letter-pin" id="lettera-N" data-max="15" data-380v="false" data-acqua="true"  data-lavaggio="false" data-target="Molo-N">N</div>
+                        <div class="letter-pin" id="lettera-A" data-min="21" data-max="99" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-A">A</div>
+                        <div class="letter-pin" id="lettera-B" data-min="21" data-max="99" data-380v="true" data-acqua="true"  data-lavaggio="true"  data-target="Molo-B">B</div>
+                        <div class="letter-pin" id="lettera-D" data-min="21" data-max="99" data-380v="true"  data-acqua="true"  data-lavaggio="true" data-target="Molo-D">D</div>
+                        <div class="letter-pin" id="lettera-G" data-min="21" data-max="99" data-380v="true"  data-acqua="true"  data-lavaggio="false" data-target="Molo-G">G</div>
+
+                        <div class="letter-pin" id="lettera-C" data-min="13" data-max="20" data-380v="true" data-acqua="false" data-lavaggio="false" data-target="Molo-C">C</div>
+                        <div class="letter-pin" id="lettera-E" data-min="13" data-max="20" data-380v="true" data-acqua="true"  data-lavaggio="true" data-target="Molo-E">E</div>
+                        <div class="letter-pin" id="lettera-F" data-min="13" data-max="20" data-380v="true"  data-acqua="true"  data-lavaggio="true"  data-target="Molo-F">F</div>
+                        <div class="letter-pin" id="lettera-H" data-min="13" data-max="20" data-380v="true"  data-acqua="true" data-lavaggio="false" data-target="Molo-H">H</div>
+
+                        <div class="letter-pin" id="lettera-I" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-I">I</div>
+                        <div class="letter-pin" id="lettera-J" data-min="5" data-max="12" data-380v="true" data-acqua="false" data-lavaggio="false" data-target="Molo-J">J</div>
+                        <div class="letter-pin" id="lettera-K" data-min="5" data-max="12" data-380v="true" data-acqua="true" data-lavaggio="false" data-target="Molo-K">K</div>
+                        <div class="letter-pin" id="lettera-L" data-min="5" data-max="12" data-380v="true" data-acqua="false" data-lavaggio="true" data-target="Molo-L">L</div>
+                        <div class="letter-pin" id="lettera-M" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="true"  data-target="Molo-M">M</div>
+                        <div class="letter-pin" id="lettera-N" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-N">N</div>
+                                                
                     </div>
                 </div>
 
