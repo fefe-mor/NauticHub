@@ -34,6 +34,7 @@ h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; }
 .gold-gradient-text {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-style: italic;
 }

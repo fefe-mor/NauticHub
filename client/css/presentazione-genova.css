@@ -65,7 +65,10 @@ body.presentazione-theme {
 
 .gradient-logo-accent {
     background: var(--cyan-gradient);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    font-style: italic;
 }
 
 .port-location {

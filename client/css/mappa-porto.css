@@ -67,7 +67,7 @@ body.booking-premium-theme {
     text-decoration: none; font-weight: 600; letter-spacing: -0.5px;
 }
 .gradient-logo-accent {
-    background: var(--cyan-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background: var(--cyan-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     font-family: var(--font-sans); font-weight: 800;
 }
 .user-info { display: flex; align-items: center; gap: 20px; }
