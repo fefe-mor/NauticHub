@@ -9,94 +9,117 @@ require_once '../server/auth_logic.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Accesso | NauticHub</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/auth.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
-    <div class="split-brand">
-        <div class="brand-content">
-            <h1>NauticHub</h1>
-            <div class="brand-divider"></div>
-            <p>L'eleganza della navigazione incontra l'eccellenza della gestione digitale. L'accesso riservato alla tua flotta.</p>
-        </div>
-    </div>
+    <div class="auth-bg-image" style="background-image: url('img/foto-porto.jpeg');" aria-hidden="true"></div>
+    <div class="auth-bg-overlay" aria-hidden="true"></div>
 
-    <div class="split-form">
-        <div class="form-container">
-            <a id="btn-indietro" class="back-link">← Torna Indietro</a>
+    <main class="split-layout">
+        
+        <aside class="split-brand">
+            <div class="brand-content">
+                <h1>NauticHub</h1>
+                <div class="brand-divider"></div>
+                <p>L'eleganza della navigazione incontra l'eccellenza della gestione digitale.<br><span class="cyan-text">L'accesso riservato alla tua flotta.</span></p>
+            </div>
+        </aside>
 
-            <?php if(isset($errore) && $errore): ?>
-                <div class="sys-msg sys-error"><?php echo $errore; ?></div>
-            <?php endif; ?>
-            
-            <?php if(isset($messaggio_successo) && $messaggio_successo): ?>
-                <div class="sys-msg sys-success"><?php echo $messaggio_successo; ?></div>
-                <script>
-                    // Piccolo helper per far aprire subito il login in caso di successo
-                    document.addEventListener('DOMContentLoaded', () => {
-                        document.getElementById('form-registrazione').style.display = 'none';
-                        document.getElementById('form-login').style.display = 'block';
-                    });
-                </script>
-            <?php endif; ?>
+        <section class="split-form">
+            <div class="form-container">
+                <a id="btn-indietro" class="back-link" href="index.php"><i class="fa-solid fa-arrow-left"></i> Torna alla rotta</a>
 
-            <form id="form-login" method="POST" action="auth.php">
-                <h2>Accesso</h2>
-                <p>Inserisci le tue credenziali per proseguire.</p>
-                <input type="hidden" name="azione" value="login">
+                <?php if(isset($errore) && $errore): ?>
+                    <div class="sys-msg sys-error"><i class="fa-solid fa-triangle-exclamation"></i> <?php echo $errore; ?></div>
+                <?php endif; ?>
                 
-                <div class="form-group">
-                    <label>Indirizzo Email</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">Entra nel Porto</button>
-                
-                <div class="form-switch">
-                    Non sei ancora registrato? <span id="btn-vai-registrazione">Richiedi Accesso</span>
-                </div>
-            </form>
+                <?php if(isset($messaggio_successo) && $messaggio_successo): ?>
+                    <div class="sys-msg sys-success"><i class="fa-solid fa-circle-check"></i> <?php echo $messaggio_successo; ?></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            document.getElementById('form-registrazione').style.display = 'none';
+                            document.getElementById('form-login').style.display = 'block';
+                        });
+                    </script>
+                <?php endif; ?>
 
-            <form id="form-registrazione" method="POST" action="auth.php">
-                <h2>Registrazione</h2>
-                <p>Crea il tuo profilo da armatore in pochi istanti.</p>
-                <input type="hidden" name="azione" value="registrazione">
-                
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" name="nome" required>
-                </div>
-                <div class="form-group">
-                    <label>Cognome</label>
-                    <input type="text" name="cognome" required>
-                </div>
-                <div class="form-group">
-                    <label>Indirizzo Email</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" id="reg-password" required>
-                    <div id="pwd-error" class="pwd-error-text">
-                        La password deve contenere almeno 8 caratteri, una lettera Maiuscola e un carattere speciale (es. ! @ #).
+                <form id="form-login" method="POST" action="auth.php">
+                    <h2>Accedi </h2>
+                    <p class="form-subtitle">Inserisci le tue credenziali per proseguire.</p>
+                    <input type="hidden" name="azione" value="login">
+                    
+                    <div class="form-group">
+                        <label for="login-email">Indirizzo Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" id="login-email" name="email" required placeholder="capitano@email.com">
+                        </div>
                     </div>
-                </div>
-                
-                <button type="submit" class="btn-submit">Registra Profilo</button>
-                
-                <div class="form-switch">
-                    Sei già registrato? <span id="btn-vai-login">Torna al Login</span>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-gold">Entra nel Porto <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    
+                    <div class="form-switch">
+                        Non sei ancora registrato? <span id="btn-vai-registrazione" class="switch-link">Richiedi Accesso</span>
+                    </div>
+                </form>
 
-        </div>
-    </div>
+                <form id="form-registrazione" method="POST" action="auth.php">
+                    <h2>Nuovo <span class="gold-text">Armatore</span></h2>
+                    <p class="form-subtitle">Crea il tuo profilo da armatore in pochi istanti.</p>
+                    <input type="hidden" name="azione" value="registrazione">
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="reg-nome">Nome</label>
+                            <input type="text" id="reg-nome" name="nome" required placeholder="Il tuo nome">
+                        </div>
+                        <div class="form-group half">
+                            <label for="reg-cognome">Cognome</label>
+                            <input type="text" id="reg-cognome" name="cognome" required placeholder="Il tuo cognome">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Indirizzo Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" id="reg-email" name="email" required placeholder="capitano@email.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <input type="password" name="password" id="reg-password" required placeholder="Crea una password sicura">
+                        </div>
+                        <div id="pwd-error" class="pwd-error-text">
+                            <i class="fa-solid fa-circle-exclamation"></i> Deve contenere 8 caratteri, una Maiuscola e un simbolo (!@#).
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-gold">Registra Profilo <i class="fa-solid fa-user-plus"></i></button>
+                    
+                    <div class="form-switch">
+                        Sei già registrato? <span id="btn-vai-login" class="switch-link">Torna al Login</span>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
 
     <script src="js/auth.js"></script>
 </body>

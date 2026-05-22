@@ -89,55 +89,23 @@ $mie_prenotazioni = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area Personale | NauticHub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/mappa-porto.css?v=6.5"> 
-    <link rel="stylesheet" href="css/dashboard.css?v=6.5">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>Dashboard | NauticHub</title>
     
-    <style>
-        .toast-premium {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #ffffff;
-            color: #0a192f;
-            padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 10000;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            transform: translateX(120%);
-            animation: slideInToast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            border-left: 6px solid;
-        }
-        .toast-premium.successo { border-left-color: #2ecc71; }
-        .toast-premium.errore { border-left-color: #e74c3c; }
-
-        .toast-premium.nascondi {
-            animation: slideOutToast 0.5s ease forwards;
-        }
-
-        @keyframes slideInToast {
-            to { transform: translateX(0); }
-        }
-        @keyframes slideOutToast {
-            to { transform: translateX(120%); opacity: 0; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <link rel="stylesheet" href="css/dashboard.css?v=<?php echo time(); ?>">
 </head>
-<body>
+<body class="dashboard-theme">
 
     <?php if(!empty($messaggio_toast)): ?>
     <div id="toast-sistema" class="toast-premium <?php echo $tipo_toast; ?>">
-        <span style="font-size: 1.5rem;"><?php echo $tipo_toast === 'successo' ? '' : ''; ?></span>
+        <i class="fa-solid <?php echo $tipo_toast === 'successo' ? 'fa-circle-check' : 'fa-circle-exclamation'; ?>"></i>
         <span><?php echo htmlspecialchars($messaggio_toast); ?></span>
     </div>
     <script>
@@ -151,226 +119,294 @@ $mie_prenotazioni = $stmt->fetchAll();
     </script>
     <?php endif; ?>
 
-    <header class="navbar-premium" style="position: sticky; top: 0; width: 100%; z-index: 1000;">
-        <div class="nav-content">
-            <div class="logo">
-                <img src="img/logo_nautic.png" alt="Logo" style="height: 80px; vertical-align: middle;">
-                NauticHub <span class="gold-text">Genova</span>
+    <header class="dash-header">
+        <div class="nav-content container">
+            <div class="logo-area">
+                <a href="index.php" class="text-logo">
+                    Nautic<span class="gradient-logo-accent">Hub</span>
+                </a>
             </div>
             <div class="user-info">
-                <span style="color: white; margin-right: 15px; font-weight: 600;">Bentornato, <?php echo htmlspecialchars($nome_utente); ?></span>
-                <a href="../server/logout.php" class="btn-outline-light">Disconnetti</a>
+                <span class="welcome-text"><i class="fa-regular fa-user"></i> Bentornato, <strong><?php echo htmlspecialchars($nome_utente); ?></strong></span>
+                <a href="../server/logout.php" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="logout-text">Disconnetti</span></a>
             </div>
         </div>
     </header>
 
-    <div class="tab-menu" style="margin-top: 0;">
-        <button class="tab-btn active" data-target="tab-prenota"> Esplora e Prenota</button>
-        <button class="tab-btn" data-target="tab-barche"> Le Mie Barche</button>
-        <button class="tab-btn" data-target="tab-prenotazioni"> Prenotazioni</button>
-    </div>
-
-    <div id="tab-prenota" class="tab-content active">
-        <h2 style="font-family: 'Playfair Display'; font-size: 2rem; margin-bottom: 0.5rem;">Trova il tuo prossimo Ormeggio</h2>
-        <p style="color: #666; margin-bottom: 2rem;">Trascina la mappa, usa lo zoom e clicca sui porti partner per esplorare la darsena.</p>
-        <div id="mappa-vera"></div>
-    </div>
-
-    <div id="tab-barche" class="tab-content">
-        <h2 style="font-family: 'Playfair Display'; font-size: 2rem; margin-bottom: 1rem;">Il tuo Garage Navale</h2>
-        <div class="griglia-barche">
-            <?php foreach($mie_barche as $barca): 
-                $icona = '⛵'; 
-                if($barca['tipo'] == 'Gommone') $icona = '🚤';
-                if($barca['tipo'] == 'Barca a Motore') $icona = '🛥️';
-                if($barca['tipo'] == 'Yacht') $icona = '🛳️';
-                if($barca['tipo'] == 'Catamarano') $icona = '⛵';
-            ?>
-            <div class="boat-card">
-                <div>
-                    <div style="font-size: 4rem; margin-bottom: 1rem;"><?php echo $icona; ?></div>
-                    <h3><?php echo htmlspecialchars($barca['nome']); ?></h3>
-                    <p style="color: #666;"><?php echo htmlspecialchars($barca['tipo']); ?> | L: <?php echo htmlspecialchars($barca['lunghezza']); ?>m</p>
-                </div>
-                <div class="boat-actions">
-                    <button class="btn-small btn-modifica" 
-                        data-id="<?php echo $barca['id']; ?>" 
-                        data-nome="<?php echo htmlspecialchars($barca['nome']); ?>" 
-                        data-tipo="<?php echo htmlspecialchars($barca['tipo']); ?>" 
-                        data-lunghezza="<?php echo $barca['lunghezza']; ?>"
-                        data-larghezza="<?php echo $barca['larghezza']; ?>"
-                        data-pescaggio="<?php echo $barca['pescaggio']; ?>"
-                        data-altezza="<?php echo $barca['altezza']; ?>"
-                        data-immatricolazione="<?php echo htmlspecialchars($barca['numero_immatricolazione']); ?>">Modifica</button>
-                    
-                    <form method="POST" action="dashboard.php" style="display:inline;">
-                        <input type="hidden" name="azione" value="elimina_barca">
-                        <input type="hidden" name="id_barca" value="<?php echo $barca['id']; ?>">
-                        <button type="button" class="btn-small btn-danger btn-elimina-custom" data-messaggio="Sei sicuro di voler eliminare <?php echo htmlspecialchars($barca['nome']); ?> dal tuo garage navale?">Elimina</button>
-                    </form>
-                </div>
-            </div>
-            <?php endforeach; ?>
-
-            <div class="boat-card add-boat-card" id="btn-aggiungi-barca">
-                <div style="font-size: 3.5rem; color: #ccc; margin-bottom: 0.5rem;">➕</div>
-                <h3 style="color: #999;">Aggiungi Imbarcazione</h3>
-            </div>
+    <nav class="tab-menu-container">
+        <div class="tab-menu">
+            <button class="tab-btn active" data-target="tab-prenota"><i class="fa-solid fa-map-location-dot"></i> Esplora e Prenota</button>
+            <button class="tab-btn" data-target="tab-barche"><i class="fa-solid fa-anchor"></i> Il Mio Garage</button>
+            <button class="tab-btn" data-target="tab-prenotazioni"><i class="fa-solid fa-book-bookmark"></i> Prenotazioni</button>
         </div>
-    </div>
+    </nav>
 
-    <div id="tab-prenotazioni" class="tab-content">
-        <h2 style="font-family: 'Playfair Display'; font-size: 2rem; margin-bottom: 1rem;">Le tue Prenotazioni</h2>
-        <?php if(empty($mie_prenotazioni)): ?>
-            <p style="color: #666;">Non hai ancora effettuato nessuna prenotazione.</p>
-        <?php else: ?>
-            <?php foreach($mie_prenotazioni as $pren): ?>
-            <div class="booking-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                <div class="booking-details">
-                    <h3 style="margin-bottom: 0.5rem; color: #0a192f; font-family: 'Playfair Display', serif; font-size: 1.6rem;">
-                        ⛵ <?php echo htmlspecialchars($pren['nome_barca']); ?>
-                    </h3>
-                    <p style="margin-bottom: 4px;"><strong>Porto:</strong> Smart Marina Genova</p>
-                    <p style="margin-bottom: 4px;"><strong>Posizione:</strong> Molo <?php echo htmlspecialchars($pren['posto']); ?></p>
-                    <p style="margin-bottom: 4px;"><strong>Dal:</strong> <?php echo htmlspecialchars($pren['data_inizio']); ?> <strong>Al:</strong> <?php echo htmlspecialchars($pren['data_fine']); ?></p>
-                    <p style="margin-top: 8px; color: #2ecc71; font-weight: 600;">👥 Persone a bordo: <?php echo htmlspecialchars($pren['numero_persone']); ?></p>
+    <main class="dash-main-content">
+        
+        <section id="tab-prenota" class="tab-content active">
+            <div class="tab-header">
+                <h2>Trova il tuo prossimo Ormeggio</h2>
+                <p>Trascina la mappa, usa lo zoom e clicca sui porti partner per esplorare la darsena e prenotare.</p>
+            </div>
+            <div class="map-container-glass">
+                <div id="mappa-vera"></div>
+            </div>
+        </section>
+
+        <section id="tab-barche" class="tab-content">
+            <div class="tab-header">
+                <h2>Il tuo Garage Navale</h2>
+                <p>Gestisci la tua flotta per visualizzare solo i posti barca compatibili.</p>
+            </div>
+            <div class="griglia-barche">
+                <?php foreach($mie_barche as $barca): 
+                    // Assegnazione delle tue immagini locali salvate nella cartella img/
+                    $img_barca = 'img/vela.jpeg'; // Default / Barca a Vela
+                    if($barca['tipo'] == 'Gommone') $img_barca = 'img/gommone.jpeg';
+                    if($barca['tipo'] == 'Barca a Motore') $img_barca = 'img/motore.jpeg';
+                    if($barca['tipo'] == 'Yacht') $img_barca = 'img/yacht.jpeg'; 
+                    if($barca['tipo'] == 'Catamarano') $img_barca = 'img/catamarano.jpeg';
+                ?>
+                <div class="boat-card-premium">
+                    <div class="boat-card-image" style="background-image: url('<?php echo $img_barca; ?>');">
+                        <div class="boat-card-overlay"></div>
+                        <h3 class="boat-name-display"><?php echo htmlspecialchars($barca['nome']); ?></h3>
+                    </div>
+                    <div class="boat-card-details">
+                        <div class="boat-specs-grid">
+                            <div class="spec-block"><span class="spec-label">Tipo</span><span class="spec-value gold-txt"><?php echo htmlspecialchars($barca['tipo']); ?></span></div>
+                            <div class="spec-block"><span class="spec-label">Lunghezza</span><span class="spec-value"><i class="fa-solid fa-ruler-horizontal"></i> <?php echo htmlspecialchars($barca['lunghezza']); ?>m</span></div>
+                            <div class="spec-block"><span class="spec-label">Larghezza</span><span class="spec-value"><i class="fa-solid fa-expand"></i> <?php echo htmlspecialchars($barca['larghezza']); ?>m</span></div>
+                            <div class="spec-block"><span class="spec-label">Pescaggio</span><span class="spec-value"><i class="fa-solid fa-arrow-down"></i> <?php echo htmlspecialchars($barca['pescaggio']); ?>m</span></div>
+                        </div>
+                        <div class="boat-actions-panel">
+                            <button class="btn-panel btn-modifica" 
+                                data-id="<?php echo $barca['id']; ?>" 
+                                data-nome="<?php echo htmlspecialchars($barca['nome']); ?>" 
+                                data-tipo="<?php echo htmlspecialchars($barca['tipo']); ?>" 
+                                data-lunghezza="<?php echo $barca['lunghezza']; ?>"
+                                data-larghezza="<?php echo $barca['larghezza']; ?>"
+                                data-pescaggio="<?php echo $barca['pescaggio']; ?>"
+                                data-altezza="<?php echo $barca['altezza']; ?>"
+                                data-immatricolazione="<?php echo htmlspecialchars($barca['numero_immatricolazione']); ?>">
+                                <i class="fa-solid fa-pen"></i> Modifica
+                            </button>
+                            
+                            <form method="POST" action="dashboard.php" style="display:inline; flex: 1;">
+                                <input type="hidden" name="azione" value="elimina_barca">
+                                <input type="hidden" name="id_barca" value="<?php echo $barca['id']; ?>">
+                                <button type="button" class="btn-panel btn-delete btn-elimina-custom" data-messaggio="Sei sicuro di voler eliminare <?php echo htmlspecialchars($barca['nome']); ?> dal tuo garage navale?"><i class="fa-solid fa-trash-can"></i> Rimuovi</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button type="button" class="btn-apri-modifica-prenotazione"
-                        data-id="<?php echo $pren['id']; ?>"
-                        data-posto="<?php echo htmlspecialchars($pren['posto']); ?>"
-                        data-barca="<?php echo htmlspecialchars($pren['nome_barca']); ?>"
-                        data-dal="<?php echo $pren['data_inizio']; ?>"
-                        data-al="<?php echo $pren['data_fine']; ?>"
-                        data-persone="<?php echo $pren['numero_persone']; ?>"
-                        style="border: 2px solid #d4af37; color: #d4af37; background: none; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s;"
-                        onmouseover="this.style.background='#d4af37'; this.style.color='#0a192f';" 
-                        onmouseout="this.style.background='none'; this.style.color='#d4af37';">
-                        Modifica
-                    </button>
+                <?php endforeach; ?>
 
-                    <form method="POST" action="dashboard.php" style="display:inline;">
-                        <input type="hidden" name="azione" value="annulla_prenotazione">
-                        <input type="hidden" name="codice_posto" value="<?php echo $pren['posto']; ?>">
-                        <button type="button" class="btn-elimina-custom" data-messaggio="Vuoi davvero annullare la prenotazione del posto <?php echo $pren['posto']; ?>? Questa azione è irreversibile." style="border: 2px solid #e74c3c; color: #e74c3c; background: none; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#e74c3c'; this.style.color='white';" onmouseout="this.style.background='none'; this.style.color='#e74c3c';">Annulla</button>
-                    </form>
+                <div class="boat-card-premium add-boat-card-new" id="btn-aggiungi-barca">
+                    <div class="add-container-inner">
+                        <div class="add-icon-pulsing"><i class="fa-solid fa-plus"></i></div>
+                        <h3>Aggiungi Imbarcazione</h3>
+                        <p>Inserisci un nuovo scafo nella flotta</p>
+                    </div>
                 </div>
             </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+        </section>
+
+        <section id="tab-prenotazioni" class="tab-content">
+            <div class="tab-header">
+                <h2>Le tue Prenotazioni</h2>
+                <p>Tieni traccia dei tuoi ormeggi futuri e passati.</p>
+            </div>
+            
+            <?php if(empty($mie_prenotazioni)): ?>
+                <div class="empty-state">
+                    <i class="fa-solid fa-anchor-circle-exclamation"></i>
+                    <p>Non hai ancora effettuato nessuna prenotazione.</p>
+                </div>
+            <?php else: ?>
+                <div class="booking-list">
+                    <?php foreach($mie_prenotazioni as $pren): ?>
+                    <div class="booking-card">
+                        <div class="booking-details">
+                            <h3><i class="fa-solid fa-ship gold-text"></i> <?php echo htmlspecialchars($pren['nome_barca']); ?></h3>
+                            <div class="booking-info-grid">
+                                <div><i class="fa-solid fa-location-dot"></i> <strong>Porto:</strong> Smart Marina Genova</div>
+                                <div><i class="fa-solid fa-dharmachakra"></i> <strong>Molo:</strong> <?php echo htmlspecialchars($pren['posto']); ?></div>
+                                <div><i class="fa-regular fa-calendar-check"></i> <strong>Dal:</strong> <?php echo htmlspecialchars($pren['data_inizio']); ?></div>
+                                <div><i class="fa-regular fa-calendar-xmark"></i> <strong>Al:</strong> <?php echo htmlspecialchars($pren['data_fine']); ?></div>
+                                <div class="people-count"><i class="fa-solid fa-users"></i> Persone a bordo: <?php echo htmlspecialchars($pren['numero_persone']); ?></div>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-actions">
+                            <button type="button" class="btn-azione btn-apri-modifica-prenotazione"
+                                data-id="<?php echo $pren['id']; ?>"
+                                data-posto="<?php echo htmlspecialchars($pren['posto']); ?>"
+                                data-barca="<?php echo htmlspecialchars($pren['nome_barca']); ?>"
+                                data-dal="<?php echo $pren['data_inizio']; ?>"
+                                data-al="<?php echo $pren['data_fine']; ?>"
+                                data-persone="<?php echo $pren['numero_persone']; ?>">
+                                <i class="fa-solid fa-pen-to-square"></i> Gestisci
+                            </button>
+
+                            <form method="POST" action="dashboard.php" style="display:inline;">
+                                <input type="hidden" name="azione" value="annulla_prenotazione">
+                                <input type="hidden" name="codice_posto" value="<?php echo $pren['posto']; ?>">
+                                <button type="button" class="btn-azione btn-danger btn-elimina-custom" data-messaggio="Vuoi davvero annullare la prenotazione del posto <?php echo $pren['posto']; ?>? Questa azione è irreversibile."><i class="fa-solid fa-ban"></i> Annulla</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </section>
+    </main>
+
+    <?php include 'footer.php'; ?>
 
     <div class="modal-overlay" id="boatModal">
         <div class="modal-box">
-            <h2 id="modal-title" style="font-family: 'Playfair Display'; margin-bottom: 1.5rem; color: #0a192f;">Aggiungi Barca</h2>
-            <form method="POST" action="dashboard.php">
+            <div class="modal-header">
+                <h2 id="modal-title">Aggiungi Barca</h2>
+                <button type="button" class="btn-close-icon" id="btn-chiudi-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form method="POST" action="dashboard.php" class="modal-form">
                 <input type="hidden" name="azione" value="salva_barca">
                 <input type="hidden" id="boat-id" name="id_barca" value="nuovo">
                 
-                <div class="form-group-modal">
+                <div class="form-group-modal full-width">
                     <label>Nome dell'imbarcazione</label>
-                    <input type="text" id="boat-name" name="nome" required placeholder="Es. Mare Mosso">
+                    <div class="input-glass">
+                        <i class="fa-solid fa-signature"></i>
+                        <input type="text" id="boat-name" name="nome" required placeholder="Es. Mare Mosso">
+                    </div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-grid">
                     <div class="form-group-modal">
                         <label>Tipologia</label>
-                        <select id="boat-type" name="tipo" required>
-                            <option value="">Seleziona...</option>
-                            <option value="Barca a Vela">Barca a Vela ⛵</option>
-                            <option value="Catamarano">Catamarano ⛵</option>
-                            <option value="Barca a Motore">Barca a Motore 🛥️</option>
-                            <option value="Gommone">Gommone 🚤</option>
-                            <option value="Yacht">Yacht 🛳️</option>
-                        </select>
+                        <div class="input-glass select-glass">
+                            <i class="fa-solid fa-ship"></i>
+                            <select id="boat-type" name="tipo" required>
+                                <option value="">Seleziona...</option>
+                                <option value="Barca a Vela">Barca a Vela</option>
+                                <option value="Catamarano">Catamarano</option>
+                                <option value="Barca a Motore">Barca a Motore</option>
+                                <option value="Gommone">Gommone</option>
+                                <option value="Yacht">Yacht</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group-modal">
                         <label>Lunghezza (m)</label>
-                        <input type="number" id="boat-length" name="lunghezza" step="0.01" required min="1">
+                        <div class="input-glass">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                            <input type="number" id="boat-length" name="lunghezza" step="0.01" required min="1" placeholder="Es. 12.5">
+                        </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-grid">
                     <div class="form-group-modal">
                         <label>Larghezza (m)</label>
-                        <input type="number" id="boat-width" name="larghezza" step="0.01" required min="0.5">
+                        <div class="input-glass">
+                            <i class="fa-solid fa-expand"></i>
+                            <input type="number" id="boat-width" name="larghezza" step="0.01" required min="0.5">
+                        </div>
                     </div>
                     <div class="form-group-modal">
                         <label>Pescaggio (m)</label>
-                        <input type="number" id="boat-draft" name="pescaggio" step="0.01" required min="0">
+                        <div class="input-glass">
+                            <i class="fa-solid fa-arrow-down-up-across-line"></i>
+                            <input type="number" id="boat-draft" name="pescaggio" step="0.01" required min="0">
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group-modal">
+                <div class="form-group-modal full-width">
                     <label>Altezza (m) - Facoltativa</label>
-                    <input type="number" id="boat-height" name="altezza" step="0.01" min="0">
+                    <div class="input-glass">
+                        <i class="fa-solid fa-up-long"></i>
+                        <input type="number" id="boat-height" name="altezza" step="0.01" min="0">
+                    </div>
                 </div>
 
-                <div class="form-group-modal" style="margin-top: 10px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
-                    <label style="margin-bottom: 10px;">Hai un numero di immatricolazione?</label>
-                    <div style="display: flex; gap: 20px; margin-bottom: 10px;">
-                        <label><input type="radio" name="ha_immatricolazione" value="no" checked onchange="toggleImmatricolazione(this.value)"> No</label>
-                        <label><input type="radio" name="ha_immatricolazione" value="si" onchange="toggleImmatricolazione(this.value)"> Sì</label>
+                <div class="form-group-modal full-width box-immatricolazione-container">
+                    <label class="toggle-label">Hai un numero di immatricolazione?</label>
+                    <div class="radio-group">
+                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" value="no" checked onchange="toggleImmatricolazione(this.value)"> <span>No</span></label>
+                        <label class="radio-glass"><input type="radio" name="ha_immatricolazione" value="si" onchange="toggleImmatricolazione(this.value)"> <span>Sì</span></label>
                     </div>
                     <div id="box-immatricolazione" style="display: none; margin-top: 15px;">
                         <label>Numero Immatricolazione</label>
-                        <input type="text" id="boat-immatricolazione" name="numero_immatricolazione" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();">
+                        <div class="input-glass">
+                            <i class="fa-solid fa-hashtag"></i>
+                            <input type="text" id="boat-immatricolazione" name="numero_immatricolazione" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();">
+                        </div>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 2rem;">
-                    <button type="submit" class="btn-gold" style="width: 100%; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; background-color: #d4af37; color: #0a192f;">Salva Imbarcazione</button>
-                    <button type="button" class="btn-outline-dark" id="btn-chiudi-modal" style="width: 100%; padding: 1rem; border-radius: 8px; cursor: pointer;">Annulla</button>
-                </div>
+                <button type="submit" class="btn-gold-modal"><i class="fa-solid fa-floppy-disk"></i> Salva Imbarcazione</button>
             </form>
         </div>
     </div>
 
     <div class="modal-overlay" id="editBookingModal">
         <div class="modal-box">
-            <h2 style="font-family: 'Playfair Display'; margin-bottom: 1.5rem; color: #0a192f;">Modifica Sosta Ormeggio</h2>
+            <div class="modal-header">
+                <h2>Gestisci Sosta</h2>
+                <button type="button" class="btn-close-icon" id="btn-chiudi-edit-booking"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             
-            <div id="notifica-edit-modal" style="display: none; margin-bottom: 15px; padding: 12px; border-radius: 8px; font-weight: 600; text-align: center;"></div>
+            <div id="notifica-edit-modal" class="sys-msg" style="display: none;"></div>
             
-            <form id="form-edit-booking">
+            <form id="form-edit-booking" class="modal-form">
                 <input type="hidden" id="edit-booking-id">
                 
-                <p style="margin-bottom: 1.5rem; background: #fdfbf7; padding: 10px; border-left: 4px solid #d4af37; border-radius: 4px;">
-                    Sosta per il molo: <strong id="lbl-edit-posto">--</strong> con imbarcazione: <strong id="lbl-edit-barca">--</strong>
-                </p>
+                <div class="booking-summary-glass">
+                    <i class="fa-solid fa-map-pin gold-text"></i> Molo: <strong id="lbl-edit-posto" class="cyan-text">--</strong><br>
+                    <i class="fa-solid fa-ship gold-text" style="margin-top: 5px;"></i> Barca: <strong id="lbl-edit-barca">--</strong>
+                </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-grid">
                     <div class="form-group-modal">
                         <label>Data Arrivo</label>
-                        <input type="date" id="edit-booking-dal" required>
+                        <div class="input-glass">
+                            <i class="fa-regular fa-calendar-check"></i>
+                            <input type="date" id="edit-booking-dal" required>
+                        </div>
                     </div>
                     <div class="form-group-modal">
                         <label>Data Partenza</label>
-                        <input type="date" id="edit-booking-al" required>
+                        <div class="input-glass">
+                            <i class="fa-regular fa-calendar-xmark"></i>
+                            <input type="date" id="edit-booking-al" required>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group-modal">
+                <div class="form-group-modal full-width">
                     <label>Persone a bordo previste</label>
-                    <input type="number" id="edit-booking-persone" required min="1" placeholder="Es. 4">
+                    <div class="input-glass">
+                        <i class="fa-solid fa-users"></i>
+                        <input type="number" id="edit-booking-persone" required min="1" placeholder="Es. 4">
+                    </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 2rem;">
-                    <button type="submit" id="btn-salva-edit" class="btn-gold" style="width: 100%; border: none; padding: 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; background-color: #d4af37; color: #0a192f;">Salva Modifiche</button>
-                    <button type="button" id="btn-chiudi-edit-booking" class="btn-outline-dark" style="width: 100%; padding: 1rem; border-radius: 8px; cursor: pointer;">Annulla</button>
-                </div>
+                <button type="submit" id="btn-salva-edit" class="btn-gold-modal"><i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione</button>
             </form>
         </div>
     </div>
 
     <div class="modal-overlay" id="modal-conferma">
-        <div class="modal-box" style="max-width: 400px; text-align: center; padding: 2rem;">
-            <h3 style="margin-bottom: 15px; color: #e74c3c; font-family: 'Playfair Display', serif; font-size: 1.8rem;">Attenzione</h3>
-            <p id="testo-conferma" style="margin-bottom: 25px; color: #333; line-height: 1.5;"></p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button type="button" id="btn-conferma-si" style="background: #e74c3c; color: white; border-radius: 8px; border: none; padding: 0.8rem 1.5rem; cursor: pointer; font-weight: bold; flex: 1;">Sì, Conferma</button>
-                <button type="button" id="btn-conferma-no" style="border-radius: 8px; border: 1px solid #ccc; padding: 0.8rem 1.5rem; background: transparent; cursor: pointer; font-weight: bold; flex: 1;">No, Indietro</button>
+        <div class="modal-box warning-box">
+            <div class="warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Attenzione</h3>
+            <p id="testo-conferma"></p>
+            <div class="modal-actions">
+                <button type="button" id="btn-conferma-no" class="btn-outline-light-modal">Annulla</button>
+                <button type="button" id="btn-conferma-si" class="btn-danger-modal">Conferma</button>
             </div>
         </div>
     </div>
@@ -392,14 +428,13 @@ $mie_prenotazioni = $stmt->fetchAll();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        
-        // --- 1. MOSTRA TOAST PREMIUM (DA JS) DOPO IL RELOAD AJAX ---
+        // --- 1. TOAST PREVENTIVATO AJAX ---
         const savedSuccessToast = sessionStorage.getItem('ajax_toast_success');
         if (savedSuccessToast) {
             sessionStorage.removeItem('ajax_toast_success');
             const toast = document.createElement('div');
             toast.className = 'toast-premium successo';
-            toast.innerHTML = `<span style="font-size: 1.5rem;"></span><span>${savedSuccessToast}</span>`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${savedSuccessToast}</span>`;
             document.body.appendChild(toast);
             setTimeout(() => {
                 toast.classList.add('nascondi');
@@ -407,7 +442,7 @@ $mie_prenotazioni = $stmt->fetchAll();
             }, 4000);
         }
 
-        // --- 2. MODALE ELIMINAZIONE ---
+        // --- 2. MODALE ELIMINAZIONE CONFERMA ---
         const modalConferma = document.getElementById('modal-conferma');
         const btnConfermaNo = document.getElementById('btn-conferma-no');
         const btnConfermaSi = document.getElementById('btn-conferma-si');
@@ -434,13 +469,13 @@ $mie_prenotazioni = $stmt->fetchAll();
         if(btnConfermaSi) {
             btnConfermaSi.addEventListener('click', () => {
                 if(formDaInviare) {
-                    btnConfermaSi.innerText = "Attendere...";
+                    btnConfermaSi.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
                     formDaInviare.submit(); 
                 }
             });
         }
 
-        // --- 3. MODALE MODIFICA PRENOTAZIONE (AJAX) ---
+        // --- 3. AJAX MODIFICA PRENOTAZIONE ---
         const modalEditBooking = document.getElementById('editBookingModal');
         const btnChiudiEditBooking = document.getElementById('btn-chiudi-edit-booking');
         const formEditBooking = document.getElementById('form-edit-booking');
@@ -467,13 +502,11 @@ $mie_prenotazioni = $stmt->fetchAll();
             });
         }
 
-        // --- INVIO AJAX MODIFICA PRENOTAZIONE ---
         if(formEditBooking) {
             formEditBooking.addEventListener('submit', async (e) => {
                 e.preventDefault(); 
-                
                 notificaEdit.style.display = 'none';
-                btnSalvaEdit.innerText = 'Attendere...';
+                btnSalvaEdit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
                 btnSalvaEdit.disabled = true;
 
                 const payload = {
@@ -484,35 +517,26 @@ $mie_prenotazioni = $stmt->fetchAll();
                 };
 
                 try {
-                    // PUNTO AL FILE CORRETTO: modifica-prenotazione.php
                     const response = await fetch('../server/modifica-prenotazione.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-                    
                     const data = await response.json();
-
                     if(data.success) {
                         sessionStorage.setItem('ajax_toast_success', data.message);
                         window.location.reload(); 
                     } else {
                         notificaEdit.style.display = 'block';
-                        notificaEdit.style.backgroundColor = 'rgba(231, 76, 60, 0.1)';
-                        notificaEdit.style.color = '#c0392b';
-                        notificaEdit.style.border = '1px solid #e74c3c';
-                        notificaEdit.innerText = data.message;
+                        notificaEdit.className = 'sys-msg sys-error';
+                        notificaEdit.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message}`;
                     }
-
                 } catch (error) {
-                    // Errore generico pulito, nessun dettaglio tecnico mostrato all'utente
                     notificaEdit.style.display = 'block';
-                    notificaEdit.style.backgroundColor = 'rgba(231, 76, 60, 0.1)';
-                    notificaEdit.style.color = '#c0392b';
-                    notificaEdit.style.border = '1px solid #e74c3c';
-                    notificaEdit.innerText = 'Errore di connessione al server.';
+                    notificaEdit.className = 'sys-msg sys-error';
+                    notificaEdit.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di connessione al server.';
                 } finally {
-                    btnSalvaEdit.innerText = 'Salva Modifiche';
+                    btnSalvaEdit.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione';
                     btnSalvaEdit.disabled = false;
                 }
             });

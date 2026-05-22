@@ -1,182 +1,421 @@
-/* =========================================
-   1. VARIABILI E RESET
-   ========================================= */
-:root { 
-    --navy-blue: #0a192f; 
-    --navy-light: #172a45; 
-    --gold: #d4af37; 
-    --gold-hover: #b5952f; 
-    --white: #ffffff; 
-    --verde-ok: #2ecc71; 
-    --rosso-stop: #ff4d4d; 
-    --bg-light: #f8f9fa; 
+/* ==========================================================================
+   NAUTICHUB PREMIUM - CSS MISTO (LAYOUT MODERNO + MAPPA CLASSICA)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@200;400;500;600;700&display=swap');
+
+:root {
+    /* Palette Layout */
+    --ocean-deep: #030B17;
+    --ocean-navy: #061224;
+    --cyan-glow: #00F2FE;
+    --cyan-dim: rgba(0, 242, 254, 0.25);
+    --cyan-gradient: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+    --platinum: #E2E8F0;
+    
+    /* Colori Mappa Classica */
+    --verde-ok: #2ecc71;
+    --rosso-stop: #ef4444;
+    --fuel-glow: #2ecc71; 
+    
+    /* Superfici */
+    --glass-surface: rgba(6, 18, 36, 0.75);
+    --glass-bright: rgba(255, 255, 255, 0.04);
+    --border-crystal: rgba(255, 255, 255, 0.07);
+    
+    /* Stati Funzionali */
+    --berth-free: #00E676;
+    --berth-busy: #FF4C4C;
+    --text-pure: #F8FAFC;
+    --text-soft: #94A3B8;
+    
+    /* Tipografia e Curve */
+    --font-sans: 'Inter', sans-serif;
+    --font-heading: 'Playfair Display', serif;
+    --font-nautic: 'Montserrat', sans-serif;
+    --transition-smooth: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-light); color: var(--navy-blue); line-height: 1.6; }
-h1, h2, h3, h4, .logo { font-family: 'Playfair Display', serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
 
-/* =========================================
-   2. NAVBAR E BOTTONI
-   ========================================= */
-.navbar-premium { background-color: var(--navy-blue); padding: 1.2rem 2rem; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-.nav-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
-.logo { color: var(--white); font-size: 1.8rem; } .gold-text { color: var(--gold); font-style: italic; }
+body.booking-premium-theme {
+    background-color: var(--ocean-deep);
+    color: var(--text-pure);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
 
-.btn-gold { background-color: var(--gold); color: var(--navy-blue); padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; transition: 0.3s; }
-.btn-gold:hover { background-color: var(--gold-hover); transform: translateY(-2px); }
-.btn-outline-light { border: 2px solid var(--white); color: var(--white); background: transparent; padding: 0.5rem 1.5rem; border-radius: 30px; cursor: pointer; text-decoration: none; transition: 0.3s; }
-.btn-outline-light:hover { background-color: var(--white); color: var(--navy-blue); }
+/* ==========================================================================
+   1. HEADER
+   ========================================================================== */
+.dash-header {
+    background: rgba(3, 11, 23, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-crystal);
+    padding: 0.75rem 0;
+    position: sticky; top: 0; z-index: 1000;
+    height: 80px; display: flex; align-items: center;
+}
+.dash-header .nav-content {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; max-width: 100%; margin: 0; padding: 0 3rem;
+}
+.text-logo {
+    font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-pure);
+    text-decoration: none; font-weight: 600; letter-spacing: -0.5px;
+}
+.gradient-logo-accent {
+    background: var(--cyan-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-family: var(--font-sans); font-weight: 800;
+}
+.user-info { display: flex; align-items: center; gap: 20px; }
+.welcome-text { font-size: 0.95rem; color: var(--text-soft); }
+.welcome-text strong { color: var(--text-pure); font-weight: 600; }
+.welcome-text i { margin-right: 6px; color: var(--cyan-glow); }
 
-/* =========================================
-   3. LAYOUT DASHBOARD A 2 COLONNE E SELEZIONE
-   ========================================= */
-.dashboard-main { margin-top: 130px; padding: 0 2rem 2rem 2rem; max-width: 1400px; margin-left: auto; margin-right: auto; display: flex; gap: 2rem; align-items: flex-start; }
-.pannello-filtri { width: 320px; flex-shrink: 0; background: var(--white); padding: 2rem; border-radius: 12px; border-top: 5px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-.mappa-section { flex-grow: 1; background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-.mappa-header { border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 2rem; }
+.btn-outline-premium {
+    background: var(--glass-bright); border: 1px solid var(--border-crystal); color: var(--text-pure);
+    padding: 0.6rem 1.4rem; border-radius: 40px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition-smooth);
+}
+.btn-outline-premium:hover {
+    border-color: var(--cyan-glow); background: rgba(0, 242, 254, 0.05); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+}
 
-/* Selezione Barca (Grafica) */
-.boat-card-radio input { display: none; }
-.boat-card-content { display: flex; align-items: center; padding: 12px 15px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.3s; background: white; }
-.boat-card-content:hover { border-color: var(--gold); background: #fdfbf7; }
-.boat-card-radio input:checked + .boat-card-content { border-color: var(--navy-blue); background: var(--navy-blue); color: white; }
-.boat-card-radio input:checked + .boat-card-content .boat-info span { color: #cbd5e1; }
+/* ==========================================================================
+   2. LAYOUT PRINCIPALE E SIDEBAR FISSA
+   ========================================================================== */
+.booking-main-layout {
+    display: grid; grid-template-columns: 380px 1fr;
+    height: calc(100vh - 80px); width: 100%;
+}
 
-/* Filtri Servizi (Pillole) */
-.toggle-pill input { display: none; }
-.toggle-pill span { display: inline-block; padding: 6px 12px; border: 2px solid #eee; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s; background: white; }
-.toggle-pill input:checked + span { background: var(--navy-blue); color: white; border-color: var(--navy-blue); }
+.booking-sidebar {
+    background: linear-gradient(180deg, rgba(6, 18, 36, 0.95) 0%, rgba(3, 11, 23, 0.98) 100%);
+    border-right: 1px solid var(--border-crystal);
+    display: flex; flex-direction: column;
+    height: 100%; overflow-x: hidden;
+}
+.sidebar-header { padding: 1.5rem 1.5rem 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.sidebar-header h2 { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+.cyan-text { color: var(--cyan-glow); }
 
-/* =========================================
-   4. MAPPA E LE 14 LETTERE
-   ========================================= */
-.contenitore-mappa-immagine { position: relative; width: 100%; border: 3px solid var(--navy-light); border-radius: 8px; overflow: hidden; display: block; }
-.immagine-sfondo-porto { width: 100%; display: block; height: auto; }
+.sidebar-content-scroll {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 1rem 1.5rem 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.8rem;
+}
+.sidebar-content-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-content-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-.lettera-pontile { 
-    position: absolute; color: #ef4444; font-size: clamp(0.7rem, 1.2vw, 1.2rem); font-weight: 900; 
-    font-family: 'Montserrat', sans-serif; background: transparent; border: none; 
+/* ==========================================================================
+   3. ELEMENTI SIDEBAR (Date e Barche)
+   ========================================================================== */
+.filter-section { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
+.filter-title { font-family: var(--font-nautic); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-soft); }
+
+.input-glass-premium { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.input-glass-premium label { font-size: 0.75rem; font-weight: 500; color: var(--text-soft); }
+.input-with-icon { position: relative; width: 100%; }
+.input-with-icon i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; }
+.input-with-icon input {
+    width: 100%; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-crystal);
+    padding: 0.8rem 1rem 0.8rem 2.5rem; border-radius: 8px; color: var(--text-pure);
+    font-size: 0.95rem; outline: none; transition: var(--transition-smooth);
+}
+
+.input-with-icon input:focus { border-color: var(--cyan-glow); box-shadow: 0 0 10px rgba(0, 242, 254, 0.1); }
+/* Stile base del calendario e reset nativo iOS/Android */
+.input-with-icon input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: var(--font-sans);
+}
+
+/* Allinea correttamente il testo interno su Safari/iOS */
+.input-with-icon input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator { 
+    filter: invert(1); opacity: 0.6; cursor: pointer; transition: var(--transition-smooth); 
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover { 
+    opacity: 1; 
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+.date-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+
+.boat-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; }
+.boat-list::-webkit-scrollbar { width: 4px; }
+.boat-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+.boat-radio-item { cursor: pointer; display: block; }
+.boat-radio-item input[type="radio"] { display: none; }
+.boat-card-mini {
+    background: var(--glass-bright); border: 1px solid var(--border-crystal); padding: 0.8rem;
+    border-radius: 10px; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth);
+}
+.boat-name { font-size: 0.95rem; color: var(--text-pure); display: block; margin-bottom: 2px; }
+.boat-specs { font-size: 0.75rem; color: var(--text-soft); }
+.check-indicator { color: var(--text-soft); opacity: 0.2; transition: var(--transition-smooth); font-size: 1.2rem; }
+
+.boat-radio-item input[type="radio"]:checked + .boat-card-mini { border-color: var(--cyan-glow); background: rgba(0, 242, 254, 0.04); }
+.boat-radio-item input[type="radio"]:checked + .boat-card-mini .check-indicator { color: var(--cyan-glow); opacity: 1; }
+
+.services-flex { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
+.service-chip { cursor: pointer; }
+.service-chip input { display: none; }
+.service-chip span {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--glass-bright); border: 1px solid var(--border-crystal);
+    padding: 0.5rem 1rem; border-radius: 40px; font-size: 0.8rem; font-weight: 500; color: var(--text-soft); transition: var(--transition-smooth);
+}
+.service-chip input:checked + span { background: rgba(0, 242, 254, 0.08); border-color: var(--cyan-glow); color: var(--cyan-glow); text-shadow: 0 0 5px rgba(0, 242, 254, 0.3); }
+
+.btn-premium-solid {
+    background: var(--cyan-gradient); color: var(--ocean-deep); border: none; padding: 0.9rem; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+}
+.btn-close-icon, .sidebar-drag-indicator, .mobile-apply-wrapper, .fab-mobile-filters { display: none; }
+
+/* ==========================================================================
+   4. AREA MAPPA E BANNER
+   ========================================================================== */
+.booking-map-area { padding: 1.5rem 3rem; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; overflow-y: auto; }
+.scenic-banner {
+    flex-shrink: 0; height: 120px; border-radius: var(--radius-premium); position: relative; overflow: hidden;
+    background-size: cover; background-position: center 35%; display: flex; align-items: center; padding: 0 2rem; border: 1px solid var(--border-crystal);
+}
+.banner-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(3, 11, 23, 0.9) 0%, rgba(6, 18, 36, 0.5) 100%); z-index: 1; }
+.banner-text { position: relative; z-index: 2; }
+.banner-text h2 { font-family: var(--font-heading); font-size: 2rem; font-weight: 500; margin-bottom: 2px; }
+.banner-text p { color: var(--text-soft); font-size: 0.9rem; font-weight: 300; }
+
+.map-container-glass {
+    background: var(--glass-surface); border: 1px solid var(--border-crystal); border-radius: var(--radius-premium);
+    padding: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; 
+}
+
+/* ==========================================================================
+   5. LA TUA MAPPA CLASSICA: LETTERE PURE E PERCENTUALI ESATTE
+   ========================================================================== */
+.interactive-map-wrapper { width: 100%; display: flex; justify-content: center; }
+
+/* Ripristino del bordo intorno alla foto della mappa */
+.responsive-map-container { 
+    position: relative; width: 100%; max-width: 900px; display: inline-block; 
+    border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;
+}
+.porto-base-image { width: 100%; height: auto; display: block; filter: brightness(0.85); }
+
+/* Stile della lettera originale: No pallini, sfondi o cerchi */
+.letter-pin { 
+    position: absolute; 
+    color: var(--rosso-stop); /* Il tuo rosso originale: #ef4444 */
+    font-size: clamp(0.7rem, 1.2vw, 1.2rem); 
+    font-weight: 900; 
+    font-family: 'Montserrat', sans-serif; 
+    background: transparent; 
+    border: none; 
+    /* Il tuo esatto text-shadow originale per dare l'effetto 3D/Contorno */
     text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 3px rgba(0,0,0,0.9);
-    cursor: not-allowed; transition: 0.3s; transform: translate(-50%, -50%); z-index: 10; 
+    cursor: not-allowed; 
+    transition: 0.3s; 
+    transform: translate(-50%, -50%); 
+    z-index: 10; 
 }
-.lettera-pontile.compatibile { 
-    color: var(--verde-ok); cursor: pointer; 
+
+/* Lettera Compatibile (Verde Ok) */
+.letter-pin.compatibile { 
+    color: var(--verde-ok); /* Il tuo verde originale: #2ecc71 */
+    cursor: pointer; 
     text-shadow: 0 0 8px rgba(46, 204, 113, 1), 1px 1px 0 #000, -1px -1px 0 #000; 
-    transform: translate(-50%, -50%); z-index: 10;
+    transform: translate(-50%, -50%); 
+    z-index: 10;
 }
-.lettera-pontile.compatibile:hover { color: var(--white); transform: translate(-50%, -50%) scale(1.5); }
-.lettera-pontile.incompatibile { color: #7f8c8d; pointer-events: none; }
-
-/* Coordinate */
-#lettera-A { top: 74%; left: 10%; } #lettera-B { top: 55.5%; left: 22%; } #lettera-C { top: 79%; left: 28%; } 
-#lettera-D { top: 35%; left: 38.5%; } #lettera-E { top: 59.5%; left: 45.5%; } #lettera-F { top: 76.5%; left: 55%; } 
-#lettera-G { top: 19.5%; left: 69%; } #lettera-H { top: 50%; left: 65%; } #lettera-I { top: 43%; left: 75%; }   
-#lettera-J { top: 52.5%; left: 75%; } #lettera-K { top: 45.5%; left: 92%; } #lettera-L { top: 47.5%; left: 88.5%; } 
-#lettera-M { top: 54.5%; left: 90%; } #lettera-N { top: 59%; left: 87%; } 
-
-/* =========================================
-   5. DARSENA E BANCHINA (Design Premium 3D)
-   ========================================= */
-.pagina-molo { 
-    background: radial-gradient(circle at 50% 20%, #1a4263 0%, #0a192f 80%);
-    padding: 3rem 2rem; border-radius: 20px; border: 6px solid #142a3b; 
-    box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.3); position: relative;
+.letter-pin.compatibile:hover { 
+    color: #ffffff; 
+    transform: translate(-50%, -50%) scale(1.5); 
 }
 
-/* Intestazione del molo: Stile luxury e minimalista */
-.molo-header-page { text-align: center; margin-bottom: 3.5rem; }
-.molo-header-page h3 { 
-    color: var(--gold); font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 600;
-    letter-spacing: 6px; text-transform: uppercase; margin: 0; display: inline-block; padding-bottom: 10px;
-    border-bottom: 2px solid rgba(212, 175, 55, 0.4); text-shadow: 0 5px 15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.3);
+/* Lettera Incompatibile (Grigia) */
+.letter-pin.incompatibile { 
+    color: #7f8c8d; 
+    pointer-events: none; 
 }
 
-/* La banchina in legno: ALLUNGATA DAI DUE LATI */
-.pontile-legno-lungo { 
-    width: calc(100% + 40px) !important; 
-    height: 40px; 
-    background: repeating-linear-gradient(90deg, #5c4033, #5c4033 12px, #4a332a 12px, #4a332a 14px); 
-    border-bottom: 5px solid #2e1f19; border-radius: 4px; position: relative; z-index: 3; 
-    box-shadow: 0 8px 15px rgba(41, 128, 185, 0.25);
+/* Lettera Rifornimento (Ambra quando compatibile) */
+#lettera-F.compatibile {
+    color: var(--fuel-glow);
+    text-shadow: 0 0 8px rgba(245, 158, 11, 1), 1px 1px 0 #000, -1px -1px 0 #000;
 }
 
-/* Lampioncino come DIVISORE tra le barche e alzato sul legno */
-.lampioncino {
+/* Le tue esatte 14 Coordinate percentuali copiate alla lettera */
+#lettera-A { top: 74%; left: 10%; } 
+#lettera-B { top: 55.5%; left: 22%; } 
+#lettera-C { top: 79%; left: 28%; } 
+#lettera-D { top: 35%; left: 38.5%; } 
+#lettera-E { top: 59.5%; left: 45.5%; } 
+#lettera-F { top: 76.5%; left: 55%; } 
+#lettera-G { top: 19.5%; left: 69%; } 
+#lettera-H { top: 50%; left: 65%; } 
+#lettera-I { top: 43%; left: 75%; }   
+#lettera-J { top: 52.5%; left: 75%; } 
+#lettera-K { top: 45.5%; left: 92%; } 
+#lettera-L { top: 47.5%; left: 88.5%; } 
+#lettera-M { top: 54.5%; left: 90%; } 
+#lettera-N { top: 59%; left: 87%; }
+
+/* ==========================================================================
+   6. DARSENA (Dettaglio Molo e Acqua) - PREMIUM 3D DINAMICO CON LUCINE
+   ========================================================================== */
+.pier-board { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+.pier-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-crystal); padding-bottom: 0.8rem; }
+.pier-header h2 { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 500; }
+.pier-scroll-track { width: 100%; overflow-x: auto; padding-bottom: 10px; }
+
+.molo-scene { width: 100%; width: max-content; }
+.molo-title-wrapper {
+    margin-bottom: 1rem;
+    position: sticky;   /* Rende il titolo intelligente */
+    left: 0;            /* Lo blocca sul bordo sinistro dello schermo */
+    width: max-content; /* Evita che si estenda prendendo la larghezza minima di 600px */
+    z-index: 10;        /* Lo tiene sempre sopra lo sfondo dell'acqua */
+}
+.molo-title-wrapper h3 { font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 4px; color: var(--text-pure); }
+.molo-badge { display: inline-block; background: rgba(255,255,255,0.04); border: 1px solid var(--border-crystal); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; color: var(--text-soft); }
+
+/* Sfondo della darsena (Stile Luxury Profondo) */
+.water-basin { 
+    background: radial-gradient(circle at 50% 20%, #1a4263 0%, #0a192f 80%); 
+    border-radius: 20px; padding: 4rem 2rem 2.5rem 2.5rem; position: relative; 
+    border: 6px solid #142a3b; box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.3); 
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem; 
+}
+
+/* 1. FIX: Nascondiamo la vecchia staccionata div fissa non ridimensionabile */
+.wood-dock { display: none; }
+
+/* 2. REATTIVITÀ: Il contenitore si stringe o si allarga esattamente in base ai posti esistenti */
+.mooring-slots { 
+    display: flex; 
+    justify-content: center; 
+    gap: 20px; 
+    width: max-content; /* Sforza la larghezza a calcolarsi sul totale dei posti barca reali */
+    position: relative; 
+    margin-top: 10px;
+}
+
+/* NUOVA BANCHINA IN LEGNO REATTIVA (Spessore ridotto a 16px e auto-adattiva) */
+.mooring-slots::before {
+    content: '';
     position: absolute;
-    top: -30px; left: -6px; transform: translateX(-50%);
-    width: 10px; height: 10px; background: #fff9c4; border-radius: 50%; 
-    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.8); z-index: 10; pointer-events: none; 
+    top: -24px; /* Posizionata sopra la linea degli ormeggi */
+    left: -25px; /* Crea un leggero margine sporgente a sinistra dell'ultima barca */
+    right: -25px; /* Crea un leggero margine sporgente a destra dell'ultima barca */
+    height: 30px; /* Grandezza ridotta come richiesto (era 40px) */
+    background: repeating-linear-gradient(90deg, #5c4033, #5c4033 12px, #4a332a 12px, #4a332a 14px); 
+    border-bottom: 3px solid #2e1f19; 
+    border-radius: 4px; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6); 
+    z-index: 3; 
+}
+
+.slot-wrapper { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 0; 
+    position: relative; 
+}
+
+/* 3. LE LUCINE SULLA BANCHINA TRA UN POSTO E L'ALTRO */
+.slot-wrapper::after {
+    content: ''; 
+    position: absolute; 
+    top: -8px; /* Centrata perfettamente sull'asse della nuova staccionata ridotta */
+    left: -12px; /* Posizionata al centro esatto del gap vuoto tra le imbarcazioni */
+    width: 6px; 
+    height: 6px; 
+    background: #fff9c4; 
+    border-radius: 50%; 
+    box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.8), 0 0 15px 4px rgba(0, 242, 254, 0.5); 
+    z-index: 10; 
+    pointer-events: none; 
     animation: respiroLuce 3s infinite ease-in-out;
 }
 
-/* Chiudiamo la fila luminosa a destra dell'ultima barca */
-.posto-wrapper:last-child::after {
-    content: ''; position: absolute; top: -30px; right: -6px; transform: translateX(50%);
-    width: 10px; height: 10px; background: #fff9c4; border-radius: 50%; 
-    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.8); z-index: 10; pointer-events: none;
+/* Chiudiamo il ciclo inserendo l'ultimo lampioncino sul lato destro del molo */
+.slot-wrapper:last-child::before {
+    content: ''; 
+    position: absolute; 
+    top: -8px; 
+    right: -12px; /* Speculare sul lato esterno destro dell'ultimo posto */
+    width: 6px; 
+    height: 6px; 
+    background: #fff9c4; 
+    border-radius: 50%; 
+    box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.8), 0 0 15px 4px rgba(0, 242, 254, 0.5); 
+    z-index: 10; 
+    pointer-events: none; 
     animation: respiroLuce 3s infinite ease-in-out;
+    animation-delay: 0.4s; /* Sfalsamento temporale per rendere il movimento ondulatorio e naturale */
 }
 
+/* Animazione di pulsazione marina delle lucine */
 @keyframes respiroLuce {
-    0%, 100% { opacity: 0.6; box-shadow: 0 0 6px 1px rgba(255, 215, 0, 0.5); }
-    50% { opacity: 1; box-shadow: 0 0 15px 4px rgba(255, 215, 0, 1); }
+    0%, 100% { opacity: 0.6; transform: scale(0.9); box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.5), 0 0 10px 3px rgba(0, 242, 254, 0.3); }
+    50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px 4px rgba(255, 215, 0, 1), 0 0 20px 6px rgba(0, 242, 254, 0.6); }
 }
 
-/* =========================================
-   6. ORMEGGI, BARCHE ED EFFETTI
-   ========================================= */
+/* Elementi Grafici Posti Barche (Ripristino Stile 3D Premium) */
 .posto-ui { 
     width: 85px; height: 180px; background-color: rgba(24, 78, 119, 0.2); 
-    border-left: 3px solid rgba(255, 255, 255, 0.3); border-right: 3px solid rgba(255, 255, 255, 0.3); border-bottom: 3px dashed rgba(255, 255, 255, 0.15); 
+    border-left: 3px solid rgba(255, 255, 255, 0.3); border-right: 3px solid rgba(255, 255, 255, 0.3); border-bottom: 3px dashed rgba(255, 255, 255, 0.15); border-top: none;
     border-radius: 0 0 15px 15px; display: flex; flex-direction: column; align-items: center; 
-    cursor: pointer; position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-top: 15px; 
+    position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 15px;
 }
 
-.posto-ui.posto-media, .posto-ui.posto-yacht { width: 95px; height: 190px; }
+.posto-ui.posto-piccola { width: 75px; height: 160px; }
+.posto-ui.posto-media { width: 85px; height: 180px; }
+.posto-ui.posto-yacht { width: 95px; height: 190px; }
 
 /* Targhetta Numero */
-.posto-numero { 
+.badge-posto { 
     position: absolute; top: 10px; z-index: 4;
     background: linear-gradient(135deg, #2ecc71 0%, #1e8449 100%); color: #ffffff; border: 1px solid #145a32; padding: 3px 12px; 
     border-radius: 4px; font-size: 0.9rem; font-weight: 900; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.4); box-shadow: 1px 3px 5px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.4);
     transition: 0.3s;
 }
-.posto-numero::before, .posto-numero::after {
+.badge-posto::before, .badge-posto::after {
     content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; background: #fdfdfd; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.6);
 }
-.posto-numero::before { left: 4px; } .posto-numero::after { right: 4px; }
+.badge-posto::before { left: 4px; } .badge-posto::after { right: 4px; }
 
 /* -- STATO: LIBERO -- */
 .posto-ui.libero { background-color: rgba(46, 204, 113, 0.05); }
-.posto-ui.libero:hover { 
+.posto-ui.posto-cliccabile { cursor: pointer; }
+.posto-ui.posto-cliccabile:hover { 
     background-color: rgba(46, 204, 113, 0.2); border-left-color: var(--verde-ok); border-right-color: var(--verde-ok);
     transform: translateY(-8px); box-shadow: 0 15px 30px rgba(46, 204, 113, 0.25), inset 0 0 25px rgba(46, 204, 113, 0.15); 
 }
-.posto-ui.libero:hover .posto-numero { background: #ffffff; color: #1e8449; border-color: #1e8449; text-shadow: none; }
-.posto-ui.libero:hover::after {
+.posto-ui.posto-cliccabile:hover .badge-posto { background: #ffffff; color: #1e8449; border-color: #1e8449; text-shadow: none; }
+.posto-ui.posto-cliccabile:hover::after {
     content: 'PRENOTA'; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
     color: #2ecc71; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; text-shadow: 0 2px 5px rgba(0,0,0,0.9); z-index: 2; animation: pulseText 1.5s infinite;
 }
 
-@keyframes pulseText {
-    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-}
-
-/* -- STATO: OCCUPATO -- */
+/* -- STATO: OCCUPATO (Effetto Galleggiamento Originale) -- */
 .posto-ui.occupato { 
     background-color: rgba(10, 25, 47, 0.4); border-color: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05); /* Ingrandimento leggero e controllato */
-    transform-origin: top center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 50; cursor: not-allowed; 
+    transform: scale(1.05); transform-origin: top center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 50; cursor: not-allowed; 
     background-size: 70%; background-repeat: no-repeat; animation: galleggia 4s ease-in-out infinite;
 }
+.posto-ui.occupato .badge-posto { background: linear-gradient(135deg, #ff4d4d 0%, #c0392b 100%); color: #fff; border-color: #7a1c1c; }
 
-/* SOLO LA TARGHETTA DIVENTA ROSSA */
-.posto-ui.occupato .posto-numero { background: linear-gradient(135deg, #ff4d4d 0%, #c0392b 100%); color: #fff; border-color: #7a1c1c; }
-
-/* Immagini Barche */
 .posto-ui.occupato.posto-piccola { background-image: url('../img/barca_piccola.png'); }
 .posto-ui.occupato.posto-media { background-image: url('../img/barca_media.png'); }
 .posto-ui.occupato.posto-yacht { background-image: url('../img/barca_yacht.png'); }
@@ -189,45 +428,113 @@ h1, h2, h3, h4, .logo { font-family: 'Playfair Display', serif; }
     50% { background-position: center 40px; }
 }
 
-/* -- STATO: NON COMPATIBILE -- */
-.posto-ui.non-compatibile { background-color: rgba(0, 0, 0, 0.3); opacity: 0.5; cursor: not-allowed; }
-.posto-ui.non-compatibile .posto-numero { background: #444; color: #888; border-color: #222; }
+/* ==========================================================================
+   7. MODALE RIEPILOGO E NOTIFICHE
+   ========================================================================== */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 11, 23, 0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; transition: var(--transition-smooth); }
+.modal-box { background: linear-gradient(135deg, rgba(10, 22, 45, 0.95) 0%, rgba(4, 12, 26, 0.98) 100%); border: 1px solid var(--border-crystal); width: 100%; max-width: 440px; border-radius: var(--radius-premium); padding: 2rem; box-shadow: 0 30px 70px rgba(0,242,254,0.15); text-align: left; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-header h2 { font-family: var(--font-heading); font-size: 1.6rem; margin: 0; }
+.btn-close-icon { background: transparent; border: none; color: var(--text-soft); font-size: 1.4rem; cursor: pointer; }
+.booking-summary-glass { background: rgba(0, 242, 254, 0.03); border: 1px solid var(--border-crystal); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem; }
+.modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
+.btn-dark { background: transparent; border: 1px solid var(--border-crystal); color: var(--text-pure); padding: 0.8rem; border-radius: 10px; font-weight: 500; cursor: pointer; text-align: center; }
 
-/* =========================================
-   7. NOTIFICHE CUSTOM (TOAST)
-   ========================================= */
-.notifica-toast {
-    padding: 12px 15px; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem; font-weight: 700; text-align: center;
-    animation: fadeInDown 0.4s ease; transition: opacity 0.3s ease;
+.sys-msg { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; display:flex; align-items:center; gap:8px;}
+.sys-error { background: rgba(255, 76, 76, 0.1); border: 1px solid var(--berth-busy); color: var(--berth-busy); }
+.sys-success { background: rgba(0, 230, 118, 0.1); border: 1px solid var(--berth-free); color: var(--berth-free); }
+.notifica-toast { position: fixed; bottom: 30px; right: 30px; background: #ffffff; color: var(--ocean-deep); padding: 16px 24px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 12px; z-index: 10000; font-size: 0.95rem; font-weight: 600; border-left: 6px solid; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; }
+.notifica-toast.successo { border-left-color: var(--berth-free); }
+.notifica-toast.errore { border-left-color: var(--berth-busy); }
+
+
+/* ==========================================================================
+   8. RESPONSIVE MOBILE E FIX TENDINA (Cassetto dal basso)
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .booking-main-layout { grid-template-columns: 340px 1fr; }
+    .dash-header .nav-content { padding: 0 1.5rem; }
 }
-.notifica-toast.errore { background-color: rgba(231, 76, 60, 0.1); color: #c0392b; border: 1px solid #e74c3c; }
-.notifica-toast.successo { background-color: rgba(46, 204, 113, 0.1); color: #1e8449; border: 1px solid #2ecc71; }
 
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+@media (max-width: 992px) {
+    .booking-main-layout { grid-template-columns: 1fr; }
+    
+    /* Il cassetto ora ha uno z-index ALTISSIMO per stare sopra la mappa */
+    .booking-sidebar {
+        position: fixed; bottom: 0; left: 0; top: auto; height: 85vh; width: 100%;
+        z-index: 9999; transform: translateY(100%); transition: var(--transition-smooth);
+        background: rgba(3, 11, 23, 0.98); padding: 1.5rem 0 0 0;
+        border-top-left-radius: 24px; border-top-right-radius: 24px; border-top: 1px solid var(--cyan-glow);
+    }
+    .booking-sidebar.drawer-open { transform: translateY(0); }
+    
+    .sidebar-header { padding: 0 1.5rem 0.5rem 1.5rem; }
+    .sidebar-drag-indicator { display: block; width: 50px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 10px; margin: 0 auto 1rem auto; }
+    .btn-close-icon { display: block; font-size: 1.5rem; }
+    
+    .sidebar-content-scroll { padding-bottom: 100px; }
+    .booking-map-area { padding: 1rem; }
+    .scenic-banner { height: 100px; padding: 0 1.5rem; }
+    .banner-text h2 { font-size: 1.5rem; }
+    
+    .mobile-apply-wrapper { 
+        display: block; position: absolute; bottom: 0; left: 0; width: 100%; 
+        padding: 1rem 1.5rem; background: var(--ocean-deep); border-top: 1px solid var(--border-crystal); z-index: 10;
+    }
+    
+    /* Tasto fluttuante per aprire i filtri su mobile */
+    .fab-mobile-filters {
+        display: flex; justify-content: center; align-items: center; position: fixed; bottom: 30px; right: 20px;
+        width: 60px; height: 60px; background: var(--cyan-gradient); color: var(--ocean-deep);
+        border: none; border-radius: 50%; font-size: 1.5rem; cursor: pointer; z-index: 900; box-shadow: 0 5px 20px rgba(0, 242, 254, 0.5);
+    }
+    .logout-text-hide { display: none; }
+
+    /* --- FIX DIMENSIONI HEADER MOBILE (Non intacca il cassetto laterale) --- */
+    .dash-header { height: 70px; }
+    .dash-header .nav-content { padding: 0 1rem; }
+    .text-logo { font-size: 1.4rem; }
+    .text-logo .port-location { font-size: 0.85rem !important; margin-left: 5px !important; }
+    .user-info { gap: 8px; }
+    
+    /* Forza il testo dell'utente su una sola riga e rimpicciolisce il bottone */
+    .welcome-text { font-size: 0.8rem; white-space: nowrap; }
+    .btn-outline-premium { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+
+    /* --- FIX INPUT DATE MOBILE (Griglia affiancata e ottimizzazione spazi) --- */
+    .date-grid { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 10px; 
+    }
+    
+    /* La combinazione dei selettori aumenta il peso specifico ed evita l'uso di !important */
+    .booking-sidebar .filter-section .input-with-icon input {
+        padding: 0.8rem 0.5rem 0.8rem 2rem;
+        font-size: 0.85rem;
+        letter-spacing: -0.3px;
+    }
+
+    /* Espande l'indicatore invisibile del calendario per rendere l'intera area cliccabile */
+    .booking-sidebar .filter-section .input-with-icon input[type="date"]::-webkit-calendar-picker-indicator {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
 }
 
-/* =========================================
-   8. MODAL PRENOTAZIONE
-   ========================================= */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-.modal.nascosto { display: none; }
-.modal-content { background: var(--white); padding: 3rem; border-radius: 16px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border-top: 6px solid var(--gold); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.modal-actions { margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center; }
-
-@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-/* =========================================
-   9. REGOLE PER SMARTPHONE (Responsive)
-   ========================================= */
-@media (max-width: 900px) {
-    .navbar-premium { padding: 1rem; }
-    .nav-content { flex-direction: column; gap: 15px; text-align: center; }
-    .user-info { display: flex; flex-direction: column; gap: 10px; align-items: center; }
-    .dashboard-main { flex-direction: column; margin-top: 140px; padding: 1rem; }
-    .pannello-filtri { width: 100%; border-radius: 8px; }
-    .mappa-section { width: 100%; padding: 1rem; }
-    .lettera-pontile, .lettera-pontile.compatibile { transform: translate(-60%, -60%) scale(0.8); }
-    .molo-header-page h3 { font-size: 1.8rem; }
+/* Protezione extra per smartphone molto stretti per evitare tagli brutti */
+@media (max-width: 400px) {
+    .text-logo .port-location { display: none; }
+    .welcome-text strong { 
+        display: inline-block; 
+        max-width: 65px; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        vertical-align: bottom; 
+    }
 }
