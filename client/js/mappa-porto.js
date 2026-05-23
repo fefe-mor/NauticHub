@@ -1,169 +1,177 @@
-// js/mappa-porto.js
+/**
+ * File: js/mappa-porto.js
+ * Logica interattiva per la Mappa del Porto: Filtri dinamici, visualizzazione darsene e chiamate AJAX per le prenotazioni.
+ */
 document.addEventListener('DOMContentLoaded', () => {
 
-    const radiosBarca = document.querySelectorAll('.radio-barca');
-    const checkboxServizi = document.querySelectorAll('.checkbox-servizio');
-    const letterePontili = document.querySelectorAll('.letter-pin'); 
-    const btnIndietro = document.getElementById('btn-indietro');
+    // =========================================
+    // 1. SELEZIONE ELEMENTI DOM
+    // =========================================
+    const pulsantiRadioBarca = document.querySelectorAll('.radio-barca');
+    const checkboxServiziBanchina = document.querySelectorAll('.checkbox-servizio');
+    const lettereMoli = document.querySelectorAll('.letter-pin'); 
+    const pulsanteIndietro = document.getElementById('btn-indietro');
     
-    const inputDal = document.getElementById('filtro-dal');
-    const inputAl = document.getElementById('filtro-al');
+    const campoDataArrivo = document.getElementById('filtro-dal');
+    const campoDataPartenza = document.getElementById('filtro-al');
     
-    const modal = document.getElementById('prenotazioneModal');
-    const btnAnnulla = document.getElementById('btn-annulla');
-    const formPrenotazione = document.getElementById('form-prenotazione');
+    const modalePrenotazione = document.getElementById('prenotazioneModal');
+    const pulsanteAnnullaModale = document.getElementById('btn-annulla');
+    const moduloPrenotazione = document.getElementById('form-prenotazione');
 
-    // --- GESTIONE MOBILE DRAWER CON BLOCCO SCORRIMENTO ---
-    const btnOpenDrawer = document.getElementById('fab-open-filters');
-    const btnCloseDrawer = document.getElementById('btn-close-drawer');
-    const drawer = document.getElementById('mobile-filter-drawer');
-    const btnApplyFilters = document.getElementById('btn-apply-filters');
+    // Elementi per la gestione del cassetto filtri su dispositivi mobili
+    const pulsanteApriFiltriMobile = document.getElementById('fab-open-filters');
+    const pulsanteChiudiFiltriMobile = document.getElementById('btn-close-drawer');
+    const cassettoFiltriMobile = document.getElementById('mobile-filter-drawer');
+    const pulsanteApplicaFiltri = document.getElementById('btn-apply-filters');
 
-    if(btnOpenDrawer) {
-        btnOpenDrawer.addEventListener('click', () => {
-            drawer.classList.add('drawer-open');
-            document.body.classList.add('no-scroll'); // Blocca lo sfondo
+    // =========================================
+    // 2. GESTIONE MENU LATERALE SU SMARTPHONE
+    // =========================================
+    if(pulsanteApriFiltriMobile) {
+        pulsanteApriFiltriMobile.addEventListener('click', () => {
+            cassettoFiltriMobile.classList.add('drawer-open');
+            document.body.classList.add('no-scroll'); // Blocca lo scorrimento dello sfondo
         });
     }
-    if(btnCloseDrawer) {
-        btnCloseDrawer.addEventListener('click', () => {
-            drawer.classList.remove('drawer-open');
-            document.body.classList.remove('no-scroll'); // Sblocca lo sfondo
-        });
-    }
-    if(btnApplyFilters) {
-        btnApplyFilters.addEventListener('click', () => {
-            drawer.classList.remove('drawer-open');
-            document.body.classList.remove('no-scroll'); // Sblocca lo sfondo
-        });
-    }
-
-    // Controlli Date e attivazione dinamica moli
-    inputDal.addEventListener('change', () => {
-        if(inputDal.value) {
-            // FIX MOBILE: Se il browser del telefono forza una data passata, la azzeriamo a oggi
-            if (inputDal.value < oggiStr) {
-                mostraNotifica("Non puoi selezionare una data passata.", "errore");
-                inputDal.value = oggiStr;
-            }
-            let giornoDopo = getGiornoDopo(inputDal.value);
-            inputAl.min = giornoDopo;
-            if(inputAl.value && inputAl.value <= inputDal.value) {
-                inputAl.value = giornoDopo;
-            }
-        }
-        aggiornaDisponibilitaMappa();
-        eseguiFiltroIntelligente(); // Attiva le lettere solo se i dati sono completi
-    });
     
-    inputAl.addEventListener('change', () => {
-        if(inputDal.value && inputAl.value && inputAl.value <= inputDal.value) {
-            mostraNotifica("Il pernottamento minimo è di 1 notte.", "errore");
-            inputAl.value = getGiornoDopo(inputDal.value);
-        }
-        aggiornaDisponibilitaMappa();
-        eseguiFiltroIntelligente(); // Attiva le lettere solo se i dati sono completi
-    });
+    if(pulsanteChiudiFiltriMobile) {
+        pulsanteChiudiFiltriMobile.addEventListener('click', () => {
+            cassettoFiltriMobile.classList.remove('drawer-open');
+            document.body.classList.remove('no-scroll');
+        });
+    }
+    
+    if(pulsanteApplicaFiltri) {
+        pulsanteApplicaFiltri.addEventListener('click', () => {
+            cassettoFiltriMobile.classList.remove('drawer-open');
+            document.body.classList.remove('no-scroll');
+        });
+    }
 
-
-    // --- FUNZIONE PER LE NOTIFICHE ---
-    const mostraNotifica = (messaggio, tipo = 'errore', targetId = 'notifica-sidebar') => {
-        const box = document.getElementById(targetId);
-        if(!box) return;
+    // =========================================
+    // 3. FUNZIONI DI UTILITÀ (DATE E NOTIFICHE)
+    // =========================================
+    
+    // Mostra avvisi di errore o successo nei pannelli predefiniti
+    const mostraAvvisoDiSistema = (messaggio, tipo = 'error', targetId = 'notifica-sidebar') => {
+        const contenitoreAvviso = document.getElementById(targetId);
+        if(!contenitoreAvviso) return;
         
-        box.className = `sys-msg sys-${tipo}`;
-        const icona = tipo === 'errore' ? '<i class="fa-solid fa-triangle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ';
-        box.innerHTML = icona + messaggio;
-        box.style.display = 'flex';
-        box.style.opacity = '1';
+        contenitoreAvviso.className = `sys-msg sys-${tipo}`;
+        const icona = tipo === 'error' ? '<i class="fa-solid fa-triangle-exclamation"></i> ' : '<i class="fa-solid fa-circle-check"></i> ';
         
+        contenitoreAvviso.innerHTML = icona + messaggio;
+        contenitoreAvviso.classList.remove('nascosto');
+        contenitoreAvviso.style.display = 'flex';
+        contenitoreAvviso.style.opacity = '1';
+        
+        // Nascondi automaticamente dopo 4 secondi
         setTimeout(() => {
-            box.style.opacity = '0';
-            box.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => { box.style.display = 'none'; }, 300); 
+            contenitoreAvviso.style.opacity = '0';
+            contenitoreAvviso.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => { 
+                contenitoreAvviso.style.display = 'none'; 
+                contenitoreAvviso.classList.add('nascosto');
+            }, 300); 
         }, 4000);
     };
 
-    // Helper Date (Timezone sicuro per fuso orario locale, evita il bug UTC su iOS)
-    const formattaData = (date) => {
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+    // Formattazione data sicura per evitare fusi orari sballati (Bug iOS)
+    const formattaDataTestuale = (dataInserita) => {
+        const d = new Date(dataInserita);
+        const anno = d.getFullYear();
+        const mese = String(d.getMonth() + 1).padStart(2, '0');
+        const giorno = String(d.getDate()).padStart(2, '0');
+        return `${anno}-${mese}-${giorno}`;
     };
     
-    const oggiObj = new Date();
-    const oggiStr = formattaData(oggiObj);
+    const oggettoOggi = new Date();
+    const stringaOggi = formattaDataTestuale(oggettoOggi);
     
-    const getGiornoDopo = (dataStr) => {
-        let data = new Date(dataStr);
+    const ottieniGiornoSuccessivo = (stringaData) => {
+        let data = new Date(stringaData);
         data.setDate(data.getDate() + 1);
-        return formattaData(data);
+        return formattaDataTestuale(data);
     };
 
-    // Formattatore da YYYY-MM-DD a DD/MM/YYYY per il Modale (Riepilogo)
-    const formatDataIT = (dataStr) => {
-        if(!dataStr) return '--';
-        const parti = dataStr.split('-');
+    const convertiDataItaliana = (stringaData) => {
+        if(!stringaData) return '--';
+        const parti = stringaData.split('-');
         return `${parti[2]}/${parti[1]}/${parti[0]}`;
     };
 
-    inputDal.min = oggiStr;
-    inputAl.min = getGiornoDopo(oggiStr); 
+    // Imposta le date minime nei calendari al momento del caricamento
+    campoDataArrivo.min = stringaOggi;
+    campoDataPartenza.min = ottieniGiornoSuccessivo(stringaOggi); 
 
-    // --- AJAX DATE (Aggiorna disponibilità) ---
-    const aggiornaDisponibilitaMappa = async () => {
-        let dal = inputDal.value;
-        let al = inputAl.value;
-        if (!dal || !al) return;
+    // =========================================
+    // 4. CHIAMATA AJAX PER DISPONIBILITÀ POSTI
+    // =========================================
+    const aggiornaStatoPostiMappa = async () => {
+        let dataArrivo = campoDataArrivo.value;
+        let dataPartenza = campoDataPartenza.value;
+        if (!dataArrivo || !dataPartenza) return;
 
         try {
-            const response = await fetch(`../server/check_disponibilita.php?dal=${dal}&al=${al}`);
-            const occupati = await response.json();
+            const risposta = await fetch(`../server/check_disponibilita.php?dal=${dataArrivo}&al=${dataPartenza}`);
+            const postiOccupati = await risposta.json();
 
             document.querySelectorAll('.posto-ui').forEach(posto => {
-                let codice = posto.getAttribute('data-codice');
+                let codicePosto = posto.getAttribute('data-codice');
+                
+                // Resetta lo stato a libero
                 posto.classList.remove('occupato');
                 posto.classList.add('libero', 'posto-cliccabile');
                 
-                if (occupati.includes(codice)) {
+                // Se il server lo segnala come occupato, cambia lo stato visivo
+                if (postiOccupati.includes(codicePosto)) {
                     posto.classList.remove('libero', 'posto-cliccabile');
                     posto.classList.add('occupato');
                 }
             });
-        } catch (error) {
-            console.error('Errore mappa:', error);
+        } catch (errore) {
+            console.error('NauticHub Errore Server:', errore);
         }
     };
 
-    inputDal.addEventListener('change', () => {
-        if(inputDal.value) {
-            let giornoDopo = getGiornoDopo(inputDal.value);
-            inputAl.min = giornoDopo;
-            if(inputAl.value && inputAl.value <= inputDal.value) {
-                inputAl.value = giornoDopo;
+    // Gestione reattiva dei calendari
+    campoDataArrivo.addEventListener('change', () => {
+        if(campoDataArrivo.value) {
+            if (campoDataArrivo.value < stringaOggi) {
+                mostraAvvisoDiSistema("Non puoi selezionare una data passata.", "error");
+                campoDataArrivo.value = stringaOggi;
+            }
+            let giornoDopo = ottieniGiornoSuccessivo(campoDataArrivo.value);
+            campoDataPartenza.min = giornoDopo;
+            
+            if(campoDataPartenza.value && campoDataPartenza.value <= campoDataArrivo.value) {
+                campoDataPartenza.value = giornoDopo;
             }
         }
-        aggiornaDisponibilitaMappa();
+        aggiornaStatoPostiMappa();
+        applicaFiltriIntelligenti(); 
     });
     
-    inputAl.addEventListener('change', () => {
-        if(inputDal.value && inputAl.value && inputAl.value <= inputDal.value) {
-            mostraNotifica("Il pernottamento minimo è di 1 notte.", "errore");
-            inputAl.value = getGiornoDopo(inputDal.value);
+    campoDataPartenza.addEventListener('change', () => {
+        if(campoDataArrivo.value && campoDataPartenza.value && campoDataPartenza.value <= campoDataArrivo.value) {
+            mostraAvvisoDiSistema("Il pernottamento minimo è di 1 notte.", "error");
+            campoDataPartenza.value = ottieniGiornoSuccessivo(campoDataArrivo.value);
         }
-        aggiornaDisponibilitaMappa();
+        aggiornaStatoPostiMappa();
+        applicaFiltriIntelligenti(); 
     });
 
-   // --- FILTRI INTELLIGENTI CON ATTIVAZIONE DOPO LE DATE ---
-    const eseguiFiltroIntelligente = () => {
-        let dal = inputDal.value;
-        let al = inputAl.value;
+    // =========================================
+    // 5. MOTORE DEI FILTRI INTELLIGENTI
+    // =========================================
+    const applicaFiltriIntelligenti = () => {
+        let dataArrivo = campoDataArrivo.value;
+        let dataPartenza = campoDataPartenza.value;
         
-        // Se le date non sono impostate, spegni preventivamente tutti i moli
-        if (!dal || !al) {
-            letterePontili.forEach(lettera => {
+        // Spegne i moli se le date mancano
+        if (!dataArrivo || !dataPartenza) {
+            lettereMoli.forEach(lettera => {
                 lettera.classList.remove('compatibile');
                 lettera.classList.add('incompatibile');
             });
@@ -171,8 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
+        
+        // Spegne i moli se manca la barca
         if (!barcaSelezionata) {
-            letterePontili.forEach(lettera => {
+            lettereMoli.forEach(lettera => {
                 lettera.classList.remove('compatibile');
                 lettera.classList.add('incompatibile');
             });
@@ -180,29 +190,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         let lunghezzaBarca = parseFloat(barcaSelezionata.getAttribute('data-lunghezza'));
-        let vuole380v = document.getElementById('filtro-corrente').checked;
-        let vuoleAcqua = document.getElementById('filtro-acqua').checked;
-        let vuoleLavaggio = document.getElementById('filtro-lavaggio').checked;
+        let richiedeCorrente = document.getElementById('filtro-corrente').checked;
+        let richiedeAcqua = document.getElementById('filtro-acqua').checked;
+        let richiedeLavaggio = document.getElementById('filtro-lavaggio').checked;
         
-        letterePontili.forEach(lettera => {
-            let minLenMolo = parseFloat(lettera.getAttribute('data-min'));
-            let maxLenMolo = parseFloat(lettera.getAttribute('data-max'));
+        lettereMoli.forEach(lettera => {
+            let lunghezzaMinima = parseFloat(lettera.getAttribute('data-min'));
+            let lunghezzaMassima = parseFloat(lettera.getAttribute('data-max'));
             
-            let moloHa380v = lettera.getAttribute('data-380v') === 'true';
+            let moloHaCorrente = lettera.getAttribute('data-380v') === 'true';
             let moloHaAcqua = lettera.getAttribute('data-acqua') === 'true';
             let moloHaLavaggio = lettera.getAttribute('data-lavaggio') === 'true';
             
-            let compatibile = true;
+            let risultaCompatibile = true;
             
-            // Verifica le fasce di dimensione impostate (Piccoli, Medi, Grandi)
-            if (lunghezzaBarca < minLenMolo || lunghezzaBarca > maxLenMolo) compatibile = false;
-            
-            // Verifica i servizi accessori richiesti
-            if (vuole380v && !moloHa380v) compatibile = false;
-            if (vuoleAcqua && !moloHaAcqua) compatibile = false;
-            if (vuoleLavaggio && !moloHaLavaggio) compatibile = false;
+            if (lunghezzaBarca < lunghezzaMinima || lunghezzaBarca > lunghezzaMassima) risultaCompatibile = false;
+            if (richiedeCorrente && !moloHaCorrente) risultaCompatibile = false;
+            if (richiedeAcqua && !moloHaAcqua) risultaCompatibile = false;
+            if (richiedeLavaggio && !moloHaLavaggio) risultaCompatibile = false;
 
-            if (compatibile) {
+            if (risultaCompatibile) {
                 lettera.classList.remove('incompatibile');
                 lettera.classList.add('compatibile');
             } else {
@@ -212,16 +219,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    radiosBarca.forEach(radio => radio.addEventListener('change', eseguiFiltroIntelligente));
-    checkboxServizi.forEach(chk => chk.addEventListener('change', eseguiFiltroIntelligente));
-    eseguiFiltroIntelligente(); // Esegui all'avvio
+    // Ascoltatori per l'aggiornamento in tempo reale
+    pulsantiRadioBarca.forEach(radio => radio.addEventListener('change', applicaFiltriIntelligenti));
+    checkboxServiziBanchina.forEach(chk => chk.addEventListener('change', applicaFiltriIntelligenti));
+    
+    applicaFiltriIntelligenti(); // Esecuzione iniziale al caricamento della pagina
 
-    // --- CLIC SULLA MAPPA ---
-    letterePontili.forEach(lettera => {
+    // =========================================
+    // 6. NAVIGAZIONE MAPPA (CLIC SUI MOLI)
+    // =========================================
+    lettereMoli.forEach(lettera => {
         lettera.addEventListener('click', function() {
-            if(!inputDal.value || !inputAl.value) {
-                mostraNotifica("Seleziona prima le date di Arrivo e Partenza.", "errore");
-                if(window.innerWidth <= 992) drawer.classList.add('drawer-open');
+            if(!campoDataArrivo.value || !campoDataPartenza.value) {
+                mostraAvvisoDiSistema("Seleziona prima le date di Arrivo e Partenza.", "error");
+                if(window.innerWidth <= 992) cassettoFiltriMobile.classList.add('drawer-open');
                 return;
             }
             if (this.classList.contains('compatibile')) {
@@ -229,110 +240,113 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('dettaglio-molo-container').style.display = 'flex';
                 document.querySelectorAll('.molo-scene').forEach(molo => molo.style.display = 'none');
                 
-                let targetId = this.getAttribute('data-target');
-                let moloTarget = document.getElementById(targetId);
-                if(moloTarget) moloTarget.style.display = 'block';
+                let idDestinazione = this.getAttribute('data-target');
+                let moloBersaglio = document.getElementById(idDestinazione);
+                if(moloBersaglio) moloBersaglio.style.display = 'block';
             }
         });
     });
 
-    if(btnIndietro) {
-        btnIndietro.addEventListener('click', () => {
+    if(pulsanteIndietro) {
+        pulsanteIndietro.addEventListener('click', () => {
             document.getElementById('dettaglio-molo-container').style.display = 'none';
             document.getElementById('vista-immagine-porto').style.display = 'block';
         });
     }
-// --- APERTURA MODALE PRENOTAZIONE ---
-    document.addEventListener('click', function(e) {
-        let postoDiv = e.target.closest('.posto-cliccabile');
-        if (postoDiv) {
+
+    // =========================================
+    // 7. GESTIONE MODALE DI PRENOTAZIONE
+    // =========================================
+    document.addEventListener('click', function(evento) {
+        let elementoPosto = evento.target.closest('.posto-cliccabile');
+        
+        if (elementoPosto) {
             let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
             
-            // FIX CRITICO: Se nessuna barca è selezionata, blocca l'esecuzione ed evita il crash del codice
             if (!barcaSelezionata) {
-                mostraNotifica("Devi prima selezionare un'imbarcazione dal menu laterale.", "errore");
-                // Apre il menu laterale da mobile se l'utente sbaglia
-                const drawer = document.getElementById('mobile-filter-drawer');
-                if(window.innerWidth <= 992 && drawer) drawer.classList.add('drawer-open');
+                mostraAvvisoDiSistema("Devi prima selezionare un'imbarcazione dal menu laterale.", "error");
+                if(window.innerWidth <= 992 && cassettoFiltriMobile) cassettoFiltriMobile.classList.add('drawer-open');
                 return;
             }
 
-            let idPosto = postoDiv.getAttribute('data-codice');
-            let idBarca = barcaSelezionata.value;
-            let nomeBarca = barcaSelezionata.getAttribute('data-nome');
+            let idPostoSelezionato = elementoPosto.getAttribute('data-codice');
+            let idBarcaSelezionata = barcaSelezionata.value;
+            let nomeBarcaScelta = barcaSelezionata.getAttribute('data-nome');
 
-            // Passa i dati ai campi nascosti
-            document.getElementById('input-barca-id').value = idBarca;
-            document.getElementById('input-posto-prenotato').value = idPosto;
+            // Passaggio dati ai campi nascosti del form
+            document.getElementById('input-barca-id').value = idBarcaSelezionata;
+            document.getElementById('input-posto-prenotato').value = idPostoSelezionato;
             
-            // Popolamento dinamico dei campi di riepilogo
-            document.getElementById('recap-barca').innerText = nomeBarca;
-            document.getElementById('posto-selezionato-id').innerText = idPosto;
-            document.getElementById('recap-dal').innerText = formatDataIT(inputDal.value);
-            document.getElementById('recap-al').innerText = formatDataIT(inputAl.value);
+            // Popolamento dinamico etichette riepilogative
+            document.getElementById('recap-barca').innerText = nomeBarcaScelta;
+            document.getElementById('posto-selezionato-id').innerText = idPostoSelezionato;
+            document.getElementById('recap-dal').innerText = convertiDataItaliana(campoDataArrivo.value);
+            document.getElementById('recap-al').innerText = convertiDataItaliana(campoDataPartenza.value);
             
             document.getElementById('notifica-modal').style.display = 'none';
             
-            // Mostra il modale con effetto fluido
-            modal.style.display = 'flex';
-            setTimeout(() => { modal.classList.remove('nascosto'); }, 10);
+            // Visualizza modale rimuovendo la classe nascosto
+            modalePrenotazione.style.display = 'flex';
+            setTimeout(() => { modalePrenotazione.classList.remove('nascosto'); }, 10);
         }
     });
 
-    // --- CHIUSURA MODALE ---
-    const chiudiModale = () => {
-        modal.classList.add('nascosto');
-        setTimeout(() => { modal.style.display = 'none'; }, 300);
+    const chiudiModalePrenotazione = () => {
+        modalePrenotazione.classList.add('nascosto');
+        setTimeout(() => { modalePrenotazione.style.display = 'none'; }, 300);
     };
     
-    if(btnAnnulla) btnAnnulla.addEventListener('click', chiudiModale);
+    if(pulsanteAnnullaModale) pulsanteAnnullaModale.addEventListener('click', chiudiModalePrenotazione);
 
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) chiudiModale();
+    window.addEventListener('click', (evento) => {
+        if (evento.target === modalePrenotazione) chiudiModalePrenotazione();
     });
 
-    // --- INVIO PRENOTAZIONE (AJAX) ---
-    if(formPrenotazione) {
-        formPrenotazione.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    // =========================================
+    // 8. INVIO PRENOTAZIONE TRAMITE AJAX
+    // =========================================
+    if(moduloPrenotazione) {
+        moduloPrenotazione.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
             
-            let posto = document.getElementById('input-posto-prenotato').value;
-            let idBarca = document.getElementById('input-barca-id').value;
-            let dal = inputDal.value;
-            let al = inputAl.value;
-            let numeroPersone = document.getElementById('input-numero-persone').value || "1"; // Modificato il fallback a 1
+            let postoPrenotato = document.getElementById('input-posto-prenotato').value;
+            let idBarcaAssegnata = document.getElementById('input-barca-id').value;
+            let dataArrivo = campoDataArrivo.value;
+            let dataPartenza = campoDataPartenza.value;
+            let numeroMembriEquipaggio = document.getElementById('input-numero-persone').value || "1"; 
             
-            let btnConferma = document.getElementById('btn-conferma');
-            btnConferma.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Elaborazione...';
-            btnConferma.disabled = true;
+            let pulsanteConfermaDefinitiva = document.getElementById('btn-conferma');
+            pulsanteConfermaDefinitiva.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Elaborazione...';
+            pulsanteConfermaDefinitiva.disabled = true;
 
             try {
-                const response = await fetch('../server/prenota.php', {
+                const rispostaServer = await fetch('../server/prenota.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ posto: posto, barca_id: idBarca, dal: dal, al: al, numero_persone: numeroPersone })
+                    body: JSON.stringify({ 
+                        posto: postoPrenotato, 
+                        barca_id: idBarcaAssegnata, 
+                        dal: dataArrivo, 
+                        al: dataPartenza, 
+                        numero_persone: numeroMembriEquipaggio 
+                    })
                 });
 
-                const data = await response.json();
+                const datiDecodificati = await rispostaServer.json();
 
-                if (data.success) {
-                    // 1. Salva il messaggio di successo nel sessionStorage (la dashboard lo leggerà in automatico all'avvio)
-                    sessionStorage.setItem('ajax_toast_success', data.message);
-                    
-                    // 2. Forza la tab "Prenotazioni" ad aprirsi come attiva nella dashboard
+                if (datiDecodificati.success) {
+                    sessionStorage.setItem('ajax_toast_success', datiDecodificati.message);
                     sessionStorage.setItem('activeTab', 'tab-prenotazioni');
-                    
-                    // 3. Reindirizza l'utente alla pagina dashboard.php
-                    window.location.href = 'dashboard.php';
+                    window.location.href = 'dashboard.php?tab=prenotazioni';
                 } else {
-                    mostraNotifica(data.message, "errore", "notifica-modal");
+                    mostraAvvisoDiSistema(datiDecodificati.message, "error", "notifica-modal");
                 }
 
-            } catch (error) {
-                mostraNotifica("Si è verificato un errore di connessione.", "errore", "notifica-modal");
+            } catch (erroreDiRete) {
+                mostraAvvisoDiSistema("Si è verificato un errore di connessione con il porto.", "error", "notifica-modal");
             } finally {
-                btnConferma.innerHTML = '<i class="fa-solid fa-anchor"></i> Autorizza Attracco';
-                btnConferma.disabled = false;
+                pulsanteConfermaDefinitiva.innerHTML = '<i class="fa-solid fa-anchor"></i> Autorizza Attracco';
+                pulsanteConfermaDefinitiva.disabled = false;
             }
         });
     }

@@ -1,6 +1,9 @@
 <?php
-// server/logout.php
-session_start(); // Recupera la sessione attuale
+/**
+ * File: server/logout.php
+ * Gestisce la distruzione della sessione e il reindirizzamento corretto alla cartella client.
+ */
+session_start();
 
 // 1. Svuota l'array della sessione
 $_SESSION = array();
@@ -14,10 +17,10 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// 3. Distrugge definitivamente la sessione sul server
+// 3. Distrugge la sessione sul server
 session_destroy();
 
-// 4. Reindirizza alla pagina di login/home
+// 4. Reindirizza alla rotta originale corretta all'interno della cartella client
 header("Location: ../client/index.php");
 exit;
 ?>

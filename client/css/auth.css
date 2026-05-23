@@ -1,35 +1,43 @@
 /* =========================================
-   1. VARIABILI GLOBALI (Deep Ocean Theme)
+   1. VARIABILI GLOBALI (ROOT)
    ========================================= */
 :root {
-    --bg-deep: #030B17;
+    /* Sfondi */
+    --sfondo-principale: #030B17;
+    --sfondo-vetro: rgba(10, 18, 35, 0.65); 
     
-    /* Effetto Vetro Scuro Premium */
-    --glass-bg: rgba(10, 18, 35, 0.65); 
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    /* Bordi ed Effetti */
+    --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
+    --ombra-effetto-vetro: 0 30px 60px rgba(0, 0, 0, 0.6);
     
-    /* Colori Brand */
-    --gold-primary: #D4AF37;
-    --gold-gradient: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
-    --cyan-glow: #00F2FE;
-    
-    /* Testi e Avvisi */
-    --text-main: #F8FAFC; 
-    --text-muted: #94A3B8; 
-    --error-red: #ff4c4c; 
-    --success-green: #00e676;
+    /* Colori Accento e Gradienti */
+    --accento-oro-base: #D4AF37;
+    --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
+    --ombra-luce-ciano: #00F2FE;
 
-    --font-ui: 'Inter', sans-serif;
-    --font-heading: 'Playfair Display', serif;
+    /* Colori Testo e Stati (Successo/Errore) */
+    --testo-primario: #F8FAFC; 
+    --testo-secondario: #94A3B8; 
+    --rosso-errore: #ff4c4c; 
+    --verde-successo: #00e676;
+
+    /* Tipografia */
+    --font-interfaccia: 'Inter', sans-serif;
+    --font-titoli: 'Playfair Display', serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-ui); }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: var(--font-interfaccia); 
+}
 
 body { 
-    min-height: 100vh; width: 100%; 
-    background-color: var(--bg-deep); 
-    color: var(--text-main);
+    min-height: 100vh; 
+    width: 100%; 
+    background-color: var(--sfondo-principale); 
+    color: var(--testo-primario);
     overflow-x: hidden; 
     position: relative;
 }
@@ -37,14 +45,24 @@ body {
 /* =========================================
    2. SFONDO IMMERSIVO A TUTTO SCHERMO
    ========================================= */
+
 .auth-bg-image {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    background-size: cover; background-position: center;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh;
+    background-size: cover; 
+    background-position: center;
     z-index: -2;
 }
 
 .auth-bg-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh;
     /* Gradiente che sfuma dal nero a sinistra al blu semitrasparente a destra */
     background: linear-gradient(90deg, rgba(3,11,23,0.95) 0%, rgba(3,11,23,0.4) 100%);
     z-index: -1;
@@ -59,120 +77,275 @@ body {
     width: 100%; 
 }
 
-/* --- ASIDE: PARTE SINISTRA (BRANDING) --- */
+/* PARTE SINISTRA (Brand) */
 .split-brand { 
     width: 45%; 
-    display: flex; flex-direction: column; justify-content: center; align-items: center; 
-    position: relative; padding: 2rem;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    position: relative; 
+    padding: 2rem;
 }
 
-.brand-content { text-align: center; padding: 3rem; max-width: 600px; animation: fadeIn 1s ease-out; }
-.brand-content h1 { font-family: var(--font-heading); font-size: 4.5rem; letter-spacing: 2px; margin-bottom: 1.5rem; color: var(--text-main); }
-.brand-divider { width: 80px; height: 3px; background: var(--gold-gradient); margin: 0 auto 2rem auto; border-radius: 5px; }
-.brand-content p { font-size: 1.2rem; font-weight: 300; line-height: 1.8; color: var(--text-muted); }
-.cyan-text { color: var(--cyan-glow); font-weight: 500; display: block; margin-top: 10px; }
+.brand-content { 
+    text-align: center; 
+    padding: 3rem; 
+    max-width: 600px; 
+    animation: fadeIn 1s ease-out; 
+}
 
-/* --- SECTION: PARTE DESTRA (FORM IN VETRO) --- */
+.brand-content h1 { 
+    font-family: var(--font-titoli); 
+    font-size: 4.5rem; 
+    letter-spacing: 2px; 
+    margin-bottom: 1.5rem; 
+    color: var(--testo-primario); 
+}
+
+.brand-divider { 
+    width: 80px; 
+    height: 3px; 
+    background: var(--gradiente-oro-primario); 
+    margin: 0 auto 2rem auto; 
+    border-radius: 5px; 
+}
+
+.brand-content p { 
+    font-size: 1.2rem; 
+    font-weight: 300; 
+    line-height: 1.8; 
+    color: var(--testo-secondario); 
+}
+
+.cyan-text { 
+    color: var(--ombra-luce-ciano); 
+    font-weight: 500; 
+    display: block; 
+    margin-top: 10px; 
+}
+
+/* PARTE DESTRA (Moduli di Accesso) */
 .split-form { 
     width: 55%; 
-    display: flex; flex-direction: column; justify-content: center; align-items: center; 
-    padding: 4rem; position: relative;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 4rem; 
+    position: relative;
 }
 
 .form-container { 
-    width: 100%; max-width: 500px; 
-    background: var(--glass-bg);
-    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-    border: 1px solid var(--glass-border);
-    padding: 3.5rem; border-radius: 24px;
-    box-shadow: var(--glass-shadow);
+    width: 100%; 
+    max-width: 500px; 
+    background: var(--sfondo-vetro);
+    backdrop-filter: blur(25px); 
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 3.5rem; 
+    border-radius: 24px;
+    box-shadow: var(--ombra-effetto-vetro);
     animation: slideInUp 0.8s ease-out; 
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+}
+
+@keyframes slideInUp { 
+    from { opacity: 0; transform: translateY(30px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
 
 /* =========================================
    4. TIPOGRAFIA E LINK DEL FORM
    ========================================= */
-.back-link { 
-    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2rem; 
-    color: var(--text-muted); text-decoration: none; font-size: 0.85rem; 
-    text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; 
-    transition: all 0.3s; cursor: pointer; 
-}
-.back-link:hover { color: var(--cyan-glow); transform: translateX(-5px); }
 
-.form-container h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 2.5rem; margin-bottom: 0.5rem; }
-.gold-text { color: var(--gold-primary); font-style: italic; }
-.form-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 3rem; font-weight: 400; }
+.back-link { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-bottom: 2rem; 
+    color: var(--testo-secondario); 
+    text-decoration: none; 
+    font-size: 0.85rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    font-weight: 600; 
+    transition: all 0.3s; 
+    cursor: pointer; 
+}
+
+.back-link:hover { 
+    color: var(--ombra-luce-ciano); 
+    transform: translateX(-5px); 
+}
+
+.form-container h2 { 
+    font-family: var(--font-titoli); 
+    color: var(--testo-primario); 
+    font-size: 2.5rem; 
+    margin-bottom: 0.5rem; 
+}
+
+.gold-text { 
+    color: var(--accento-oro-base); 
+    font-style: italic; 
+}
+
+.form-subtitle { 
+    color: var(--testo-secondario); 
+    font-size: 0.95rem; 
+    margin-bottom: 3rem; 
+    font-weight: 400; 
+}
 
 /* =========================================
-   5. STILE DEGLI INPUT (TECH & CLEAN)
+   5. STILE DEGLI INPUT
    ========================================= */
 .form-row { display: flex; gap: 1.5rem; }
 .form-group { margin-bottom: 2rem; position: relative; width: 100%; }
 .form-group.half { width: 50%; }
 
 .form-group label { 
-    display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; 
-    color: var(--text-muted); margin-bottom: 0.8rem; font-weight: 600; 
+    display: block; 
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    color: var(--testo-secondario); 
+    margin-bottom: 0.8rem; 
+    font-weight: 600; 
 }
 
 .input-wrapper { position: relative; display: flex; align-items: center; }
-.input-wrapper i { position: absolute; left: 18px; color: var(--text-muted); transition: 0.3s; font-size: 1.1rem; }
+
+.input-wrapper i { 
+    position: absolute; 
+    left: 18px; 
+    color: var(--testo-secondario); 
+    transition: 0.3s; 
+    font-size: 1.1rem; 
+}
 
 .form-group input { 
-    width: 100%; padding: 1.1rem 1rem 1.1rem 50px; 
+    width: 100%; 
+    padding: 1.1rem 1rem 1.1rem 50px; 
     background: rgba(255, 255, 255, 0.03); 
-    border: 1px solid var(--glass-border); border-radius: 12px;
-    color: var(--text-main); font-size: 1rem; transition: all 0.3s; 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    border-radius: 12px;
+    color: var(--testo-primario); 
+    font-size: 1rem; 
+    transition: all 0.3s; 
 }
+
 /* Nei campi senza icona (Nome, Cognome) il padding torna normale */
 .form-group.half input { padding: 1.1rem; } 
 
 .form-group input:focus { 
-    outline: none; border-color: var(--cyan-glow); 
+    outline: none; 
+    border-color: var(--ombra-luce-ciano); 
     background: rgba(0, 242, 254, 0.05); 
     box-shadow: 0 0 20px rgba(0, 242, 254, 0.15); 
 }
-/* Quando l'input è a fuoco, l'icona interna si illumina */
-.form-group input:focus + i, .input-wrapper:focus-within i { color: var(--cyan-glow); }
 
-.pwd-error-text { color: var(--error-red); font-size: 0.8rem; margin-top: 10px; display: none; font-weight: 500; }
+/* Quando l'input è a fuoco, l'icona interna si illumina */
+.form-group input:focus + i, 
+.input-wrapper:focus-within i { 
+    color: var(--ombra-luce-ciano); 
+}
+
+.pwd-error-text { 
+    color: var(--rosso-errore); 
+    font-size: 0.8rem; 
+    margin-top: 10px; 
+    display: none; 
+    font-weight: 500; 
+}
 
 /* =========================================
    6. BOTTONI E SWITCH DI REGISTRAZIONE
    ========================================= */
 .btn-gold { 
-    width: 100%; background: var(--gold-gradient); color: #000; 
-    border: none; padding: 1.2rem; font-size: 1rem; 
-    text-transform: uppercase; letter-spacing: 2px; font-weight: 700; 
-    cursor: pointer; transition: all 0.3s; margin-top: 1rem; 
-    border-radius: 50px; display: flex; justify-content: center; align-items: center; gap: 10px;
+    width: 100%; 
+    background: var(--gradiente-oro-primario); 
+    color: #000; 
+    border: none; 
+    padding: 1.2rem; 
+    font-size: 1rem; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: all 0.3s; 
+    margin-top: 1rem; 
+    border-radius: 50px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px;
     box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
 }
-.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4); }
 
-.form-switch { margin-top: 2.5rem; text-align: center; font-size: 0.95rem; color: var(--text-muted); }
+.btn-gold:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4); 
+}
+
+.form-switch { 
+    margin-top: 2.5rem; 
+    text-align: center; 
+    font-size: 0.95rem; 
+    color: var(--testo-secondario); 
+}
+
 .switch-link { 
-    color: var(--cyan-glow); font-weight: 600; cursor: pointer; 
-    text-transform: uppercase; letter-spacing: 1px; margin-left: 10px; 
+    color: var(--ombra-luce-ciano); 
+    font-weight: 600; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    margin-left: 10px; 
     transition: 0.3s; 
 }
-.switch-link:hover { text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); }
+
+.switch-link:hover { 
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); 
+}
 
 /* =========================================
    7. MESSAGGI DI SISTEMA (PHP)
    ========================================= */
-.sys-msg { padding: 1rem 1.5rem; margin-bottom: 2rem; font-size: 0.9rem; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500; }
-.sys-error { background: rgba(255, 76, 76, 0.1); border: 1px solid var(--error-red); color: var(--error-red); }
-.sys-success { background: rgba(0, 230, 118, 0.1); border: 1px solid var(--success-green); color: var(--success-green); }
+.sys-msg { 
+    padding: 1rem 1.5rem; 
+    margin-bottom: 2rem; 
+    font-size: 0.9rem; 
+    border-radius: 12px; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-weight: 500; 
+}
 
-#form-registrazione { display: none; }
+.sys-error { 
+    background: rgba(255, 76, 76, 0.1); 
+    border: 1px solid var(--rosso-errore); 
+    color: var(--rosso-errore); 
+}
+
+.sys-success { 
+    background: rgba(0, 230, 118, 0.1); 
+    border: 1px solid var(--verde-successo); 
+    color: var(--verde-successo); 
+}
+
+#form-registrazione { 
+    display: none; 
+}
 
 /* =========================================
-   8. RESPONSIVE DESIGN (MOBILE & TABLET)
+   8. RESPONSIVE
    ========================================= */
 @media (max-width: 992px) {
     .split-layout { flex-direction: column; } 

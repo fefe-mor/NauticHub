@@ -1,157 +1,208 @@
 /* =========================================
-   1. VARIABILI GLOBALI (Deep Ocean Dashboard Premium)
+   1. VARIABILI GLOBALI (ROOT) E IMPOSTAZIONI BASE
    ========================================= */
 :root {
-    --bg-deep: #030B17;
-    --bg-darker: #01060e;
-    --bg-card: rgba(15, 25, 45, 0.6); 
+    /* Colori di Sfondo */
+    --sfondo-principale: #030B17;
+    --sfondo-scuro-assoluto: #01060e;
+    --sfondo-schede: rgba(15, 25, 45, 0.6); 
     
-    /* Effetto Vetro (Glassmorphism) */
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    /* Bordi ed Effetti Vetro (Glassmorphism) */
+    --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
+    --ombra-effetto-vetro: 0 20px 40px rgba(0, 0, 0, 0.5);
     
-    /* Palette NauticHub Coerente con l'Index */
-    --gold-primary: #D4AF37;
-    --gold-gradient: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
-    --cyan-glow: #00F2FE;
-    --danger-red: #ff4c4c;
-    --success-green: #00e676;
+    /* Colori Accento e Gradienti */
+    --accento-oro-base: #D4AF37;
+    --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
+    --ombra-luce-ciano: #00F2FE;
+    --rosso-errore: #ff4c4c;
+    --verde-successo: #00e676;
     
-    /* Tipografia */
-    --text-main: #F8FAFC; 
-    --text-muted: #94A3B8; 
-    --font-ui: 'Inter', sans-serif;
-    --font-heading: 'Playfair Display', serif;
+    /* Tipografia e Testi */
+    --testo-primario: #F8FAFC; 
+    --testo-secondario: #94A3B8; 
+    --font-interfaccia: 'Inter', sans-serif;
+    --font-titoli: 'Playfair Display', serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-ui); }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: var(--font-interfaccia); 
+}
 
-/* Scrollbar Custom Elegante */
+/* Personalizzazione Barra di Scorrimento */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-darker); }
+::-webkit-scrollbar-track { background: var(--sfondo-scuro-assoluto); }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan-glow); }
+::-webkit-scrollbar-thumb:hover { background: var(--ombra-luce-ciano); }
 
 body.dashboard-theme { 
-    background-color: var(--bg-deep); 
-    color: var(--text-main); 
+    background-color: var(--sfondo-principale); 
+    color: var(--testo-primario); 
     min-height: 100vh;
-    display: flex; flex-direction: column;
+    display: flex; 
+    flex-direction: column;
 }
 
 /* =========================================
-   2. HEADER DASHBOARD (COERENTE ED ESTESO ALL'INDEX)
+   2. HEADER / NAVBAR DELLA DASHBOARD
    ========================================= */
 .dash-header {
     background: rgba(3, 11, 23, 0.85);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--bordo-effetto-vetro);
+    position: sticky; 
+    top: 0; 
+    z-index: 1000;
     padding: 0.5rem 0;
 }
 
-/* Forza la barra ad estendersi alle estremità assolute come nell'Index */
 .dash-header .nav-content {
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 100% ; width: 100% ; 
-    padding: 0 4rem ; /* Ampio spazio dai bordi destro/sinistro */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 100%; 
+    width: 100%; 
+    padding: 0 4rem; 
     margin: 0 auto;
 }
 
 .logo-area { display: flex; align-items: center; }
 
-/* Nuovo Logo Testuale Puro (Risolve problemi di sfondo e ritaglio delle immagini) */
 .text-logo {
-    font-family: var(--font-heading);
+    font-family: var(--font-titoli);
     font-size: 2.2rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--testo-primario);
     text-decoration: none;
     letter-spacing: 1px;
     transition: transform 0.3s;
 }
+
 .text-logo:hover { transform: scale(1.02); }
 
 .gradient-logo-accent {
-    /* Inseriamo direttamente il gradiente qui per sicurezza, senza dipendere dalle variabili del :root */
     background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
     -webkit-background-clip: text;
-    background-clip: text; /* Risolve l'avviso giallo di VS Code */
+    background-clip: text; 
     -webkit-text-fill-color: transparent;
-    font-family: var(--font-ui);
+    font-family: var(--font-interfaccia);
     font-weight: 800;
     font-style: italic;
 }
 
-/* Informazioni Utente e Logout */
+/* Informazioni Utente e Pulsante Logout */
 .user-info { display: flex; align-items: center; gap: 25px; }
-.welcome-text { font-weight: 400; color: var(--text-muted); font-size: 0.95rem; }
-.welcome-text strong { color: var(--text-main); font-weight: 600; }
+.welcome-text { font-weight: 400; color: var(--testo-secondario); font-size: 0.95rem; }
+.welcome-text strong { color: var(--testo-primario); font-weight: 600; }
 
 .btn-logout { 
-    color: var(--text-main); text-decoration: none; border: 1px solid var(--glass-border);
-    padding: 0.6rem 1.4rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
-    transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03);
+    color: var(--testo-primario); 
+    text-decoration: none; 
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.6rem 1.4rem; 
+    border-radius: 50px; 
+    font-size: 0.85rem; 
+    font-weight: 600;
+    transition: all 0.3s ease; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: rgba(255,255,255,0.03);
 }
-.btn-logout:hover { background: rgba(255, 76, 76, 0.1); border-color: var(--danger-red); color: var(--danger-red); }
+
+.btn-logout:hover { 
+    background: rgba(255, 76, 76, 0.1); 
+    border-color: var(--rosso-errore); 
+    color: var(--rosso-errore); 
+}
 
 /* =========================================
-   3. MENU TAB (SLIDER ORIZZONTALE MOBILE)
+   3. MENU NAVIGAZIONE SCHEDE (TAB MENU)
    ========================================= */
-.tab-menu-container { background: var(--bg-darker); border-bottom: 1px solid var(--glass-border); }
+.tab-menu-container { background: var(--sfondo-scuro-assoluto); border-bottom: 1px solid var(--bordo-effetto-vetro); }
+
 .tab-menu {
-    display: flex; justify-content: flex-start; gap: 3rem;
-    max-width: 100%; width: 100%; padding: 0 4rem; margin: 0 auto;
-    overflow-x: auto; scrollbar-width: none; 
+    display: flex; 
+    justify-content: flex-start; 
+    gap: 3rem;
+    max-width: 100%; 
+    width: 100%; 
+    padding: 0 4rem; 
+    margin: 0 auto;
+    overflow-x: auto; 
+    scrollbar-width: none; 
 }
+
 .tab-menu::-webkit-scrollbar { display: none; }
 
 .tab-btn {
-    background: transparent; border: none; color: var(--text-muted);
-    font-size: 0.95rem; font-weight: 600; padding: 1.2rem 0; cursor: pointer;
-    border-bottom: 3px solid transparent; transition: all 0.3s;
-    white-space: nowrap; display: flex; align-items: center; gap: 8px;
-    text-transform: uppercase; letter-spacing: 1px;
+    background: transparent; 
+    border: none; 
+    color: var(--testo-secondario);
+    font-size: 0.95rem; 
+    font-weight: 600; 
+    padding: 1.2rem 0; 
+    cursor: pointer;
+    border-bottom: 3px solid transparent; 
+    transition: all 0.3s;
+    white-space: nowrap; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    text-transform: uppercase; 
+    letter-spacing: 1px;
 }
-.tab-btn:hover { color: var(--text-main); }
-.tab-btn.active { color: var(--cyan-glow); border-bottom-color: var(--cyan-glow); text-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
+
+.tab-btn:hover { color: var(--testo-primario); }
+
+.tab-btn.active { 
+    color: var(--ombra-luce-ciano); 
+    border-bottom-color: var(--ombra-luce-ciano); 
+    text-shadow: 0 0 10px rgba(0, 242, 254, 0.3); 
+}
 
 /* =========================================
-   4. CONTENUTO GENERALE E MAPPA RADAR
+   4. CONTENUTI SCHEDE E MAPPA LEAFLET
    ========================================= */
 .dash-main-content { flex: 1; padding: 3rem 4rem; width: 100%; margin: 0 auto; }
 
 .tab-content { display: none; animation: fadeIn 0.4s ease; }
 .tab-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
 
 .tab-header { margin-bottom: 3rem; }
-.tab-header h2 { font-family: var(--font-heading); font-size: 2.5rem; color: var(--text-main); margin-bottom: 0.5rem; font-weight: 500; }
-.tab-header p { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+.tab-header h2 { font-family: var(--font-titoli); font-size: 2.5rem; color: var(--testo-primario); margin-bottom: 0.5rem; font-weight: 500; }
+.tab-header p { color: var(--testo-secondario); font-size: 1.1rem; font-weight: 300; }
 
-.map-container-glass { background: var(--bg-card); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 24px; box-shadow: var(--glass-shadow); }
-#mappa-vera { width: 100%; height: 600px; border-radius: 16px; z-index: 1; background-color: var(--bg-darker); }
+.map-container-glass { background: var(--sfondo-schede); border: 1px solid var(--bordo-effetto-vetro); padding: 1rem; border-radius: 24px; box-shadow: var(--ombra-effetto-vetro); }
+#mappa-vera { width: 100%; height: 600px; border-radius: 16px; z-index: 1; background-color: var(--sfondo-scuro-assoluto); }
 
-/* Popup Leaflet Custom Dark */
-.leaflet-popup-content-wrapper { background: #050e1a ; color: var(--text-main) ; border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5) ; }
+/* Popup Leaflet Custom Stile Tech Dark */
+.leaflet-popup-content-wrapper { background: #050e1a; color: var(--testo-primario); border: 1px solid var(--bordo-effetto-vetro); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .leaflet-popup-tip { background: #050e1a; }
 .custom-popup { padding: 5px; }
 
-/* Il titolo del porto passa da Giallo a Celeste Ciano */
 .custom-popup .popup-title { 
-    font-family: var(--font-heading); 
-    color: var(--cyan-glow); 
+    font-family: var(--font-titoli); 
+    color: var(--ombra-luce-ciano); 
     font-size: 1.25rem; 
     margin-bottom: 6px; 
     font-weight: 600; 
 }
-.custom-popup .popup-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px; }
+.custom-popup .popup-desc { color: var(--testo-secondario); font-size: 0.9rem; margin-bottom: 14px; }
 
-/* Il bottone prende il gradiente azzurro e forza le scritte interne a rimanere nere e leggibili */
 .btn-prenota-popup { 
     display: inline-block; 
     background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%); 
-    color: #000000; /* Forza il testo nero */
+    color: #000000; 
     padding: 8px 20px; 
     border-radius: 50px; 
     font-weight: 700; 
@@ -164,100 +215,181 @@ body.dashboard-theme {
 
 .btn-prenota-popup:hover { 
     transform: translateY(-2px); 
-    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); /* Ombra con bagliore azzurro */
-    color: #000000; /* Mantiene il testo nero anche in hover */
+    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); 
+    color: #000000; 
 }
 
 /* =========================================
-   5. NUOVA GRIGLIA PREMIUM GARAGE (FOTOGRAFICA)
+   5. SEZIONE FLOTTA (GRIGLIA E CARD BARCHE)
    ========================================= */
 .griglia-barche { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2.5rem; }
 
-/* La scheda della barca ora ha una foto di sfondo reale */
 .boat-card-premium {
-    background: var(--bg-card); border: 1px solid var(--glass-border);
-    border-radius: 24px; overflow: hidden; backdrop-filter: blur(10px);
-    display: flex; flex-direction: column; transition: all 0.4s ease;
-    box-shadow: var(--glass-shadow); min-height: 400px;
+    background: var(--sfondo-schede); 
+    border: 1px solid var(--bordo-effetto-vetro);
+    border-radius: 24px; 
+    overflow: hidden; 
+    backdrop-filter: blur(10px);
+    display: flex; 
+    flex-direction: column; 
+    transition: all 0.4s ease;
+    box-shadow: var(--ombra-effetto-vetro); 
+    min-height: 400px;
 }
-.boat-card-premium:hover { transform: translateY(-8px); border-color: rgba(0, 242, 254, 0.25); box-shadow: 0 20px 40px rgba(0, 242, 254, 0.1); }
 
-/* Header della card con la foto del tipo di barca */
-.boat-card-image {
-    height: 190px; background-size: cover; background-position: center;
-    position: relative; display: flex; align-items: flex-end; padding: 1.5rem;
+.boat-card-premium:hover { 
+    transform: translateY(-8px); 
+    border-color: rgba(0, 242, 254, 0.25); 
+    box-shadow: 0 20px 40px rgba(0, 242, 254, 0.1); 
 }
+
+.boat-card-image {
+    height: 190px; 
+    background-size: cover; 
+    background-position: center;
+    position: relative; 
+    display: flex; 
+    align-items: flex-end; 
+    padding: 1.5rem;
+}
+
 .boat-card-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background: linear-gradient(180deg, rgba(3,11,23,0) 20%, rgba(3,11,23,0.85) 100%);
 }
-.boat-name-display { position: relative; z-index: 2; font-family: var(--font-heading); font-size: 1.8rem; color: #fff; margin: 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
 
-/* Corpo della card con griglia tecnica pulita */
+.boat-name-display { position: relative; z-index: 2; font-family: var(--font-titoli); font-size: 1.8rem; color: #fff; margin: 0; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+
 .boat-card-details { padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
 .boat-specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 1.5rem; }
 
 .spec-block {
-    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.04);
-    padding: 0.6rem 0.8rem; border-radius: 12px; display: flex; flex-direction: column; gap: 4px;
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 0.6rem 0.8rem; 
+    border-radius: 12px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px;
 }
-.spec-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-.spec-value { font-size: 0.95rem; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.gold-txt { color: var(--gold-primary); font-style: italic; }
 
-/* Pannello Bottoni della card */
+.spec-label { font-size: 0.7rem; color: var(--testo-secondario); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.spec-value { font-size: 0.95rem; color: var(--testo-primario); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+/* Pannello Pulsanti Card Barca */
 .boat-actions-panel { display: flex; gap: 10px; align-items: center; }
-.btn-panel {
-    flex: 1; background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--glass-border);
-    padding: 0.8rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s;
-    display: flex; justify-content: center; align-items: center; gap: 8px;
-}
-.btn-panel:hover { background: #fff; color: var(--bg-deep); border-color: #fff; }
-.btn-delete { flex: 0 0 52px; background: rgba(255, 76, 76, 0.08); border-color: rgba(255, 76, 76, 0.2); color: var(--danger-red); }
-.btn-delete:hover { background: var(--danger-red); color: white; border-color: var(--danger-red); }
 
-/* Nuova Card Aggiungi Barca Speculare fotografica */
+.btn-panel {
+    flex: 1; 
+    background: rgba(255,255,255,0.03); 
+    color: var(--testo-primario); 
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.8rem; 
+    border-radius: 12px; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    cursor: pointer; 
+    transition: 0.3s;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 8px;
+}
+
+.btn-panel:hover { background: #fff; color: var(--sfondo-principale); border-color: #fff; }
+.btn-delete { flex: 0 0 52px; background: rgba(255, 76, 76, 0.08); border-color: rgba(255, 76, 76, 0.2); color: var(--rosso-errore); }
+.btn-delete:hover { background: var(--rosso-errore); color: white; border-color: var(--rosso-errore); }
+
+/* Card Inserimento Nuova Barca */
 .add-boat-card-new {
-    border: 2px dashed rgba(255,255,255,0.12); background: transparent; cursor: pointer;
-    box-shadow: none; display: flex; align-items: center; justify-content: center; text-align: center;
+    border: 2px dashed rgba(255,255,255,0.12); 
+    background: transparent; 
+    cursor: pointer;
+    box-shadow: none; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center;
 }
-.add-boat-card-new:hover { border-color: var(--cyan-glow); background: rgba(0, 242, 254, 0.02); }
+
+.add-boat-card-new:hover { border-color: var(--ombra-luce-ciano); background: rgba(0, 242, 254, 0.02); }
 .add-container-inner { padding: 2rem; }
+
 .add-icon-pulsing {
-    width: 60px; height: 60px; background: rgba(255,255,255,0.03); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
-    color: var(--text-muted); margin: 0 auto 1.5rem auto; border: 1px solid var(--glass-border); transition: 0.3s;
+    width: 60px; 
+    height: 60px; 
+    background: rgba(255,255,255,0.03); 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 1.6rem;
+    color: var(--testo-secondario); 
+    margin: 0 auto 1.5rem auto; 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    transition: 0.3s;
 }
-.add-boat-card-new:hover .add-icon-pulsing { background: var(--cyan-glow); color: var(--bg-deep); box-shadow: 0 0 20px var(--cyan-glow); border-color: transparent; }
-.add-boat-card-new h3 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 0.4rem; }
-.add-boat-card-new p { font-size: 0.9rem; color: var(--text-muted); font-weight: 300; }
+
+.add-boat-card-new:hover .add-icon-pulsing { 
+    background: var(--ombra-luce-ciano); 
+    color: var(--sfondo-principale); 
+    box-shadow: 0 0 20px var(--ombra-luce-ciano); 
+    border-color: transparent; 
+}
+
+.add-boat-card-new h3 { font-size: 1.4rem; color: var(--testo-primario); margin-bottom: 0.4rem; }
+.add-boat-card-new p { font-size: 0.9rem; color: var(--testo-secondario); font-weight: 300; }
 
 /* =========================================
-   6. LISTA PRENOTAZIONI IN VETRO
+   6. SCHEDA PRENOTAZIONI EFFETTUATE
    ========================================= */
-.empty-state { text-align: center; padding: 5rem 2rem; background: var(--bg-card); border-radius: 24px; border: 1px dashed var(--glass-border); }
-.empty-state i { font-size: 4rem; color: var(--text-muted); margin-bottom: 1.5rem; opacity: 0.4; }
-.empty-state p { font-size: 1.15rem; color: var(--text-muted); font-weight: 300; }
+.empty-state { text-align: center; padding: 5rem 2rem; background: var(--sfondo-schede); border-radius: 24px; border: 1px dashed var(--bordo-effetto-vetro); }
+.empty-state i { font-size: 4rem; color: var(--testo-secondario); margin-bottom: 1.5rem; opacity: 0.4; }
+.empty-state p { font-size: 1.15rem; color: var(--testo-secondario); font-weight: 300; }
 
 .booking-list { display: flex; flex-direction: column; gap: 2rem; }
+
 .booking-card {
-    background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px;
-    padding: 2.5rem; display: flex; justify-content: space-between; align-items: center;
-    border-left: 6px solid var(--success-green); backdrop-filter: blur(10px); box-shadow: var(--glass-shadow);
+    background: var(--sfondo-schede); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    border-radius: 24px;
+    padding: 2.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-left: 6px solid var(--verde-successo); 
+    backdrop-filter: blur(10px); 
+    box-shadow: var(--ombra-effetto-vetro);
 }
-.booking-details h3 { font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1.2rem; font-weight: 500; }
-.booking-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; color: var(--text-muted); font-size: 1rem; }
-.booking-info-grid i { width: 22px; color: var(--text-muted); }
-.booking-info-grid strong { color: var(--text-main); font-weight: 500; }
-.people-count { grid-column: span 2; margin-top: 10px; color: var(--cyan-glow); font-weight: 600; background: rgba(0, 242, 254, 0.08); padding: 6px 18px; border-radius: 50px; display: inline-flex; width: fit-content; border: 1px solid rgba(0, 242, 254, 0.15); }
+
+.booking-details h3 { font-family: var(--font-titoli); font-size: 2rem; margin-bottom: 1.2rem; font-weight: 500; }
+.booking-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; color: var(--testo-secondario); font-size: 1rem; }
+.booking-info-grid i { width: 22px; color: var(--testo-secondario); }
+.booking-info-grid strong { color: var(--testo-primario); font-weight: 500; }
+
+.people-count { 
+    grid-column: span 2; 
+    margin-top: 10px; 
+    color: var(--ombra-luce-ciano); 
+    font-weight: 600; 
+    background: rgba(0, 242, 254, 0.08); 
+    padding: 6px 18px; 
+    border-radius: 50px; 
+    display: inline-flex; 
+    width: fit-content; 
+    border: 1px solid rgba(0, 242, 254, 0.15); 
+}
 
 .booking-actions { display: flex; flex-direction: column; gap: 12px; min-width: 180px; }
 
-/* Stile base del bottone in vetro (uguale per entrambi) */
 .btn-azione {
     background: rgba(255, 255, 255, 0.03);
-    color: var(--text-main);
-    border: 1px solid var(--glass-border);
+    color: var(--testo-primario);
+    border: 1px solid var(--bordo-effetto-vetro);
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
     font-weight: 600;
@@ -271,33 +403,30 @@ body.dashboard-theme {
     width: 100%;
 }
 
-/* Stile per il bottone Gestisci (Azzurro/Ciano al passaggio del mouse) */
 .btn-apri-modifica-prenotazione:hover {
     background: rgba(0, 242, 254, 0.1);
-    border-color: var(--cyan-glow);
-    color: var(--cyan-glow);
+    border-color: var(--ombra-luce-ciano);
+    color: var(--ombra-luce-ciano);
     box-shadow: 0 8px 20px rgba(0, 242, 254, 0.2);
     transform: translateY(-2px);
 }
 
-/* Stile specifico di base per il bottone Annulla (Rosso) */
 .btn-azione.btn-danger {
     background: rgba(255, 76, 76, 0.08);
     border-color: rgba(255, 76, 76, 0.2);
-    color: var(--danger-red);
+    color: var(--rosso-errore);
 }
 
-/* Effetto Hover per il bottone Annulla (Pieno) */
 .btn-azione.btn-danger:hover {
-    background: var(--danger-red);
+    background: var(--rosso-errore);
     color: white;
-    border-color: var(--danger-red);
+    border-color: var(--rosso-errore);
     box-shadow: 0 8px 20px rgba(255, 76, 76, 0.3);
     transform: translateY(-2px);
 }
 
 /* =========================================
-   7. MODALI IN VETRO E MESSAGGI DI ERRORE
+   7. FINESTRE MODALI E SELEZIONI OPTION
    ========================================= */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -305,88 +434,141 @@ body.dashboard-theme {
     display: flex; justify-content: center; align-items: center;
     z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s;
 }
+
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
 .modal-box {
-    background: #050e1a; border: 1px solid rgba(255,255,255,0.08);
-    padding: 3rem; border-radius: 28px; width: 95%; max-width: 600px;
+    background: #050e1a; 
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 3rem; 
+    border-radius: 28px; 
+    width: 95%; 
+    max-width: 600px;
     box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-    transform: translateY(-40px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    max-height: 90vh; overflow-y: auto;
+    transform: translateY(-40px); 
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-height: 90vh; 
+    overflow-y: auto;
 }
+
 .modal-overlay.active .modal-box { transform: translateY(0); }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; }
-.modal-header h2 { font-family: var(--font-heading); color: var(--text-main); font-size: 2.2rem; font-weight: 500; }
-.btn-close-icon { background: none; border: none; color: var(--text-muted); font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
-.btn-close-icon:hover { color: var(--danger-red); transform: rotate(90deg); }
+.modal-header h2 { font-family: var(--font-titoli); color: var(--testo-primario); font-size: 2.2rem; font-weight: 500; }
+
+.btn-close-icon { background: none; border: none; color: var(--testo-secondario); font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
+.btn-close-icon:hover { color: var(--rosso-errore); transform: rotate(90deg); }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .form-group-modal { margin-bottom: 1.8rem; }
 .full-width { grid-column: span 2; }
-.form-group-modal label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600; }
+.form-group-modal label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--testo-secondario); font-weight: 600; }
 
 .input-glass { position: relative; display: flex; align-items: center; }
-.input-glass i { position: absolute; left: 18px; color: var(--text-muted); font-size: 1.1rem; }
-.input-glass input, .input-glass select {
-    width: 100%; padding: 1.1rem 1rem 1.1rem 50px; background: rgba(255,255,255,0.02);
-    border: 1px solid var(--glass-border); border-radius: 14px; color: var(--text-main);
-    font-size: 1rem; transition: 0.3s;
-}
-.input-glass select { appearance: none; cursor: pointer; }
-.input-glass input:focus, .input-glass select:focus { outline: none; border-color: var(--cyan-glow); background: rgba(0,242,254,0.05); box-shadow: 0 0 20px rgba(0, 242, 254, 0.15); }
+.input-glass i { position: absolute; left: 18px; color: var(--testo-secondario); font-size: 1.1rem; }
 
-/* --- AGGIUNGI QUESTO BLOCCO QUI --- */
+.input-glass input, 
+.input-glass select {
+    width: 100%; 
+    padding: 1.1rem 1rem 1.1rem 50px; 
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--bordo-effetto-vetro); 
+    border-radius: 14px; 
+    color: var(--testo-primario);
+    font-size: 1rem; 
+    transition: 0.3s;
+}
+
+.input-glass select { appearance: none; cursor: pointer; }
+
+.input-glass input:focus, 
+.input-glass select:focus { 
+    outline: none; 
+    border-color: var(--ombra-luce-ciano); 
+    background: rgba(0,242,254,0.05); 
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.15); 
+}
+
 .input-glass select option {
-    background-color: var(--bg-deep); 
-    color: var(--text-main);          
+    background-color: var(--sfondo-principale); 
+    color: var(--testo-primario);          
     padding: 10px;                    
 }
 
-/* Sezione immatricolazione e radio */
-.box-immatricolazione-container { background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: 16px; }
+/* Gruppo Selezioni Radio */
+.box-immatricolazione-container { background: rgba(255,255,255,0.01); border: 1px solid var(--bordo-effetto-vetro); padding: 1.5rem; border-radius: 16px; }
 .radio-group { display: flex; gap: 25px; margin-top: 10px; }
-.radio-glass { display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none !important; font-size: 1rem !important; color: var(--text-main) !important; font-weight: 500 !important; }
-.radio-glass input { width: 18px; height: 18px; accent-color: var(--gold-primary); }
+.radio-glass { display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none !important; font-size: 1rem !important; color: var(--testo-primario) !important; font-weight: 500 !important; }
+.radio-glass input { width: 18px; height: 18px; accent-color: var(--accento-oro-base); }
 
 .btn-gold-modal {
-    width: 100%; background: var(--gold-gradient); color: #000; border: none;
-    padding: 1.2rem; border-radius: 50px; font-weight: 700; font-size: 1rem;
-    text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; margin-top: 1rem;
-    display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(212,175,55,0.2);
+    width: 100%; 
+    background: var(--gradiente-oro-primario); 
+    color: #000; 
+    border: none;
+    padding: 1.2rem; 
+    border-radius: 50px; 
+    font-weight: 700; 
+    font-size: 1rem;
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    margin-top: 1rem;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    box-shadow: 0 10px 20px rgba(212,175,55,0.2);
 }
+
 .btn-gold-modal:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(212,175,55,0.4); }
 
-.booking-summary-glass { margin-bottom: 2rem; background: rgba(212, 175, 55, 0.04); padding: 1.2rem; border-left: 4px solid var(--gold-primary); border-radius: 8px; font-size: 1.05rem; line-height: 1.8; }
+.booking-summary-glass { margin-bottom: 2rem; background: rgba(212, 175, 55, 0.04); padding: 1.2rem; border-left: 4px solid var(--accento-oro-base); border-radius: 8px; font-size: 1.05rem; line-height: 1.8; }
 
-/* Modale di conferma cancellazione custom */
+/* Modale Avviso Warning Custom */
 .warning-box { max-width: 460px; text-align: center; }
-.warning-icon { font-size: 4.5rem; color: var(--danger-red); margin-bottom: 1rem; }
-.warning-box h3 { font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 1rem; color: #fff; }
-.warning-box p { color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.05rem; }
+.warning-icon { font-size: 4.5rem; color: var(--rosso-errore); margin-bottom: 1rem; }
+.warning-box h3 { font-family: var(--font-titoli); font-size: 2.2rem; margin-bottom: 1rem; color: #fff; }
+.warning-box p { color: var(--testo-secondario); margin-bottom: 2.5rem; font-size: 1.05rem; }
 .modal-actions { display: flex; gap: 15px; }
-.btn-outline-light-modal, .btn-danger-modal { flex: 1; padding: 1.1rem; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; }
-.btn-outline-light-modal { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
+
+.btn-outline-light-modal, 
+.btn-danger-modal { 
+    flex: 1; 
+    padding: 1.1rem; 
+    border-radius: 50px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    font-size: 0.85rem; 
+}
+
+.btn-outline-light-modal { background: transparent; border: 1px solid var(--bordo-effetto-vetro); color: var(--testo-primario); }
 .btn-outline-light-modal:hover { background: rgba(255,255,255,0.08); }
-.btn-danger-modal { background: var(--danger-red); color: white; border: none; }
+.btn-danger-modal { background: var(--rosso-errore); color: white; border: none; }
 .btn-danger-modal:hover { background: #d32f2f; box-shadow: 0 10px 20px rgba(255,76,76,0.3); }
 
-/* Notifiche Toast e Messaggi Generici */
+/* Notifiche Toast di Sistema Dinamiche */
 .sys-msg { padding: 1rem 1.5rem; margin-bottom: 2rem; font-size: 0.95rem; border-radius: 14px; display: flex; align-items: center; gap: 12px; font-weight: 500; }
-.sys-error { background: rgba(255, 76, 76, 0.08); border: 1px solid var(--error-red); color: var(--error-red); }
+.sys-error { background: rgba(255, 76, 76, 0.08); border: 1px solid var(--rosso-errore); color: var(--rosso-errore); }
+
 .toast-premium {
-    position: fixed; bottom: 30px; right: 30px; background: #061224; color: var(--text-main);
+    position: fixed; bottom: 30px; right: 30px; background: #061224; color: var(--testo-primario);
     padding: 1.2rem 2rem; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     display: flex; align-items: center; gap: 15px; z-index: 10000; font-size: 1rem; font-weight: 600;
-    transform: translateX(120%); border: 1px solid var(--glass-border); border-left: 6px solid;
+    transform: translateX(120%); border: 1px solid var(--bordo-effetto-vetro); border-left: 6px solid;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 .toast-premium i { font-size: 1.4rem; }
-.toast-premium.successo { border-left-color: var(--success-green); }
+.toast-premium.successo { border-left-color: var(--verde-successo); }
 .toast-premium.nascondi { transform: translateX(120%); opacity: 0; }
 
 /* =========================================
-   8. MEDIA QUERIES (OTTIMIZZAZIONE CELLULARI PERFETTA)
+   8. MEDIA QUERIES (OTTIMIZZAZIONE CELLULARI)
    ========================================= */
 @media (max-width: 1200px) {
     .dash-header .nav-content, .tab-menu { padding: 0 2rem; }
@@ -400,13 +582,12 @@ body.dashboard-theme {
 }
 
 @media (max-width: 768px) {
-    .dash-header .nav-content { padding: 0 1.5rem !important; }
-    .text-logo { font-size: 1.8rem; } /* Rimpicciolisce il logo testuale */
-    .welcome-text { display: none; } /* Nasconde il "Bentornato" per lasciare spazio pulito */
-    .logout-text { display: none; } /* Lascia solo l'icona nel bottone Esci */
+    .dash-header .nav-content { padding: 0 1.5rem; }
+    .text-logo { font-size: 1.8rem; } 
+    .welcome-text { display: none; } 
+    .logout-text { display: none; } 
     .btn-logout { padding: 0.6rem; border-radius: 50%; width: 38px; height: 38px; justify-content: center; }
 
-    /* Slider orizzontale nativo per le Tab su smartphone */
     .tab-menu { padding: 0 1.5rem; gap: 1.5rem; }
     .tab-btn { padding: 1rem 0; font-size: 0.85rem; }
 
@@ -418,7 +599,6 @@ body.dashboard-theme {
     .griglia-barche { grid-template-columns: 1fr; gap: 2rem; }
     .boat-card-premium { min-height: auto; }
     
-    /* I moduli del modale tornano a colonna singola per essere cliccati facilmente con le dita */
     .form-grid { grid-template-columns: 1fr; gap: 0; }
     .full-width { grid-column: span 1; }
     .modal-box { padding: 2rem 1.5rem; border-radius: 24px; }
@@ -428,9 +608,51 @@ body.dashboard-theme {
     .people-count { grid-column: span 1; }
     .booking-card { padding: 1.8rem 1.5rem; }
 
-    /* Rimpicciolisce il pop-up della mappa su mobile */
     .custom-popup { padding: 2px; text-align: center; }
     .custom-popup .popup-title { font-size: 1.05rem; margin-bottom: 2px; }
     .custom-popup .popup-desc { font-size: 0.8rem; margin-bottom: 10px; }
     .btn-prenota-popup { padding: 6px 14px; font-size: 0.75rem; width: 100%; box-sizing: border-box; }
+}
+
+/* =========================================
+   9. NUOVE CLASSI DI UTILITÀ (Estrazione Inline CSS)
+   ========================================= */
+.blocco-immatricolazione-evidenza {
+    grid-column: span 2; 
+    background: rgba(0, 242, 254, 0.05); 
+    border-color: rgba(0, 242, 254, 0.2);
+}
+
+.testo-ciano {
+    color: var(--ombra-luce-ciano);
+}
+
+.testo-spaziato {
+    letter-spacing: 1px;
+}
+
+.form-azione-barca {
+    display: inline; 
+    flex: 1;
+}
+
+.margine-superiore-piccolo {
+    margin-top: 5px;
+}
+
+.form-azione-base {
+    display: inline;
+}
+
+.box-immatricolazione-nascosto {
+    display: none; 
+    margin-top: 15px;
+}
+
+.testo-maiuscolo {
+    text-transform: uppercase;
+}
+
+.nascosto {
+    display: none !important;
 }

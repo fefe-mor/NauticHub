@@ -1,193 +1,333 @@
 /* =========================================
-   1. VARIABILI GLOBALI E SCROLLBAR CUSTOM
+   1. VARIABILI GLOBALI (ROOT) E IMPOSTAZIONI BASE
    ========================================= */
 :root {
-    --bg-deep: #030B17;
-    --bg-card: rgba(15, 25, 45, 0.6); 
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --gold-primary: #D4AF37;
-    --gold-hover: #F3CA45;
-    --gold-gradient: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
-    --cyan-glow: #00F2FE;
-    --text-main: #F8FAFC;        
-    --text-muted: #94A3B8;       
-    --font-ui: 'Inter', sans-serif;
-    --font-heading: 'Playfair Display', serif;
+    /* Colori di Sfondo */
+    --sfondo-principale: #030B17;
+    --sfondo-schede: rgba(15, 25, 45, 0.6); 
+    
+    /* Bordi ed Effetti */
+    --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
+    --ombra-luce-ciano: #00F2FE;
+    
+    /* Colori Accento (Oro) */
+    --accento-oro-base: #D4AF37;
+    --accento-oro-hover: #F3CA45;
+    --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
+    
+    /* Tipografia e Colori Testo */
+    --testo-primario: #F8FAFC;        
+    --testo-secondario: #94A3B8;       
+    --font-interfaccia: 'Inter', sans-serif;
+    --font-titoli: 'Playfair Display', serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold-hover); }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    scroll-behavior: smooth; 
+}
 
 body { 
-    font-family: var(--font-ui); background-color: var(--bg-deep); 
-    color: var(--text-main); line-height: 1.6; overflow-x: hidden; 
+    font-family: var(--font-interfaccia); 
+    background-color: var(--sfondo-principale); 
+    color: var(--testo-primario); 
+    line-height: 1.6; 
+    overflow-x: hidden; 
 }
 
-h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 600; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+h1, h2, h3, h4 { 
+    font-family: var(--font-titoli); 
+    font-weight: 600; 
+}
 
-.gold-text { color: var(--gold-primary); font-style: italic; }
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 0 2rem; 
+}
+
+/* =========================================
+   2. UTILITÀ DI TESTO E SCROLLBAR
+   ========================================= */
+.gold-text { 
+    color: var(--accento-oro-base); 
+    font-style: italic; 
+}
+
 .gold-gradient-text {
-    background: var(--gold-gradient);
+    background: var(--gradiente-oro-primario);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-style: italic;
 }
-.lead-text { font-size: 1.25rem; color: var(--text-main); margin-bottom: 1.5rem; font-weight: 300;}
+
+.lead-text { 
+    font-size: 1.25rem; 
+    color: var(--testo-primario); 
+    margin-bottom: 1.5rem; 
+    font-weight: 300; 
+}
+
+/* Personalizzazione Barra di Scorrimento */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--sfondo-principale); }
+::-webkit-scrollbar-thumb { background: var(--accento-oro-base); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accento-oro-hover); }
 
 /* =========================================
-   2. BOTTONI & ANIMAZIONI RADAR
+   3. BOTTONI GENERALI E ANIMAZIONI
    ========================================= */
 a { text-decoration: none; }
 
+/* Bottone dorato principale */
 .btn-gold {
-    background: var(--gold-gradient); color: #000; padding: 0.8rem 2rem;
-    border-radius: 50px; font-weight: 600; font-family: var(--font-ui);
-    display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease;
-    border: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+    background: var(--gradiente-oro-primario); 
+    color: #000; 
+    padding: 0.8rem 2rem;
+    border-radius: 50px; 
+    font-weight: 600; 
+    font-family: var(--font-interfaccia);
+    display: inline-flex; 
+    align-items: center; 
+    gap: 10px; 
+    transition: all 0.3s ease;
+    border: none; 
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
 }
-.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
 
-.btn-large { padding: 1.2rem 3rem; font-size: 1.1rem; }
+.btn-gold:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); 
+}
 
+.btn-large { 
+    padding: 1.2rem 3rem; 
+    font-size: 1.1rem; 
+}
+
+/* Bottone trasparente con bordo chiaro */
 .btn-outline-light {
-    border: 1px solid var(--glass-border); color: var(--text-main);
-    background: rgba(255, 255, 255, 0.05); padding: 1.2rem 3rem; border-radius: 50px;
-    font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(5px);
+    border: 1px solid var(--bordo-effetto-vetro); 
+    color: var(--testo-primario);
+    background: rgba(255, 255, 255, 0.05); 
+    padding: 1.2rem 3rem; 
+    border-radius: 50px;
+    font-weight: 500; 
+    transition: all 0.3s ease; 
+    backdrop-filter: blur(5px);
 }
-.btn-outline-light:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--text-main); }
 
+.btn-outline-light:hover { 
+    background: rgba(255, 255, 255, 0.1); 
+    border-color: var(--testo-primario); 
+}
+
+/* Bottone per il Login (Navbar) con effetto azzurrato */
 .btn-primary-glow {
-    background: transparent; color: var(--text-main); border: 1px solid var(--glass-border);
-    padding: 0.6rem 1.5rem; border-radius: 50px; font-size: 0.95rem; font-weight: 500;
+    background: transparent; 
+    color: var(--testo-primario); 
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.6rem 1.5rem; 
+    border-radius: 50px; 
+    font-size: 0.95rem; 
+    font-weight: 500;
     transition: all 0.3s ease;
 }
+
 .btn-primary-glow:hover {
-    background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    background: rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     border-color: transparent;
 }
 
-/* =========================================
-   3. HEADER E NAVBAR (PULITO E COERENTE)
-   ========================================= */
-.navbar-landing {
-    background: rgba(3, 11, 23, 0.7);
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 0.5rem 0;
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-}
-
-/* Gestione pulita dello spazio interno senza forzature con !important */
-.navbar-landing .nav-content { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    width: 100%;
-    max-width: 100%; 
-    padding: 0 3rem; 
-    margin: 0 auto;
-}
-
-/* Nuovo Logo Testuale NauticHUB */
-.text-logo {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--text-main);
-    text-decoration: none;
-    letter-spacing: 1px;
-    transition: transform 0.3s;
-    display: flex;
-    align-items: baseline;
-}
-.text-logo:hover { 
-    transform: scale(1.02); 
-}
-
-.gradient-logo-accent {
-    background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-family: var(--font-ui);
-    font-weight: 800;
-    font-style: italic;
-}
-
-/* Allineamento degli elementi del menu */
-.main-nav { display: flex; gap: 2.5rem; margin-left: auto; margin-right: 3rem; }
-.main-nav a { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
-.main-nav a:hover { color: var(--text-main); }
-
-
-/* =========================================
-   4. HERO SECTION 
-   ========================================= */
-.hero-section {
-    position: relative; min-height: 100vh; display: flex; align-items: center;
-    padding-top: 80px; overflow: hidden;
-}
-
-.hero-video-bg {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-size: cover; background-position: center; z-index: -2;
-}
-
-.hero-image-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(180deg, rgba(3, 11, 23, 0.7) 0%, rgba(3, 11, 23, 1) 100%); z-index: -1;
-}
-
-.hero-content { max-width: 900px; z-index: 1; text-align: center; margin: 0 auto; }
-
-.badge-tech {
-    display: inline-block; background: rgba(0, 242, 254, 0.1); color: var(--cyan-glow);
-    padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
-    margin-bottom: 2rem; border: 1px solid rgba(0, 242, 254, 0.2);
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); animation: radarPulse 2s infinite;
-}
-
+/* Animazione ad onda (effetto radar) per il badge in copertina */
 @keyframes radarPulse {
     0% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.4); }
     70% { box-shadow: 0 0 0 15px rgba(0, 242, 254, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
 }
 
-.hero-content h1 { font-size: 4.5rem; line-height: 1.1; margin-bottom: 1.5rem; }
-.hero-content p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 700px; margin-inline: auto; }
-.hero-actions { display: flex; gap: 1.5rem; justify-content: center; }
+/* =========================================
+   4. BARRA DI NAVIGAZIONE (HEADER)
+   ========================================= */
+.navbar-landing {
+    background: rgba(3, 11, 23, 0.7);
+    backdrop-filter: blur(15px); 
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.5rem 0;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    z-index: 1000;
+}
+
+.navbar-landing .nav-content { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    max-width: 100%; 
+    padding: 0 3rem; 
+    margin: 0 auto;
+}
+
+.text-logo {
+    font-family: var(--font-titoli); 
+    font-size: 2.2rem; 
+    font-weight: 700;
+    color: var(--testo-primario); 
+    text-decoration: none; 
+    letter-spacing: 1px;
+    transition: transform 0.3s; 
+    display: flex; 
+    align-items: baseline;
+}
+
+.text-logo:hover { 
+    transform: scale(1.02); 
+}
+
+.gradient-logo-accent {
+    background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-interfaccia); 
+    font-weight: 800; 
+    font-style: italic;
+}
+
+.main-nav { 
+    display: flex; 
+    gap: 2.5rem; 
+    margin-left: auto; 
+    margin-right: 3rem; 
+}
+
+.main-nav a { 
+    color: var(--testo-secondario); 
+    font-size: 0.95rem; 
+    font-weight: 500; 
+    transition: color 0.3s; 
+}
+
+.main-nav a:hover { 
+    color: var(--testo-primario); 
+}
 
 /* =========================================
-   5. SOCIAL PROOF (TICKER INFINITO E FLUIDO)
+   5. SEZIONE HERO (COPERTINA PRINCIPALE)
+   ========================================= */
+.hero-section {
+    position: relative; 
+    min-height: 100vh; 
+    display: flex; 
+    align-items: center;
+    padding-top: 80px; 
+    overflow: hidden;
+}
+
+.hero-video-bg { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-size: cover; 
+    background-position: center; 
+    z-index: -2; 
+}
+
+.hero-image-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: linear-gradient(180deg, rgba(3, 11, 23, 0.7) 0%, rgba(3, 11, 23, 1) 100%); 
+    z-index: -1; 
+}
+
+.hero-content { 
+    max-width: 900px; 
+    z-index: 1; 
+    text-align: center; 
+    margin: 0 auto; 
+}
+
+.hero-content h1 { 
+    font-size: 4.5rem; 
+    line-height: 1.1; 
+    margin-bottom: 1.5rem; 
+}
+
+.hero-content p { 
+    font-size: 1.2rem; 
+    color: var(--testo-secondario); 
+    margin-bottom: 3rem; 
+    max-width: 700px; 
+    margin-inline: auto; 
+}
+
+.hero-actions { 
+    display: flex; 
+    gap: 1.5rem; 
+    justify-content: center; 
+}
+
+.badge-tech {
+    display: inline-block; 
+    background: rgba(0, 242, 254, 0.1); 
+    color: var(--ombra-luce-ciano);
+    padding: 0.5rem 1.2rem; 
+    border-radius: 50px; 
+    font-size: 0.85rem; 
+    font-weight: 600;
+    margin-bottom: 2rem; 
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); 
+    animation: radarPulse 2s infinite;
+}
+
+/* =========================================
+   6. SEZIONE PARTNER (RIGA A SCORRIMENTO)
    ========================================= */
 .partners-section {
-    padding: 3rem 0; border-bottom: 1px solid var(--glass-border); overflow: hidden;
+    padding: 3rem 0; 
+    border-bottom: 1px solid var(--bordo-effetto-vetro); 
+    overflow: hidden;
     background: linear-gradient(90deg, rgba(3,11,23,1) 0%, rgba(10,25,47,0.5) 50%, rgba(3,11,23,1) 100%);
 }
 
-.partners-title { text-align: center; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2rem; }
+.partners-title { 
+    text-align: center; 
+    color: var(--testo-secondario); 
+    font-size: 0.9rem; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin-bottom: 2rem; 
+}
 
 .partners-ticker { 
     display: flex; 
     width: fit-content; 
 }
 
-.ticker-track {
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-    padding-right: 4rem; /* Fondamentale: deve essere uguale al gap per non fare scatti */
-    animation: scrollTicker 20s linear infinite;
+.ticker-track { 
+    display: flex; 
+    align-items: center; 
+    gap: 4rem; 
+    padding-right: 4rem; 
+    animation: scrollTicker 20s linear infinite; 
 }
 
 .ticker-track span { 
-    font-family: var(--font-ui); 
+    font-family: var(--font-interfaccia); 
     font-size: 1.1rem; 
     font-weight: 500; 
     color: rgba(255, 255, 255, 0.6); 
@@ -198,83 +338,183 @@ a { text-decoration: none; }
     0% { transform: translateX(0); } 
     100% { transform: translateX(-100%); } 
 }
+
 /* =========================================
-   6. CARATTERISTICHE (BENTO GRID)
+   7. CARATTERISTICHE (BENTO GRID)
    ========================================= */
 .features-section { padding: 8rem 0; }
 .section-header { text-align: center; margin-bottom: 5rem; }
 .section-title { font-size: 3rem; margin-bottom: 1rem; }
-.section-subtitle { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 
-.features-bento-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+.section-subtitle { 
+    color: var(--testo-secondario); 
+    font-size: 1.1rem; 
+    max-width: 600px; 
+    margin: 0 auto; 
+}
+
+.features-bento-grid { 
+    display: grid; 
+    grid-template-columns: 1fr; 
+    gap: 2rem; 
+}
 
 .bento-card {
-    background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px;
-    padding: 3rem 2rem; backdrop-filter: blur(10px); transition: all 0.4s ease;
-    position: relative; overflow: hidden;
+    background: var(--sfondo-schede); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    border-radius: 24px;
+    padding: 3rem 2rem; 
+    backdrop-filter: blur(10px); 
+    transition: all 0.4s ease;
+    position: relative; 
+    overflow: hidden;
 }
 
-.bento-card:hover { transform: translateY(-5px); border-color: rgba(0, 242, 254, 0.5); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.1); }
+.bento-card:hover { 
+    transform: translateY(-5px); 
+    border-color: rgba(0, 242, 254, 0.5); 
+    box-shadow: 0 10px 30px rgba(0, 242, 254, 0.1); 
+}
+
+.bento-card h3 { 
+    font-size: 1.5rem; 
+    margin-bottom: 1rem; 
+    font-family: var(--font-interfaccia); 
+    font-weight: 600; 
+}
+
+.bento-card p { 
+    color: var(--testo-secondario); 
+    font-size: 1rem; 
+    line-height: 1.7; 
+}
 
 .icon-wrapper {
-    width: 60px; height: 60px; background: rgba(255, 255, 255, 0.05); border-radius: 16px;
-    display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-    color: var(--gold-primary); margin-bottom: 1.5rem; border: 1px solid var(--glass-border);
+    width: 60px; 
+    height: 60px; 
+    background: rgba(255, 255, 255, 0.05); 
+    border-radius: 16px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 1.5rem;
+    color: var(--accento-oro-base); 
+    margin-bottom: 1.5rem; 
+    border: 1px solid var(--bordo-effetto-vetro);
 }
 
-.bento-card h3 { font-size: 1.5rem; margin-bottom: 1rem; font-family: var(--font-ui); font-weight: 600; }
-.bento-card p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
-
-@media (min-width: 992px) { .features-bento-grid { grid-template-columns: repeat(3, 1fr); } .highlight-card { grid-column: span 2; } }
+@media (min-width: 992px) { 
+    .features-bento-grid { grid-template-columns: repeat(3, 1fr); } 
+    .highlight-card { grid-column: span 2; } 
+}
 
 /* =========================================
-   7. CHI SIAMO E PROGETTO
+   8. SEZIONE PROGETTO (CHI SIAMO)
    ========================================= */
 .about-section { padding: 8rem 0; position: relative; }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+
+.about-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 6rem; 
+    align-items: center; 
+}
+
 .about-image-wrapper { position: relative; }
 
-.about-image-placeholder {
-    width: 100%; height: 500px; background-size: cover; background-position: center;
-    border-radius: 30px; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-    border: 1px solid var(--glass-border);
+.about-image-placeholder { 
+    width: 100%; 
+    height: 500px; 
+    background-size: cover; 
+    background-position: center; 
+    border-radius: 30px; 
+    position: relative; 
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
+    border: 1px solid var(--bordo-effetto-vetro); 
 }
 
 .floating-badge {
-    position: absolute; bottom: -20px; right: -20px; background: rgba(10, 25, 47, 0.95);
-    backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.3); padding: 1rem 1.5rem;
-    border-radius: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    position: absolute; 
+    bottom: -20px; 
+    right: -20px; 
+    background: rgba(10, 25, 47, 0.95);
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(212, 175, 55, 0.3); 
+    padding: 1rem 1.5rem;
+    border-radius: 20px; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
 }
 
-.floating-badge i { font-size: 2rem; color: var(--gold-primary); }
-.floating-badge span { font-weight: 600; font-family: var(--font-ui); }
+.floating-badge i { 
+    font-size: 2rem; 
+    color: var(--accento-oro-base); 
+}
 
-.about-text p { color: var(--text-muted); margin-bottom: 1.5rem; }
-.about-list { list-style: none; margin-bottom: 2rem; }
-.about-list li { margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
-.about-list i { color: var(--cyan-glow); }
+.floating-badge span { 
+    font-weight: 600; 
+    font-family: var(--font-interfaccia); 
+}
 
+.about-text p { 
+    color: var(--testo-secondario); 
+    margin-bottom: 1.5rem; 
+}
+
+.about-list { 
+    list-style: none; 
+    margin-bottom: 2rem; 
+}
+
+.about-list li { 
+    margin-bottom: 1rem; 
+    color: var(--testo-primario); 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.about-list i { color: var(--ombra-luce-ciano); }
 
 /* =========================================
-   8. CALL TO ACTION FINALE (CODICE PULITO)
+   9. CALL TO ACTION FINALE (RIQUADRO DI INVITO)
    ========================================= */
-.cta-section {
-    padding: 8rem 0; position: relative; text-align: center;
-    /* Codice pulito da tag inutili */
-    background: url('../img/sfondo-cta.jpeg') center/cover fixed; 
+.cta-section { 
+    padding: 8rem 0; 
+    position: relative; 
+    text-align: center; 
+    background: url('../img/sfondo.jpeg') center/cover fixed; 
 }
 
-.cta-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(3, 11, 23, 0.85); backdrop-filter: blur(5px);
+.cta-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(3, 11, 23, 0.85); 
+    backdrop-filter: blur(5px); 
 }
 
 .cta-content { position: relative; z-index: 2; }
-.cta-content h2 { font-size: 3.5rem; margin-bottom: 1.5rem; }
-.cta-content p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 600px; margin-inline: auto; }
+
+.cta-content h2 { 
+    font-size: 3.5rem; 
+    margin-bottom: 1.5rem; 
+}
+
+.cta-content p { 
+    font-size: 1.2rem; 
+    color: var(--testo-secondario); 
+    margin-bottom: 3rem; 
+    max-width: 600px; 
+    margin-inline: auto; 
+}
 
 /* =========================================
-   9. RESPONSIVE DESIGN (MOBILE)
+   10. RESPONSIVE DESIGN (OTTIMIZZAZIONE MOBILE)
    ========================================= */
 @media (max-width: 992px) {
     .about-grid { grid-template-columns: 1fr; gap: 4rem; }
@@ -283,51 +523,44 @@ a { text-decoration: none; }
 }
 
 @media (max-width: 768px) {
-    /* 1. Mettiamo il container in modalità "relativa" per poterci muovere liberamente dentro */
-    .navbar-landing .nav-content,
+    .navbar-landing .nav-content, 
     .navbar-landing .nav-content.container { 
-        position: relative;
-        justify-content: flex-start; /* Il logo si ancora a sinistra in pace */
-        padding-left: 15px;
-        padding-right: 0; /* Annulliamo i vecchi padding di destra che facevano danni */
+        position: relative; 
+        justify-content: flex-start; 
+        padding-left: 15px; 
+        padding-right: 0; 
     }
     
     .text-logo { font-size: 1.5rem; }
+    .main-nav { display: none; } 
     
-    /* 2. POSIZIONAMENTO ASSOLUTO: Ora il bottone ubbidisce solo a noi */
-    .auth-buttons {
-        position: absolute;
-        right: 15px; /* <--- AUMENTA QUESTO NUMERO (es. 40px) PER SPINGERLO PIÙ A SINISTRA */
-        top: 50%;
-        transform: translateY(-50%); /* Lo tiene perfettamente allineato al centro verticale */
+    .auth-buttons { 
+        position: absolute; 
+        right: 15px; 
+        top: 50%; 
+        transform: translateY(-50%); 
     }
     
-    .btn-primary-glow {
+    .btn-primary-glow { 
         padding: 0.4rem 0.8rem; 
-        font-size: 0.75rem;   
-        white-space: nowrap; /* Niente più ritagli brutti a capo */
+        font-size: 0.75rem; 
+        white-space: nowrap; 
     }
     
     .hero-content h1 { font-size: 2.8rem; }
     .hero-actions { flex-direction: column; width: 100%; padding: 0 1rem; }
     .btn-large { width: 100%; text-align: center; justify-content: center; }
-    .main-nav { display: none; } 
+    
     .section-title { font-size: 2.2rem; }
     .features-section, .about-section, .cta-section { padding: 4rem 0; }
     .bento-card { padding: 2rem 1.5rem; }
-    
-    .cta-section { background-attachment: scroll; }
+    .cta-section { background-attachment: scroll; } 
 }
 
 @media (max-width: 375px) {
-    .navbar-landing .nav-content,
+    .navbar-landing .nav-content, 
     .navbar-landing .nav-content.container { padding-left: 10px; }
-    
     .text-logo { font-size: 1.3rem; }
-    
-    .auth-buttons {
-        right: 15px; /* Regolazione millimetrica per i display minuscoli */
-    }
-    
+    .auth-buttons { right: 15px; }
     .btn-primary-glow { padding: 0.35rem 0.6rem; font-size: 0.7rem; }
 }

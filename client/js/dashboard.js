@@ -1,10 +1,13 @@
-// js/dashboard.js
-// Riscritto interamente in Vanilla JS (JS Puro) per un codice accademico impeccabile ed efficiente
-
+/**
+ * File: js/dashboard.js
+ * Logica lato client della Dashboard: Gestione Schede, Mappa Leaflet, Modali e chiamate AJAX.
+ * Scritto interamente in Vanilla JS per massimizzare le prestazioni.
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
+    
     // =========================================
-    // 0. GESTIONE DINAMICA IMMATRICOLAZIONE
+    // 0. GESTIONE DINAMICA CAMPO IMMATRICOLAZIONE
     // =========================================
     const boxImmatricolazione = document.getElementById('box-immatricolazione');
     const inputImmatricolazione = document.getElementById('boat-immatricolazione');
@@ -12,19 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const gestisciImmatricolazione = (valore) => {
         if (!boxImmatricolazione || !inputImmatricolazione) return;
+        
         if (valore === 'si') {
-            boxImmatricolazione.style.display = 'block';
+            boxImmatricolazione.classList.remove('box-immatricolazione-nascosto');
+            boxImmatricolazione.style.display = 'block'; 
             inputImmatricolazione.required = true; 
         } else {
             boxImmatricolazione.style.display = 'none';
+            boxImmatricolazione.classList.add('box-immatricolazione-nascosto');
             inputImmatricolazione.required = false; 
-            inputImmatricolazione.value = ''; 
+            inputImmatricolazione.value = ''; // Pulisce il campo se l'utente cambia idea
         }
     };
 
-    // Ascolto il cambio di selezione dall'utente (FIX iPhone/iOS Safari)
+    // Ascoltatore eventi per il cambio selezione (Con fix specifico per iOS/Safari)
     radioImmatricolazione.forEach(radio => {
-        // Ascoltiamo sia 'change' che 'click' per aggirare il blocco di iOS
         ['change', 'click', 'touchstart'].forEach(evento => {
             radio.addEventListener(evento, (e) => {
                 gestisciImmatricolazione(e.target.value);
@@ -33,42 +38,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // =========================================
-    // 1. GESTIONE TAB CON SESSION STORAGE
+    // 1. GESTIONE SCHEDE (TAB) CON MEMORIA DI SESSIONE E URL
     // =========================================
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    let savedTab = sessionStorage.getItem('activeTab');
+    const pulsantiSchede = document.querySelectorAll('.tab-btn');
+    const contenutiSchede = document.querySelectorAll('.tab-content');
     
-    // Ripristina l'ultima tab attiva salvata nella sessione
-    if (savedTab) {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
+    // Controlla se c'è un ordine esplicito dall'URL (es: dashboard.php?tab=prenotazioni)
+    const parametriUrl = new URLSearchParams(window.location.search);
+    const schedaDaUrl = parametriUrl.get('tab');
+    
+    let schedaSalvata = sessionStorage.getItem('schedaAttivaDashboard');
+    
+    // Se c'è un parametro nell'URL, ha la priorità assoluta e sovrascrive la memoria
+    if (schedaDaUrl) {
+        schedaSalvata = 'tab-' + schedaDaUrl;
+        sessionStorage.setItem('schedaAttivaDashboard', schedaSalvata);
+        // Pulisce l'URL per renderlo elegante senza ricaricare la pagina
+        window.history.replaceState(null, '', window.location.pathname);
+    }
+
+    // Ripristina l'ultima scheda attiva salvata in memoria dopo un ricaricamento
+    if (schedaSalvata) {
+        pulsantiSchede.forEach(btn => btn.classList.remove('active'));
+        contenutiSchede.forEach(contenuto => contenuto.classList.remove('active'));
         
-        const activeTabBtn = document.querySelector(`.tab-btn[data-target="${savedTab}"]`);
-        const activeContent = document.getElementById(savedTab);
+        const pulsanteAttivo = document.querySelector(`.tab-btn[data-target="${schedaSalvata}"]`);
+        const contenutoAttivo = document.getElementById(schedaSalvata);
         
-        if (activeTabBtn && activeContent) {
-            activeTabBtn.classList.add('active');
-            activeContent.classList.add('active');
+        if (pulsanteAttivo && contenutoAttivo) {
+            pulsanteAttivo.classList.add('active');
+            contenutoAttivo.classList.add('active');
         }
     }
 
-    // Cambiamento della Tab al Click
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
+    // Gestione del cambio scheda al click
+    pulsantiSchede.forEach(pulsante => {
+        pulsante.addEventListener('click', function() {
+            const idTarget = this.getAttribute('data-target');
 
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.remove('active'));
+            pulsantiSchede.forEach(btn => btn.classList.remove('active'));
+            contenutiSchede.forEach(contenuto => contenuto.classList.remove('active'));
             
             this.classList.add('active');
-            const targetContent = document.getElementById(targetId);
-            if (targetContent) targetContent.classList.add('active');
+            const contenutoTarget = document.getElementById(idTarget);
+            if (contenutoTarget) contenutoTarget.classList.add('active');
 
-            sessionStorage.setItem('activeTab', targetId);
+            sessionStorage.setItem('schedaAttivaDashboard', idTarget);
 
-            // Bug-Fix Leaflet: Forza la mappa a ridisegnare i bordi se la tab diventa visibile
-            if (targetId === 'tab-prenota' && window.mappaPorti) {
+            // Bug-Fix Leaflet: Forza il ricalcolo dei confini della mappa 
+            // quando il contenitore passa da nascosto a visibile
+            if (idTarget === 'tab-prenota' && window.mappaPorti) {
                 setTimeout(() => { 
                     window.mappaPorti.invalidateSize(); 
                 }, 450);
@@ -77,19 +96,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =========================================
-    // 2. GESTIONE MAPPA LEAFLET (TEMA TECH)
+    // 2. INIZIALIZZAZIONE MAPPA LEAFLET
     // =========================================
     if (document.getElementById('mappa-vera')) {
-        // Inizializzazione della mappa centrata su Genova
+        // Creazione mappa centrata su Genova
         window.mappaPorti = L.map('mappa-vera').setView([44.4056, 8.9463], 6);
         
-        // Mappa OpenStreetMap standard
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
             maxZoom: 18 
         }).addTo(window.mappaPorti);
         
-        // Icona personalizzata Oro Premium per il Marker
-        const iconaPorto = L.icon({
+        // Icona personalizzata Oro per coordinarsi con il tema del sito
+        const iconaPortoPremium = L.icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
             iconSize: [25, 41], 
@@ -98,23 +116,24 @@ document.addEventListener('DOMContentLoaded', () => {
             shadowSize: [41, 41]
         });
 
-        // Calcola una larghezza minima dinamica: più piccola sui telefoni
+        // Calcolo dinamico della larghezza del popup (più compatto su mobile)
         const larghezzaPopUp = window.innerWidth <= 768 ? 200 : 260;
         
-        // Marker Porto di Genova (Attivo)
-        L.marker([44.4056, 8.9463], { icon: iconaPorto }).addTo(window.mappaPorti)
+        // Marker Attivo: Porto di Genova
+        L.marker([44.4056, 8.9463], { icon: iconaPortoPremium }).addTo(window.mappaPorti)
             .bindPopup(`
                 <div class="custom-popup">
                     <div class="popup-title">Smart Marina Genova</div>
                     <div class="popup-desc">Liguria • 150 Posti • 380V Disponibile</div>
                     <a href="presentazione-genova.php" class="btn-prenota-popup">Vedi e Prenota</a>
                 </div>
-            `, { className: 'custom-popup',
+            `, { 
+                 className: 'custom-popup',
                  minWidth: larghezzaPopUp
              })
             .openPopup();
         
-        // Porti futuri (Coming Soon)
+        // Marker Futuri: Coming Soon
         L.marker([41.13, 16.85]).addTo(window.mappaPorti)
             .bindPopup('<div class="custom-popup"><div class="popup-title" style="color:#7f8c8d;">Marina di Bari</div><div class="popup-desc">Prossimamente disponibile</div></div>', { className: 'custom-popup' });
             
@@ -123,27 +142,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================
-    // 3. GESTIONE MODALE BARCHE
+    // 3. GESTIONE MODALE BARCHE (Aggiungi/Modifica)
     // =========================================
-    const modal = document.getElementById('boatModal');
-    const btnChiudi = document.getElementById('btn-chiudi-modal');
-    const btnAggiungi = document.getElementById('btn-aggiungi-barca');
-    const btnModifiche = document.querySelectorAll('.btn-modifica');
+    const modaleBarca = document.getElementById('boatModal');
+    const btnChiudiModale = document.getElementById('btn-chiudi-modal');
+    const btnAggiungiBarca = document.getElementById('btn-aggiungi-barca');
+    const pulsantiModifica = document.querySelectorAll('.btn-modifica');
 
-    const apriModalBarca = (id, nome, tipo, lunghezza, larghezza, pescaggio, altezza, immatricolazione) => {
+    // Funzione per popolare e aprire il modale
+    const apriModaleBarca = (id, nome, tipo, lunghezza, larghezza, pescaggio, altezza, immatricolazione) => {
         document.getElementById('modal-title').innerText = (id === 'nuovo') ? "Aggiungi Imbarcazione" : "Modifica Imbarcazione";
         document.getElementById('boat-id').value = id;
         document.getElementById('boat-name').value = nome;
         document.getElementById('boat-type').value = tipo;
         document.getElementById('boat-length').value = lunghezza;
         
-        // Campi aggiuntivi mappati per evitare svuotamenti accidentali
         if(document.getElementById('boat-width')) document.getElementById('boat-width').value = larghezza || '';
         if(document.getElementById('boat-draft')) document.getElementById('boat-draft').value = pescaggio || '';
         if(document.getElementById('boat-height')) document.getElementById('boat-height').value = altezza || '';
         
-
-        // Gestione Radio Button Immatricolazione (Fix affidabile)
+        // Ripristino corretto dello stato dei Radio Button Immatricolazione
         const radioNo = document.querySelector('input[name="ha_immatricolazione"][value="no"]');
         const radioSi = document.querySelector('input[name="ha_immatricolazione"][value="si"]');
         
@@ -165,21 +183,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        modal.classList.add('active');
+        modaleBarca.classList.add('active');
     };
 
-    if(btnChiudi) {
-        btnChiudi.addEventListener('click', () => modal.classList.remove('active'));
+    if(btnChiudiModale) {
+        btnChiudiModale.addEventListener('click', () => modaleBarca.classList.remove('active'));
     }
 
-    if(btnAggiungi) {
-        btnAggiungi.addEventListener('click', () => apriModalBarca('nuovo', '', '', '', '', '', '', ''));
+    if(btnAggiungiBarca) {
+        btnAggiungiBarca.addEventListener('click', () => apriModaleBarca('nuovo', '', '', '', '', '', '', ''));
     }
 
-    btnModifiche.forEach(btn => {
+    pulsantiModifica.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const target = e.currentTarget;
-            apriModalBarca(
+            apriModaleBarca(
                 target.getAttribute('data-id'),
                 target.getAttribute('data-nome'),
                 target.getAttribute('data-tipo'),
@@ -193,9 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =========================================
-    // 4. GESTIONE TOAST NOTIFICHE
+    // 4. GESTIONE NOTIFICHE A SCOMPARSA (TOAST)
     // =========================================
-    // Toast da PHP (Salvataggio/Eliminazione base)
+    // Toast generati dal PHP
     const toastSistema = document.getElementById('toast-sistema');
     if (toastSistema) {
         setTimeout(() => {
@@ -204,63 +222,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    // Toast da AJAX (Salvato in cache dalla mappa)
-    const savedSuccessToast = sessionStorage.getItem('ajax_toast_success');
-    if (savedSuccessToast) {
+    // Toast generati tramite AJAX (salvati in sessionStorage)
+    const toastSuccessoSalvato = sessionStorage.getItem('ajax_toast_success');
+    if (toastSuccessoSalvato) {
         sessionStorage.removeItem('ajax_toast_success');
-        const toast = document.createElement('div');
-        toast.className = 'toast-premium successo';
-        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${savedSuccessToast}</span>`;
-        document.body.appendChild(toast);
+        const nuovoToast = document.createElement('div');
+        nuovoToast.className = 'toast-premium successo';
+        nuovoToast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${toastSuccessoSalvato}</span>`;
+        document.body.appendChild(nuovoToast);
+        
         setTimeout(() => {
-            toast.classList.add('nascondi');
-            setTimeout(() => toast.remove(), 500);
+            nuovoToast.classList.add('nascondi');
+            setTimeout(() => nuovoToast.remove(), 500);
         }, 4000);
     }
 
     // =========================================
-    // 5. MODALE ELIMINAZIONE CONFERMA
+    // 5. MODALE DI CONFERMA ELIMINAZIONE
     // =========================================
-    const modalConferma = document.getElementById('modal-conferma');
+    const modaleConferma = document.getElementById('modal-conferma');
     const btnConfermaNo = document.getElementById('btn-conferma-no');
     const btnConfermaSi = document.getElementById('btn-conferma-si');
     const testoConferma = document.getElementById('testo-conferma');
-    let formDaInviare = null;
+    let moduloDaInviare = null;
 
     document.querySelectorAll('.btn-elimina-custom').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            formDaInviare = this.closest('form'); 
+            moduloDaInviare = this.closest('form'); 
             let messaggio = this.getAttribute('data-messaggio');
             if(messaggio) testoConferma.innerText = messaggio;
-            modalConferma.classList.add('active'); 
+            modaleConferma.classList.add('active'); 
         });
     });
 
     if(btnConfermaNo) {
         btnConfermaNo.addEventListener('click', () => {
-            modalConferma.classList.remove('active');
-            formDaInviare = null;
+            modaleConferma.classList.remove('active');
+            moduloDaInviare = null;
         });
     }
 
     if(btnConfermaSi) {
         btnConfermaSi.addEventListener('click', () => {
-            if(formDaInviare) {
+            if(moduloDaInviare) {
                 btnConfermaSi.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
-                formDaInviare.submit(); 
+                moduloDaInviare.submit(); 
             }
         });
     }
 
     // =========================================
-    // 6. AJAX MODIFICA PRENOTAZIONE
+    // 6. GESTIONE CHIAMATA AJAX (Modifica Prenotazione)
     // =========================================
-    const modalEditBooking = document.getElementById('editBookingModal');
-    const btnChiudiEditBooking = document.getElementById('btn-chiudi-edit-booking');
-    const formEditBooking = document.getElementById('form-edit-booking');
-    const notificaEdit = document.getElementById('notifica-edit-modal');
-    const btnSalvaEdit = document.getElementById('btn-salva-edit');
+    const modaleModificaPrenotazione = document.getElementById('editBookingModal');
+    const btnChiudiModificaPrenotazione = document.getElementById('btn-chiudi-edit-booking');
+    const formModificaPrenotazione = document.getElementById('form-edit-booking');
+    const notificaModifica = document.getElementById('notifica-edit-modal');
+    const btnSalvaModifica = document.getElementById('btn-salva-edit');
 
     document.querySelectorAll('.btn-apri-modifica-prenotazione').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -271,19 +290,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('edit-booking-al').value = this.getAttribute('data-al');
             document.getElementById('edit-booking-persone').value = this.getAttribute('data-persone');
             
-            notificaEdit.style.display = 'none';
-            modalEditBooking.classList.add('active');
+            notificaModifica.classList.add('nascosto'); // Nasconde vecchi avvisi
+            modaleModificaPrenotazione.classList.add('active');
         });
     });
 
-    if (btnChiudiEditBooking) btnChiudiEditBooking.addEventListener('click', () => modalEditBooking.classList.remove('active'));
+    if (btnChiudiModificaPrenotazione) {
+        btnChiudiModificaPrenotazione.addEventListener('click', () => modaleModificaPrenotazione.classList.remove('active'));
+    }
 
-    if(formEditBooking) {
-        formEditBooking.addEventListener('submit', async (e) => {
+    if(formModificaPrenotazione) {
+        formModificaPrenotazione.addEventListener('submit', async (e) => {
             e.preventDefault(); 
-            notificaEdit.style.display = 'none';
-            btnSalvaEdit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
-            btnSalvaEdit.disabled = true;
+            notificaModifica.classList.add('nascosto');
+            btnSalvaModifica.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Attendere...';
+            btnSalvaModifica.disabled = true;
 
             const payload = {
                 id_prenotazione: document.getElementById('edit-booking-id').value,
@@ -298,30 +319,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+                
                 const data = await response.json();
+                
                 if(data.success) {
                     sessionStorage.setItem('ajax_toast_success', data.message);
                     window.location.reload(); 
                 } else {
-                    notificaEdit.style.display = 'block';
-                    notificaEdit.className = 'sys-msg sys-error';
-                    notificaEdit.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message}`;
+                    notificaModifica.classList.remove('nascosto');
+                    notificaModifica.className = 'sys-msg sys-error'; // Ripristina le classi corrette
+                    notificaModifica.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${data.message}`;
                 }
             } catch (error) {
-                notificaEdit.style.display = 'block';
-                notificaEdit.className = 'sys-msg sys-error';
-                notificaEdit.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di connessione al server.';
+                notificaModifica.classList.remove('nascosto');
+                notificaModifica.className = 'sys-msg sys-error';
+                notificaModifica.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Errore di connessione al server.';
             } finally {
-                btnSalvaEdit.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione';
-                btnSalvaEdit.disabled = false;
+                btnSalvaModifica.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Aggiorna Prenotazione';
+                btnSalvaModifica.disabled = false;
             }
         });
     }
 
-    // Chiusura di tutti i modali cliccando all'esterno del box di vetro
+    // =========================================
+    // 7. CHIUSURA MODALI AL CLICK ESTERNO
+    // =========================================
     window.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-        if (e.target === modalEditBooking) modalEditBooking.classList.remove('active');
-        if (e.target === modalConferma) modalConferma.classList.remove('active');
+        if (e.target === modaleBarca) modaleBarca.classList.remove('active');
+        if (e.target === modaleModificaPrenotazione) modaleModificaPrenotazione.classList.remove('active');
+        if (e.target === modaleConferma) modaleConferma.classList.remove('active');
     });
 });

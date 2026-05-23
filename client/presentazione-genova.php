@@ -1,7 +1,11 @@
 <?php
+/**
+ * File: presentazione-genova.php
+ * Pagina vetrina dei servizi e dettagli per la Smart Marina di Genova.
+ */
 session_start();
 
-/* Controllo accesso: se non è loggato torna al login */
+/* Controllo accesso: se non è loggato o non è diportista, torna al login */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
     header("Location: auth.php");
     exit;
@@ -18,10 +22,10 @@ $nome_utente = $_SESSION['nome_utente'];
     <title>Smart Marina Genova | NauticHub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/presentazione-genova.css?v=<?php echo time(); ?>"> 
+    <link rel="stylesheet" href="css/footer.css?v=<?php echo time(); ?>">
 </head>
 <body class="presentazione-theme">
 
@@ -40,6 +44,7 @@ $nome_utente = $_SESSION['nome_utente'];
     </header>
 
     <main class="main-presentazione">
+        
         <section class="port-hero">
             <div class="hero-overlay"></div>
             <div class="hero-content">
@@ -54,13 +59,13 @@ $nome_utente = $_SESSION['nome_utente'];
             <div class="port-details glass-panel">
                 <div class="detail-text">
                     <h2>L'approdo perfetto per la tua imbarcazione.</h2>
-                    <p>Situato nel cuore pulsante del capoluogo ligure, la <strong class="cyan-text">Smart Marina di Genova</strong> offre un rifugio sicuro e protetto da tutti i venti del quadrante settentrionale. I nostri fondali, con pescaggio fino a 15 metri, ci permettono di ospitare agilmente sia piccoli motoscafi che imponenti Superyacht.</p>
+                    <p>Situato nel cuore pulsante del capoluogo ligure, la <strong class="testo-ciano">Smart Marina di Genova</strong> offre un rifugio sicuro e protetto da tutti i venti del quadrante settentrionale. I nostri fondali, con pescaggio fino a 15 metri, ci permettono di ospitare agilmente sia piccoli motoscafi che imponenti Superyacht.</p>
                     <p>A pochi passi dal Molo, ti ritroverai immerso nella storia: i celebri caruggi, l'Acquario di Genova e i migliori ristoranti di pesce della riviera sono letteralmente a portata di passeggiata. La nostra darsena è sorvegliata h24 per garantirti sonni tranquilli e una totale sicurezza per il tuo gioiello navale.</p>
                 </div>
                 <div class="detail-gallery">
                     <img src="img/barca.jpeg" alt="Barche al porto" class="gallery-img">
                     <img src="img/mare.jpeg" alt="Mare" class="gallery-img">
-                    <img src="img/vista.jpeg" alt="Vista aerea molo" class="gallery-img large">
+                    <img src="img/vista.jpg" alt="Vista aerea molo" class="gallery-img large">
                 </div>
             </div>
         </section>
@@ -101,6 +106,8 @@ $nome_utente = $_SESSION['nome_utente'];
     </main>
 
     <?php include 'footer.php'; ?>
+
+    <script src="js/presentazione-genova.js"></script>
 
 </body>
 </html>

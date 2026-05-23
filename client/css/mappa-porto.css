@@ -1,220 +1,368 @@
 /* ==========================================================================
-   NAUTICHUB PREMIUM - CSS MISTO (LAYOUT MODERNO + MAPPA CLASSICA)
+   NAUTICHUB PREMIUM - CSS MAPPA INTERATTIVA E DARSENA
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@200;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;600;800&display=swap');
 
 :root {
-    /* Palette Layout */
-    --ocean-deep: #030B17;
-    --ocean-navy: #061224;
-    --cyan-glow: #00F2FE;
-    --cyan-dim: rgba(0, 242, 254, 0.25);
-    --cyan-gradient: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-    --platinum: #E2E8F0;
+    /* Colori di Sfondo e Superfici */
+    --sfondo-principale: #030B17;
+    --sfondo-scuro-assoluto: #01060e;
+    --sfondo-vetro: rgba(6, 18, 36, 0.75);
+    --superficie-brillante: rgba(255, 255, 255, 0.04);
     
-    /* Colori Mappa Classica */
-    --verde-ok: #2ecc71;
-    --rosso-stop: #ef4444;
-    --fuel-glow: #2ecc71; 
+    /* Bordi ed Effetti */
+    --bordo-effetto-vetro: rgba(255, 255, 255, 0.07);
+    --ombra-effetto-vetro: 0 30px 60px rgba(0, 0, 0, 0.6);
     
-    /* Superfici */
-    --glass-surface: rgba(6, 18, 36, 0.75);
-    --glass-bright: rgba(255, 255, 255, 0.04);
-    --border-crystal: rgba(255, 255, 255, 0.07);
+    /* Palette Premium Accenti (Ciano, Platino e Oro) */
+    --ombra-luce-ciano: #00F2FE;
+    --gradiente-ciano: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+    --platino-argento: #E2E8F0;
+    --accento-oro-base: #D4AF37;
     
-    /* Stati Funzionali */
-    --berth-free: #00E676;
-    --berth-busy: #FF4C4C;
-    --text-pure: #F8FAFC;
-    --text-soft: #94A3B8;
+    /* Stati Funzionali Posti Barca */
+    --verde-successo: #00E676;
+    --rosso-errore: #FF4C4C;
     
-    /* Tipografia e Curve */
-    --font-sans: 'Inter', sans-serif;
-    --font-heading: 'Playfair Display', serif;
-    --font-nautic: 'Montserrat', sans-serif;
-    --transition-smooth: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    /* Tipografia e Colori Testo */
+    --testo-primario: #F8FAFC;
+    --testo-secondario: #94A3B8;
+    --font-interfaccia: 'Inter', sans-serif;
+    --font-titoli: 'Playfair Display', serif;
+    --font-nautico: 'Montserrat', sans-serif;
+    
+    /* Transizioni e Raggi */
+    --transizione-fluida: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --raggio-premium: 24px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    -webkit-font-smoothing: antialiased; 
+}
 
 body.booking-premium-theme {
-    background-color: var(--ocean-deep);
-    color: var(--text-pure);
-    font-family: var(--font-sans);
+    background-color: var(--sfondo-principale);
+    color: var(--testo-primario);
+    font-family: var(--font-interfaccia);
     overflow-x: hidden;
     min-height: 100vh;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--sfondo-scuro-assoluto); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ombra-luce-ciano); }
+
 /* ==========================================================================
-   1. HEADER
+   1. HEADER / NAVBAR
    ========================================================================== */
 .dash-header {
     background: rgba(3, 11, 23, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-crystal);
+    border-bottom: 1px solid var(--bordo-effetto-vetro);
     padding: 0.75rem 0;
-    position: sticky; top: 0; z-index: 1000;
-    height: 80px; display: flex; align-items: center;
+    position: sticky; 
+    top: 0; 
+    z-index: 1000;
+    height: 80px; 
+    display: flex; 
+    align-items: center;
 }
+
 .dash-header .nav-content {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 100%; max-width: 100%; margin: 0; padding: 0 3rem;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    max-width: 100%; 
+    margin: 0; 
+    padding: 0 3rem;
 }
+
 .text-logo {
-    font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-pure);
-    text-decoration: none; font-weight: 600; letter-spacing: -0.5px;
+    font-family: var(--font-titoli); 
+    font-size: 2.2rem; 
+    color: var(--testo-primario);
+    text-decoration: none; 
+    font-weight: 600; 
+    letter-spacing: -0.5px;
 }
+
 .gradient-logo-accent {
-    background: var(--cyan-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    font-family: var(--font-sans); font-weight: 800;
+    background: var(--gradiente-ciano); 
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-interfaccia); 
+    font-weight: 800;
 }
+
 .user-info { display: flex; align-items: center; gap: 20px; }
-.welcome-text { font-size: 0.95rem; color: var(--text-soft); }
-.welcome-text strong { color: var(--text-pure); font-weight: 600; }
-.welcome-text i { margin-right: 6px; color: var(--cyan-glow); }
+.welcome-text { font-size: 0.95rem; color: var(--testo-secondario); }
+.welcome-text strong { color: var(--testo-primario); font-weight: 600; }
+.welcome-text i { margin-right: 6px; color: var(--ombra-luce-ciano); }
 
 .btn-outline-premium {
-    background: var(--glass-bright); border: 1px solid var(--border-crystal); color: var(--text-pure);
-    padding: 0.6rem 1.4rem; border-radius: 40px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition-smooth);
+    background: var(--superficie-brillante); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    color: var(--testo-primario);
+    padding: 0.6rem 1.4rem; 
+    border-radius: 40px; 
+    cursor: pointer; 
+    font-size: 0.9rem; 
+    font-weight: 500;
+    text-decoration: none; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px; 
+    transition: var(--transizione-fluida);
 }
+
 .btn-outline-premium:hover {
-    border-color: var(--cyan-glow); background: rgba(0, 242, 254, 0.05); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    border-color: var(--ombra-luce-ciano); 
+    background: rgba(0, 242, 254, 0.05); 
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
 }
 
 /* ==========================================================================
-   2. LAYOUT PRINCIPALE E SIDEBAR FISSA
+   2. INTERFACCIA PRINCIPALE E SIDEBAR FILTRI
    ========================================================================== */
 .booking-main-layout {
-    display: grid; grid-template-columns: 380px 1fr;
-    height: calc(100vh - 80px); width: 100%;
+    display: grid; 
+    grid-template-columns: 380px 1fr;
+    height: calc(100vh - 80px); 
+    width: 100%;
 }
 
 .booking-sidebar {
     background: linear-gradient(180deg, rgba(6, 18, 36, 0.95) 0%, rgba(3, 11, 23, 0.98) 100%);
-    border-right: 1px solid var(--border-crystal);
-    display: flex; flex-direction: column;
-    height: 100%; overflow-x: hidden;
+    border-right: 1px solid var(--bordo-effetto-vetro);
+    display: flex; 
+    flex-direction: column;
+    height: 100%; 
+    overflow-x: hidden;
 }
-.sidebar-header { padding: 1.5rem 1.5rem 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-.sidebar-header h2 { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-.cyan-text { color: var(--cyan-glow); }
+
+.sidebar-header { 
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.sidebar-header h2 { 
+    font-family: var(--font-titoli); 
+    font-size: 1.6rem; 
+    font-weight: 500; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
 
 .sidebar-content-scroll {
-    flex: 1; overflow-y: auto; overflow-x: hidden;
-    padding: 1rem 1.5rem 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.8rem;
+    flex: 1; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding: 1rem 1.5rem 2rem 1.5rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1.8rem;
 }
+
 .sidebar-content-scroll::-webkit-scrollbar { width: 4px; }
 .sidebar-content-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-/* ==========================================================================
-   3. ELEMENTI SIDEBAR (Date e Barche)
-   ========================================================================== */
+/* Elementi e Campi Input */
 .filter-section { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
-.filter-title { font-family: var(--font-nautic); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-soft); }
+.filter-title { font-family: var(--font-nautico); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--testo-secondario); }
 
 .input-glass-premium { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.input-glass-premium label { font-size: 0.75rem; font-weight: 500; color: var(--text-soft); }
+.input-glass-premium label { font-size: 0.75rem; font-weight: 500; color: var(--testo-secondario); }
 .input-with-icon { position: relative; width: 100%; }
 .input-with-icon i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; }
+
 .input-with-icon input {
-    width: 100%; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-crystal);
-    padding: 0.8rem 1rem 0.8rem 2.5rem; border-radius: 8px; color: var(--text-pure);
-    font-size: 0.95rem; outline: none; transition: var(--transition-smooth);
+    width: 100%; 
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.8rem 1rem 0.8rem 2.5rem; 
+    border-radius: 8px; 
+    color: var(--testo-primario);
+    font-size: 0.95rem; 
+    outline: none; 
+    transition: var(--transizione-fluida);
 }
 
-.input-with-icon input:focus { border-color: var(--cyan-glow); box-shadow: 0 0 10px rgba(0, 242, 254, 0.1); }
-/* Stile base del calendario e reset nativo iOS/Android */
+.input-with-icon input:focus { 
+    border-color: var(--ombra-luce-ciano); 
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.1); 
+}
+
 .input-with-icon input[type="date"] {
     -webkit-appearance: none;
     appearance: none;
-    font-family: var(--font-sans);
+    font-family: var(--font-interfaccia);
 }
 
-/* Allinea correttamente il testo interno su Safari/iOS */
 .input-with-icon input[type="date"]::-webkit-date-and-time-value {
     text-align: left;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator { 
-    filter: invert(1); opacity: 0.6; cursor: pointer; transition: var(--transition-smooth); 
+    filter: invert(1); 
+    opacity: 0.6; 
+    cursor: pointer; 
+    transition: var(--transizione-fluida); 
 }
-input[type="date"]::-webkit-calendar-picker-indicator:hover { 
-    opacity: 1; 
-}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
 .date-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
+/* Sezione Lista Miniature Flotta */
 .boat-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; }
 .boat-list::-webkit-scrollbar { width: 4px; }
 .boat-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 .boat-radio-item { cursor: pointer; display: block; }
 .boat-radio-item input[type="radio"] { display: none; }
+
 .boat-card-mini {
-    background: var(--glass-bright); border: 1px solid var(--border-crystal); padding: 0.8rem;
-    border-radius: 10px; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-smooth);
+    background: var(--superficie-brillante); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    padding: 0.8rem;
+    border-radius: 10px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: var(--transizione-fluida);
 }
-.boat-name { font-size: 0.95rem; color: var(--text-pure); display: block; margin-bottom: 2px; }
-.boat-specs { font-size: 0.75rem; color: var(--text-soft); }
-.check-indicator { color: var(--text-soft); opacity: 0.2; transition: var(--transition-smooth); font-size: 1.2rem; }
 
-.boat-radio-item input[type="radio"]:checked + .boat-card-mini { border-color: var(--cyan-glow); background: rgba(0, 242, 254, 0.04); }
-.boat-radio-item input[type="radio"]:checked + .boat-card-mini .check-indicator { color: var(--cyan-glow); opacity: 1; }
+.boat-name { font-size: 0.95rem; color: var(--testo-primario); display: block; margin-bottom: 2px; }
+.boat-specs { font-size: 0.75rem; color: var(--testo-secondario); }
+.check-indicator { color: var(--testo-secondario); opacity: 0.2; transition: var(--transizione-fluida); font-size: 1.2rem; }
 
+.boat-radio-item input[type="radio"]:checked + .boat-card-mini { 
+    border-color: var(--ombra-luce-ciano); 
+    background: rgba(0, 242, 254, 0.04); 
+}
+.boat-radio-item input[type="radio"]:checked + .boat-card-mini .check-indicator { color: var(--ombra-luce-ciano); opacity: 1; }
+
+/* Chips dei Servizi Banchina */
 .services-flex { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
 .service-chip { cursor: pointer; }
 .service-chip input { display: none; }
+
 .service-chip span {
-    display: inline-flex; align-items: center; gap: 6px; background: var(--glass-bright); border: 1px solid var(--border-crystal);
-    padding: 0.5rem 1rem; border-radius: 40px; font-size: 0.8rem; font-weight: 500; color: var(--text-soft); transition: var(--transition-smooth);
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px; 
+    background: var(--superficie-brillante); 
+    border: 1px solid var(--bordo-effetto-vetro);
+    padding: 0.5rem 1rem; 
+    border-radius: 40px; 
+    font-size: 0.8rem; 
+    font-weight: 500; 
+    color: var(--testo-secondario); 
+    transition: var(--transizione-fluida);
 }
-.service-chip input:checked + span { background: rgba(0, 242, 254, 0.08); border-color: var(--cyan-glow); color: var(--cyan-glow); text-shadow: 0 0 5px rgba(0, 242, 254, 0.3); }
+
+.service-chip input:checked + span { 
+    background: rgba(0, 242, 254, 0.08); 
+    border-color: var(--ombra-luce-ciano); 
+    color: var(--ombra-luce-ciano); 
+    text-shadow: 0 0 5px rgba(0, 242, 254, 0.3); 
+}
 
 .btn-premium-solid {
-    background: var(--cyan-gradient); color: var(--ocean-deep); border: none; padding: 0.9rem; border-radius: 10px;
-    font-size: 0.95rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+    background: var(--gradiente-ciano); 
+    color: var(--sfondo-principale); 
+    border: none; 
+    padding: 0.9rem; 
+    border-radius: 10px;
+    font-size: 0.95rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    width: 100%;
 }
+
 .btn-close-icon, .sidebar-drag-indicator, .mobile-apply-wrapper, .fab-mobile-filters { display: none; }
 
 /* ==========================================================================
-   4. AREA MAPPA E BANNER
+   3. CONTAINER MAPPA E COPERTINA SUPERIORE
    ========================================================================== */
 .booking-map-area { padding: 1.5rem 3rem; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; overflow-y: auto; }
+
 .scenic-banner {
-    flex-shrink: 0; height: 120px; border-radius: var(--radius-premium); position: relative; overflow: hidden;
-    background-size: cover; background-position: center 35%; display: flex; align-items: center; padding: 0 2rem; border: 1px solid var(--border-crystal);
+    flex-shrink: 0; 
+    height: 120px; 
+    border-radius: var(--raggio-premium); 
+    position: relative; 
+    overflow: hidden;
+    background-size: cover; 
+    background-position: center 35%; 
+    display: flex; 
+    align-items: center; 
+    padding: 0 2rem; 
+    border: 1px solid var(--bordo-effetto-vetro);
 }
-.banner-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(3, 11, 23, 0.9) 0%, rgba(6, 18, 36, 0.5) 100%); z-index: 1; }
+
+.banner-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: linear-gradient(90deg, rgba(3, 11, 23, 0.9) 0%, rgba(6, 18, 36, 0.5) 100%); 
+    z-index: 1; 
+}
+
 .banner-text { position: relative; z-index: 2; }
-.banner-text h2 { font-family: var(--font-heading); font-size: 2rem; font-weight: 500; margin-bottom: 2px; }
-.banner-text p { color: var(--text-soft); font-size: 0.9rem; font-weight: 300; }
+.banner-text h2 { font-family: var(--font-titoli); font-size: 2rem; font-weight: 500; margin-bottom: 2px; }
+.banner-text p { color: var(--testo-secondario); font-size: 0.9rem; font-weight: 300; }
 
 .map-container-glass {
-    background: var(--glass-surface); border: 1px solid var(--border-crystal); border-radius: var(--radius-premium);
-    padding: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; 
+    background: var(--sfondo-vetro); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    border-radius: var(--raggio-premium);
+    padding: 1.5rem; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+    text-align: center; 
 }
 
 /* ==========================================================================
-   5. LA TUA MAPPA CLASSICA: LETTERE PURE E PERCENTUALI ESATTE
+   4. POSIZIONAMENTO LETTERE E COORDINATE PERCENTUALI ESATTE
    ========================================================================== */
 .interactive-map-wrapper { width: 100%; display: flex; justify-content: center; }
 
-/* Ripristino del bordo intorno alla foto della mappa */
 .responsive-map-container { 
-    position: relative; width: 100%; max-width: 900px; display: inline-block; 
-    border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;
+    position: relative; 
+    width: 100%; 
+    max-width: 900px; 
+    display: inline-block; 
+    border: 3px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 8px; 
+    overflow: hidden;
 }
+
 .porto-base-image { width: 100%; height: auto; display: block; filter: brightness(0.85); }
 
-/* Stile della lettera originale: No pallini, sfondi o cerchi */
+/* Stile della lettera originale del porto */
 .letter-pin { 
     position: absolute; 
-    color: var(--rosso-stop); 
+    color: var(--rosso-errore); 
     font-size: clamp(0.7rem, 1.2vw, 1.2rem); 
     font-weight: 900; 
-    font-family: 'Montserrat', sans-serif; 
+    font-family: var(--font-nautico); 
     background: transparent; 
     border: none; 
     text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 3px rgba(0,0,0,0.9);
@@ -224,32 +372,27 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     z-index: 10; 
 }
 
-/* Lettera Compatibile (Verde Ok) */
+/* Lettera Attiva e Compatibile con i Filtri Scelti */
 .letter-pin.compatibile { 
-    color: var(--verde-ok); 
+    color: var(--verde-successo); 
     cursor: pointer; 
     text-shadow: 0 0 8px rgba(46, 204, 113, 1), 1px 1px 0 #000, -1px -1px 0 #000; 
     transform: translate(-50%, -50%); 
     z-index: 10;
 }
+
 .letter-pin.compatibile:hover { 
     color: #ffffff; 
     transform: translate(-50%, -50%) scale(1.5); 
 }
 
-/* Lettera Incompatibile (Grigia) */
+/* Lettera Incompatibile */
 .letter-pin.incompatibile { 
     color: #7f8c8d; 
     pointer-events: none; 
 }
 
-/* Lettera Rifornimento (Ambra quando compatibile) */
-#lettera-F.compatibile {
-    color: var(--fuel-glow);
-    text-shadow: 0 0 8px rgba(245, 158, 11, 1), 1px 1px 0 #000, -1px -1px 0 #000;
-}
-
-/* Le tue esatte 14 Coordinate percentuali */
+/* Le tue esatte 14 Coordinate percentuali dei moli sulla foto */
 #lettera-A { top: 74%; left: 10%; } 
 #lettera-B { top: 55.5%; left: 22%; } 
 #lettera-C { top: 79%; left: 28%; } 
@@ -266,14 +409,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 #lettera-N { top: 59%; left: 87%; }
 
 /* ==========================================================================
-   6. DARSENA (Dettaglio Molo e Acqua)
+   5. DETTAGLIO BANCONA E STRUTTURA DEL PONTILI (VISTA GEOMETRICA ACQUA)
    ========================================================================== */
 .pier-board { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-.pier-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-crystal); padding-bottom: 0.8rem; }
-.pier-header h2 { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 500; }
+.pier-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordo-effetto-vetro); padding-bottom: 0.8rem; }
+.pier-header h2 { font-family: var(--font-titoli); font-size: 1.5rem; font-weight: 500; }
 .pier-scroll-track { width: 100%; overflow-x: auto; padding-bottom: 10px; }
 
 .molo-scene { width: 100%; width: max-content; }
+
 .molo-title-wrapper {
     margin-bottom: 1rem;
     position: sticky;   
@@ -281,17 +425,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     width: max-content; 
     z-index: 10;        
 }
-.molo-title-wrapper h3 { font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 4px; color: var(--text-pure); }
-.molo-badge { display: inline-block; background: rgba(255,255,255,0.04); border: 1px solid var(--border-crystal); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; color: var(--text-soft); }
+
+.molo-title-wrapper h3 { font-family: var(--font-titoli); font-size: 1.3rem; margin-bottom: 4px; color: var(--testo-primario); }
+.molo-badge { display: inline-block; background: rgba(255,255,255,0.04); border: 1px solid var(--bordo-effetto-vetro); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; color: var(--testo-secondario); }
 
 .water-basin { 
     background: radial-gradient(circle at 50% 20%, #1a4263 0%, #0a192f 80%); 
-    border-radius: 20px; padding: 4rem 2rem 2.5rem 2.5rem; position: relative; 
-    border: 6px solid #142a3b; box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.3); 
-    display: flex; flex-direction: column; align-items: center; gap: 1.5rem; 
+    border-radius: 20px; 
+    padding: 4rem 2.5rem 2.5rem 2.5rem; 
+    position: relative; 
+    border: 6px solid #142a3b; 
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.3); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 1.5rem; 
 }
-
-.wood-dock { display: none; }
 
 .mooring-slots { 
     display: flex; 
@@ -302,6 +451,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     margin-top: 10px;
 }
 
+/* Struttura in legno del pontile */
 .mooring-slots::before {
     content: '';
     position: absolute;
@@ -324,6 +474,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     position: relative; 
 }
 
+/* Luci ad impulsi (boe banchina) */
 .slot-wrapper::after {
     content: ''; 
     position: absolute; 
@@ -360,11 +511,21 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px 4px rgba(255, 215, 0, 1), 0 0 20px 6px rgba(0, 242, 254, 0.6); }
 }
 
+/* Stile Geometrico dello Specchio d'acqua per l'attracco */
 .posto-ui { 
-    width: 85px; height: 180px; background-color: rgba(24, 78, 119, 0.2); 
-    border-left: 3px solid rgba(255, 255, 255, 0.3); border-right: 3px solid rgba(255, 255, 255, 0.3); border-bottom: 3px dashed rgba(255, 255, 255, 0.15); border-top: none;
-    border-radius: 0 0 15px 15px; display: flex; flex-direction: column; align-items: center; 
-    position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 85px; 
+    height: 180px; 
+    background-color: rgba(24, 78, 119, 0.2); 
+    border-left: 3px solid rgba(255, 255, 255, 0.3); 
+    border-right: 3px solid rgba(255, 255, 255, 0.3); 
+    border-bottom: 3px dashed rgba(255, 255, 255, 0.15); 
+    border-top: none;
+    border-radius: 0 0 15px 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    position: relative; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-top: 15px;
 }
 
@@ -373,12 +534,21 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .posto-ui.posto-yacht { width: 95px; height: 190px; }
 
 .badge-posto { 
-    position: absolute; top: 10px; z-index: 4;
-    background: linear-gradient(135deg, #2ecc71 0%, #1e8449 100%); color: #ffffff; border: 1px solid #145a32; padding: 3px 12px; 
-    border-radius: 4px; font-size: 0.9rem; font-weight: 900; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.4); box-shadow: 1px 3px 5px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.4);
+    position: absolute; 
+    top: 10px; 
+    z-index: 4;
+    background: linear-gradient(135deg, #2ecc71 0%, #1e8449 100%); 
+    color: #ffffff; 
+    border: 1px solid #145a32; 
+    padding: 3px 12px; 
+    border-radius: 4px; 
+    font-size: 0.9rem; 
+    font-weight: 900; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.4);
     transition: 0.3s;
 }
+
 .badge-posto::before, .badge-posto::after {
     content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; background: #fdfdfd; border-radius: 50%; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.6);
 }
@@ -386,32 +556,56 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .posto-ui.libero { background-color: rgba(46, 204, 113, 0.05); }
 .posto-ui.posto-cliccabile { cursor: pointer; }
+
 .posto-ui.posto-cliccabile:hover { 
-    background-color: rgba(46, 204, 113, 0.2); border-left-color: var(--verde-ok); border-right-color: var(--verde-ok);
-    transform: translateY(-8px); box-shadow: 0 15px 30px rgba(46, 204, 113, 0.25), inset 0 0 25px rgba(46, 204, 113, 0.15); 
-}
-.posto-ui.posto-cliccabile:hover .badge-posto { background: #ffffff; color: #1e8449; border-color: #1e8449; text-shadow: none; }
-.posto-ui.posto-cliccabile:hover::after {
-    content: 'PRENOTA'; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
-    color: #2ecc71; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; text-shadow: 0 2px 5px rgba(0,0,0,0.9); z-index: 2; animation: pulseText 1.5s infinite;
+    background-color: rgba(46, 204, 113, 0.2); 
+    border-left-color: var(--verde-successo); 
+    border-right-color: var(--verde-successo);
+    transform: translateY(-8px); 
+    box-shadow: 0 15px 30px rgba(46, 204, 113, 0.25), inset 0 0 25px rgba(46, 204, 113, 0.15); 
 }
 
-/* -- STATO: OCCUPATO -- */
+.posto-ui.posto-cliccabile:hover .badge-posto { background: #ffffff; color: #1e8449; border-color: #1e8449; text-shadow: none; }
+
+/* Animazione di apparizione scritta di prenotazione sul molo */
+@keyframes pulseText {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.95); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.posto-ui.posto-cliccabile:hover::after {
+    content: 'PRENOTA'; 
+    position: absolute; 
+    top: 55%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    color: #2ecc71; 
+    font-weight: 800; 
+    font-size: 0.85rem; 
+    letter-spacing: 1.5px; 
+    text-shadow: 0 2px 5px rgba(0,0,0,0.9); 
+    z-index: 2; 
+    animation: pulseText 1.5s infinite;
+}
+
+/* STATO MOORING: OCCUPATO (Galleggiamento scafo personalizzato) */
 .posto-ui.occupato { 
     background-color: rgba(10, 25, 47, 0.4); 
     border-color: rgba(255, 255, 255, 0.15);
-    /* Rimosso transform: scale(1.05); per mantenere le dimensioni identiche */
     transform-origin: top center; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
     z-index: 50; 
     cursor: not-allowed; 
     background-size: 70%; 
     background-repeat: no-repeat; 
-    animation: galleggia 4s ease-in-out infinite;
+    animation: galleggiaInDarsena 4s ease-in-out infinite;
 }
 
 .posto-ui.occupato .badge-posto { 
-    background: linear-gradient(135deg, #ff4d4d 0%, #c0392b 100%); color: #fff; border-color: #7a1c1c; }
+    background: linear-gradient(135deg, #ff4d4d 0%, #c0392b 100%); 
+    color: #fff; 
+    border-color: #7a1c1c; 
+}
 
 .posto-ui.occupato.posto-piccola { background-image: url('../img/barca_piccola.png'); }
 .posto-ui.occupato.posto-media { background-image: url('../img/barca_media.png'); }
@@ -420,32 +614,65 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .posto-ui.occupato:nth-child(even) { animation-delay: -1.5s; animation-duration: 3.6s; }
 .posto-ui.occupato:nth-child(3n) { animation-delay: -3s; animation-duration: 4.8s; }
 
-@keyframes galleggia {
+@keyframes galleggiaInDarsena {
     0%, 100% { background-position: center 45px; }
     50% { background-position: center 40px; }
 }
 
 /* ==========================================================================
-   7. MODALE RIEPILOGO E NOTIFICHE
-   ========================================================================== */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 11, 23, 0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; transition: var(--transition-smooth); }
-.modal-box { background: linear-gradient(135deg, rgba(10, 22, 45, 0.95) 0%, rgba(4, 12, 26, 0.98) 100%); border: 1px solid var(--border-crystal); width: 100%; max-width: 440px; border-radius: var(--radius-premium); padding: 2rem; box-shadow: 0 30px 70px rgba(0,242,254,0.15); text-align: left; }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.modal-header h2 { font-family: var(--font-heading); font-size: 1.6rem; margin: 0; }
-.btn-close-icon { background: transparent; border: none; color: var(--text-soft); font-size: 1.4rem; cursor: pointer; }
-.booking-summary-glass { background: rgba(0, 242, 254, 0.03); border: 1px solid var(--border-crystal); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem; }
-.modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
-.btn-dark { background: transparent; border: 1px solid var(--border-crystal); color: var(--text-pure); padding: 0.8rem; border-radius: 10px; font-weight: 500; cursor: pointer; text-align: center; }
+   6. RIEPILOGO COMPONENTE MODALE E TOAST
+   ========================================================================= */
+.modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(3, 11, 23, 0.8); 
+    backdrop-filter: blur(8px); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 2000; 
+    transition: var(--transizione-fluida); 
+}
 
-.sys-msg { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; display:flex; align-items:center; gap:8px;}
-.sys-error { background: rgba(255, 76, 76, 0.1); border: 1px solid var(--berth-busy); color: var(--berth-busy); }
-.sys-success { background: rgba(0, 230, 118, 0.1); border: 1px solid var(--berth-free); color: var(--berth-free); }
-.notifica-toast { position: fixed; bottom: 30px; right: 30px; background: #ffffff; color: var(--ocean-deep); padding: 16px 24px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 12px; z-index: 10000; font-size: 0.95rem; font-weight: 600; border-left: 6px solid; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; }
-.notifica-toast.successo { border-left-color: var(--berth-free); }
-.notifica-toast.errore { border-left-color: var(--berth-busy); }
+.modal-box { 
+    background: linear-gradient(135deg, rgba(10, 22, 45, 0.95) 0%, rgba(4, 12, 26, 0.98) 100%); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    width: 100%; 
+    max-width: 440px; 
+    border-radius: var(--raggio-premium); 
+    padding: 2rem; 
+    box-shadow: 0 30px 70px rgba(0, 242, 254, 0.15); 
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-header h2 { font-family: var(--font-titoli); font-size: 1.6rem; margin: 0; }
+.btn-close-icon { background: transparent; border: none; color: var(--testo-secondario); font-size: 1.4rem; cursor: pointer; }
+
+.booking-summary-glass { 
+    background: rgba(0, 242, 254, 0.03); 
+    border: 1px solid var(--bordo-effetto-vetro); 
+    padding: 1.2rem; 
+    border-radius: 12px; 
+    margin-bottom: 1.5rem; 
+}
+
+.modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
+
+/* Notifiche ed errori interni */
+.sys-msg { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.sys-error { background: rgba(255, 76, 76, 0.1); border: 1px solid var(--rosso-errore); color: var(--rosso-errore); }
+.sys-success { background: rgba(0, 230, 118, 0.1); border: 1px solid var(--verde-successo); color: var(--verde-successo); }
+
+.notifica-toast { 
+    position: fixed; bottom: 30px; right: 30px; background: #ffffff; color: var(--sfondo-principale); 
+    padding: 16px 24px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+    display: flex; align-items: center; gap: 12px; z-index: 10000; font-size: 0.95rem; font-weight: 600; 
+    border-left: 6px solid; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s; 
+}
+.notifica-toast.successo { border-left-color: var(--verde-successo); }
+.notifica-toast.errore { border-left-color: var(--rosso-errore); }
 
 /* ==========================================================================
-   8. RESPONSIVE MOBILE E FIX TENDINA (Cassetto dal basso)
+   7. DISPOSITIVI MOBILI E OTTIMIZZAZIONE RESPONSIVE PERFECT
    ========================================================================== */
 @media (max-width: 1200px) {
     .booking-main-layout { grid-template-columns: 340px 1fr; }
@@ -455,14 +682,26 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 992px) {
     .booking-main-layout { grid-template-columns: 1fr; }
     
-    /* FIX MOBILE: Posizionamento dinamico e struttura flessibile */
+    /* Configurazione Cassetto a comparsa dal basso per smartphone */
     .booking-sidebar {
-        position: fixed; bottom: 0; left: 0; top: auto; 
-        height: 85dvh; max-height: 85%; width: 100%;
-        z-index: 9999; transform: translateY(100%); transition: var(--transition-smooth);
-        background: rgba(3, 11, 23, 0.98); padding: 1.5rem 0 0 0;
-        border-top-left-radius: 24px; border-top-right-radius: 24px; border-top: 1px solid var(--cyan-glow);
-        display: flex; flex-direction: column; overflow: hidden; 
+        position: fixed; 
+        bottom: 0; 
+        left: 0; 
+        top: auto; 
+        height: 85dvh; 
+        max-height: 85%; 
+        width: 100%;
+        z-index: 9999; 
+        transform: translateY(100%); 
+        transition: var(--transizione-fluida);
+        background: rgba(3, 11, 23, 0.98); 
+        padding: 1.5rem 0 0 0;
+        border-top-left-radius: 24px; 
+        border-top-right-radius: 24px; 
+        border-top: 1px solid var(--ombra-luce-ciano);
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden; 
     }
     
     .booking-sidebar.drawer-open { transform: translateY(0); }
@@ -471,7 +710,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .sidebar-drag-indicator { display: block; width: 50px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 10px; margin: 0 auto 1rem auto; flex-shrink: 0; }
     .btn-close-icon { display: block; font-size: 1.5rem; }
     
-    /* FIX MOBILE SCROLL: Sblocco completo per iOS Safari */
     .sidebar-content-scroll { 
         flex: 1 1 auto;
         min-height: 0; 
@@ -486,25 +724,44 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     .scenic-banner { height: 100px; padding: 0 1.5rem; }
     .banner-text h2 { font-size: 1.5rem; }
     
-    /* FIX MOBILE BOTTONE: Sticky previene accavallamenti, Env gestisce la safe area */
+    /* Sticky mobile button */
     .mobile-apply-wrapper { 
-        display: block; position: sticky; bottom: 0; left: 0; width: 100%; 
+        display: block; 
+        position: sticky; 
+        bottom: 0; 
+        left: 0; 
+        width: 100%; 
         padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom)); 
-        background: var(--ocean-deep); border-top: 1px solid var(--border-crystal); z-index: 10;
+        background: var(--sfondo-principale); 
+        border-top: 1px solid var(--bordo-effetto-vetro); 
+        z-index: 10;
         margin-top: auto;
     }
     
     .fab-mobile-filters {
-        display: flex; justify-content: center; align-items: center; position: fixed; bottom: 30px; right: 20px;
-        width: 60px; height: 60px; background: var(--cyan-gradient); color: var(--ocean-deep);
-        border: none; border-radius: 50%; font-size: 1.5rem; cursor: pointer; z-index: 900; box-shadow: 0 5px 20px rgba(0, 242, 254, 0.5);
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        position: fixed; 
+        bottom: 30px; 
+        right: 20px;
+        width: 60px; 
+        height: 60px; 
+        background: var(--gradiente-ciano); 
+        color: var(--sfondo-principale);
+        border: none; 
+        border-radius: 50%; 
+        font-size: 1.5rem; 
+        cursor: pointer; 
+        z-index: 900; 
+        box-shadow: 0 5px 20px rgba(0, 242, 254, 0.5);
     }
+    
     .logout-text-hide { display: none; }
 
     .dash-header { height: 70px; }
     .dash-header .nav-content { padding: 0 1rem; }
     .text-logo { font-size: 1.4rem; }
-    .text-logo .port-location { font-size: 0.85rem !important; margin-left: 5px !important; }
     .user-info { gap: 8px; }
     
     .welcome-text { font-size: 0.8rem; white-space: nowrap; }
@@ -522,12 +779,81 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @media (max-width: 400px) {
-    .text-logo .port-location { display: none; }
     .welcome-text strong { 
         display: inline-block; max-width: 65px; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; 
     }
 }
 
-body.booking-premium-theme.no-scroll {
-    overflow: hidden;
+body.booking-premium-theme.no-scroll { overflow: hidden; }
+
+/* ==========================================================================
+   8. UTILITY CLASSES AGGIUNTIVE (Estrazione Inline CSS)
+   ========================================================================== */
+.logo-flessibile {
+    display: flex; 
+    align-items: baseline;
+}
+
+.testo-luogo-porto {
+    color: var(--testo-secondario); 
+    font-size: 1.1rem; 
+    margin-left: 10px; 
+    font-style: normal;
+}
+
+.riga-miniatura-barca {
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+}
+
+.box-immagine-barca {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 8px; 
+    background-size: cover; 
+    background-position: center; 
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dettagli-barca-flex {
+    flex: 1;
+}
+
+.testo-sinistra {
+    text-align: left;
+}
+
+.testo-riepilogo-conferma {
+    margin-bottom: 10px; 
+    font-size: 1.05rem; 
+    color: #E2E8F0;
+}
+
+.lista-riepilogo-prenotazione {
+    list-style: none; 
+    padding: 0; 
+    color: var(--testo-secondario); 
+    font-size: 0.95rem; 
+    line-height: 1.8;
+}
+
+.icona-fissa {
+    width: 20px;
+}
+
+.margine-inferiore-medio {
+    margin-bottom: 2rem;
+}
+
+.etichetta-secondaria {
+    font-family: var(--font-nautico);
+}
+
+.larghezza-totale {
+    width: 100%;
+}
+
+.nascosto {
+    display: none !important;
 }

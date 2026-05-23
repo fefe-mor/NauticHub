@@ -1,4 +1,10 @@
 <?php
+/**
+ * File: auth.php
+ * Gestisce l'interfaccia utente per il Login e la Registrazione.
+ * La logica di autenticazione e le variabili di stato ($errore, $messaggio_successo)
+ * vengono elaborate e importate dal file auth_logic.php.
+ */
 require_once '../server/auth_logic.php';
 ?>
 
@@ -10,7 +16,6 @@ require_once '../server/auth_logic.php';
     <title>Accesso | NauticHub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/auth.css?v=<?php echo time(); ?>">
@@ -40,6 +45,7 @@ require_once '../server/auth_logic.php';
                 
                 <?php if(isset($messaggio_successo) && $messaggio_successo): ?>
                     <div class="sys-msg sys-success"><i class="fa-solid fa-circle-check"></i> <?php echo $messaggio_successo; ?></div>
+                    
                     <script>
                         document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('form-registrazione').style.display = 'none';
@@ -60,6 +66,7 @@ require_once '../server/auth_logic.php';
                             <input type="email" id="login-email" name="email" required placeholder="capitano@email.com">
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="login-password">Password</label>
                         <div class="input-wrapper">
@@ -98,6 +105,7 @@ require_once '../server/auth_logic.php';
                             <input type="email" id="reg-email" name="email" required placeholder="capitano@email.com">
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="reg-password">Password</label>
                         <div class="input-wrapper">

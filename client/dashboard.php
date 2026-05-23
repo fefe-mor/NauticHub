@@ -1,11 +1,14 @@
 <?php
-
+/**
+ * File: dashboard.php
+ * Gestione Area Personale (Garage Navale, Prenotazioni e Mappa)
+ */
 session_start();
 
-/* Includiamo il database */
+/* Inclusione del database */
 require_once '../server/database.php';
 
-/* controllo accesso */
+/* Controllo di sicurezza: se non loggato o non diportista, rimanda al login */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
     header("Location: auth.php");
     exit;
@@ -13,11 +16,14 @@ if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
 
 $nome_utente = $_SESSION['nome_utente'];
 $email_utente = $_SESSION['email_utente'];
-$utente_id = $_SESSION['utente_id']; // Recuperato dal login
+$utente_id = $_SESSION['utente_id']; 
 
-/* GESTIONE POST (Salva, Elimina Barca, Annulla Prenotazione) */
+/* =========================================
+   GESTIONE RICHIESTE POST (Salvataggio, Eliminazione, Annullamento)
+   ========================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
     
+    // AZIONE: Aggiungi o Modifica Barca
     if ($_POST['azione'] === 'salva_barca') {
         $nome = trim($_POST['nome']);
         $tipo = trim($_POST['tipo']);
@@ -29,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $numero_immatricolazione = ($ha_immatricolazione === 'si') ? strtoupper(trim($_POST['numero_immatricolazione'])) : null;
         $id_barca = trim($_POST['id_barca']);
 
+        // Controllo logico: una barca deve essere almeno di 5 metri per il porto
         if ($lunghezza < 5) {
             $_SESSION['toast_msg'] = "La lunghezza dell'imbarcazione deve essere di almeno 5 metri.";
             $_SESSION['toast_type'] = "errore";
@@ -37,17 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         }
 
         if (empty($id_barca) || $id_barca === 'nuovo') {
+            // Nuova Barca
             $stmt = $pdo->prepare("INSERT INTO barche (utente_id, nome, tipo, lunghezza, larghezza, pescaggio, altezza, numero_immatricolazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$utente_id, $nome, $tipo, $lunghezza, $larghezza, $pescaggio, $altezza, $numero_immatricolazione]);
             $_SESSION['toast_msg'] = "Imbarcazione registrata con successo!";
             $_SESSION['toast_type'] = "successo";
         } else {
+            // Aggiornamento Barca Esistente
             $stmt = $pdo->prepare("UPDATE barche SET nome = ?, tipo = ?, lunghezza = ?, larghezza = ?, pescaggio = ?, altezza = ?, numero_immatricolazione = ? WHERE id = ? AND utente_id = ?");
             $stmt->execute([$nome, $tipo, $lunghezza, $larghezza, $pescaggio, $altezza, $numero_immatricolazione, $id_barca, $utente_id]);
             $_SESSION['toast_msg'] = "Dati imbarcazione aggiornati!";
             $_SESSION['toast_type'] = "successo";
         }
     } 
+    // AZIONE: Elimina Barca
     elseif ($_POST['azione'] === 'elimina_barca') {
         $id_barca = $_POST['id_barca'];
         $stmt = $pdo->prepare("DELETE FROM barche WHERE id = ? AND utente_id = ?");
@@ -55,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $_SESSION['toast_msg'] = "Imbarcazione eliminata dal garage.";
         $_SESSION['toast_type'] = "successo";
     } 
+    // AZIONE: Annulla Prenotazione
     elseif ($_POST['azione'] === 'annulla_prenotazione') {
         $posto = $_POST['codice_posto'];
         $stmt = $pdo->prepare("DELETE FROM prenotazioni WHERE posto = ? AND utente_id = ?");
@@ -63,10 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $_SESSION['toast_type'] = "successo";
     }
     
+    // Ricarica la pagina pulita per evitare il re-invio del form al refresh
     header("Location: dashboard.php");
     exit;
 }
 
+/* Gestione Messaggi (Toast) */
 $messaggio_toast = '';
 $tipo_toast = '';
 if (isset($_SESSION['toast_msg'])) {
@@ -76,7 +89,9 @@ if (isset($_SESSION['toast_msg'])) {
     unset($_SESSION['toast_type']);
 }
 
-/* LETTURA DATI DAL DATABASE */
+/* =========================================
+   LETTURA DATI DAL DATABASE PER LA VISTA
+   ========================================= */
 $stmt = $pdo->prepare("SELECT * FROM barche WHERE utente_id = ?");
 $stmt->execute([$utente_id]);
 $mie_barche = $stmt->fetchAll();
@@ -99,14 +114,14 @@ $mie_prenotazioni = $stmt->fetchAll();
     <title>Dashboard | NauticHub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
     
     <link rel="stylesheet" href="css/dashboard.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/footer.css?v=<?php echo time(); ?>">
 </head>
 <body class="dashboard-theme">
 
@@ -158,7 +173,8 @@ $mie_prenotazioni = $stmt->fetchAll();
             </div>
             <div class="griglia-barche">
                 <?php foreach($mie_barche as $barca): 
-                    $img_barca = 'img/vela.jpeg'; // Default / Barca a Vela
+                    // Gestione dinamica immagine barca
+                    $img_barca = 'img/vela.jpeg'; 
                     if($barca['tipo'] == 'Gommone') $img_barca = 'img/gommone.jpeg';
                     if($barca['tipo'] == 'Barca a Motore') $img_barca = 'img/motore.jpeg';
                     if($barca['tipo'] == 'Yacht') $img_barca = 'img/yacht.jpeg'; 
@@ -171,15 +187,15 @@ $mie_prenotazioni = $stmt->fetchAll();
                     </div>
                     <div class="boat-card-details">
                         <div class="boat-specs-grid">
-                            <div class="spec-block"><span class="spec-label">Tipo</span><span class="spec-value gold-txt"><?php echo htmlspecialchars($barca['tipo']); ?></span></div>
+                            <div class="spec-block"><span class="spec-label">Tipo</span><span class="spec-value gold-text"><?php echo htmlspecialchars($barca['tipo']); ?></span></div>
                             <div class="spec-block"><span class="spec-label">Lunghezza</span><span class="spec-value"><i class="fa-solid fa-ruler-horizontal"></i> <?php echo htmlspecialchars($barca['lunghezza']); ?>m</span></div>
                             <div class="spec-block"><span class="spec-label">Larghezza</span><span class="spec-value"><i class="fa-solid fa-expand"></i> <?php echo htmlspecialchars($barca['larghezza']); ?>m</span></div>
                             <div class="spec-block"><span class="spec-label">Pescaggio</span><span class="spec-value"><i class="fa-solid fa-arrow-down"></i> <?php echo htmlspecialchars($barca['pescaggio']); ?>m</span></div>
                             
                             <?php if(!empty($barca['numero_immatricolazione'])): ?>
-                            <div class="spec-block" style="grid-column: span 2; background: rgba(0, 242, 254, 0.05); border-color: rgba(0, 242, 254, 0.2);">
-                                <span class="spec-label" style="color: var(--cyan-glow);">Immatricolazione</span>
-                                <span class="spec-value" style="letter-spacing: 1px;"><i class="fa-solid fa-hashtag"></i> <?php echo htmlspecialchars($barca['numero_immatricolazione']); ?></span>
+                            <div class="spec-block blocco-immatricolazione-evidenza">
+                                <span class="spec-label testo-ciano">Immatricolazione</span>
+                                <span class="spec-value testo-spaziato"><i class="fa-solid fa-hashtag"></i> <?php echo htmlspecialchars($barca['numero_immatricolazione']); ?></span>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -196,7 +212,7 @@ $mie_prenotazioni = $stmt->fetchAll();
                                 <i class="fa-solid fa-pen"></i> Modifica
                             </button>
                             
-                            <form method="POST" action="dashboard.php" style="display:inline; flex: 1;">
+                            <form method="POST" action="dashboard.php" class="form-azione-barca">
                                 <input type="hidden" name="azione" value="elimina_barca">
                                 <input type="hidden" name="id_barca" value="<?php echo $barca['id']; ?>">
                                 <button type="button" class="btn-panel btn-delete btn-elimina-custom" data-messaggio="Sei sicuro di voler eliminare <?php echo htmlspecialchars($barca['nome']); ?> dal tuo garage navale?"><i class="fa-solid fa-trash-can"></i> Rimuovi</button>
@@ -232,7 +248,7 @@ $mie_prenotazioni = $stmt->fetchAll();
                     <?php foreach($mie_prenotazioni as $pren): ?>
                     <div class="booking-card">
                         <div class="booking-details">
-                            <h3><i class="fa-solid fa-ship gold-text"></i> <?php echo htmlspecialchars($pren['nome_barca']); ?></h3>
+                            <h3><i class="fa-solid fa-ship gold-text margine-superiore-piccolo"></i> <?php echo htmlspecialchars($pren['nome_barca']); ?></h3>
                             <div class="booking-info-grid">
                                 <div><i class="fa-solid fa-location-dot"></i> <strong>Porto:</strong> Smart Marina Genova</div>
                                 <div><i class="fa-solid fa-dharmachakra"></i> <strong>Molo:</strong> <?php echo htmlspecialchars($pren['posto']); ?></div>
@@ -253,7 +269,7 @@ $mie_prenotazioni = $stmt->fetchAll();
                                 <i class="fa-solid fa-pen-to-square"></i> Gestisci
                             </button>
 
-                            <form method="POST" action="dashboard.php" style="display:inline;">
+                            <form method="POST" action="dashboard.php" class="form-azione-base">
                                 <input type="hidden" name="azione" value="annulla_prenotazione">
                                 <input type="hidden" name="codice_posto" value="<?php echo $pren['posto']; ?>">
                                 <button type="button" class="btn-azione btn-danger btn-elimina-custom" data-messaggio="Vuoi davvero annullare la prenotazione del posto <?php echo $pren['posto']; ?>? Questa azione è irreversibile."><i class="fa-solid fa-ban"></i> Annulla</button>
@@ -342,11 +358,11 @@ $mie_prenotazioni = $stmt->fetchAll();
                         <label class="radio-glass"><input type="radio" name="ha_immatricolazione" class="radio-immatricolazione" value="no" checked> <span>No</span></label>
                         <label class="radio-glass"><input type="radio" name="ha_immatricolazione" class="radio-immatricolazione" value="si"> <span>Sì</span></label>
                     </div>
-                    <div id="box-immatricolazione" style="display: none; margin-top: 15px;">
+                    <div id="box-immatricolazione" class="box-immatricolazione-nascosto">
                         <label>Numero Immatricolazione</label>
                         <div class="input-glass">
                             <i class="fa-solid fa-hashtag"></i>
-                            <input type="text" id="boat-immatricolazione" name="numero_immatricolazione" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();">
+                            <input type="text" id="boat-immatricolazione" name="numero_immatricolazione" class="testo-maiuscolo">
                         </div>
                     </div>
                 </div>
@@ -363,14 +379,14 @@ $mie_prenotazioni = $stmt->fetchAll();
                 <button type="button" class="btn-close-icon" id="btn-chiudi-edit-booking"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div id="notifica-edit-modal" class="sys-msg" style="display: none;"></div>
+            <div id="notifica-edit-modal" class="sys-msg nascosto"></div>
             
             <form id="form-edit-booking" class="modal-form">
                 <input type="hidden" id="edit-booking-id">
                 
                 <div class="booking-summary-glass">
-                    <i class="fa-solid fa-map-pin gold-text"></i> Molo: <strong id="lbl-edit-posto" class="cyan-text">--</strong><br>
-                    <i class="fa-solid fa-ship gold-text" style="margin-top: 5px;"></i> Barca: <strong id="lbl-edit-barca">--</strong>
+                    <i class="fa-solid fa-map-pin gold-text"></i> Molo: <strong id="lbl-edit-posto" class="testo-ciano">--</strong><br>
+                    <i class="fa-solid fa-ship gold-text margine-superiore-piccolo"></i> Barca: <strong id="lbl-edit-barca">--</strong>
                 </div>
 
                 <div class="form-grid">

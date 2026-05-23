@@ -1,8 +1,12 @@
 <?php
-/* --- SEZIONE 1: PHP LOGIC --- */
+/**
+ * File: mappa-porto.php
+ * Gestione interattiva della mappa, filtri disponibilità e prenotazione posti barca.
+ */
 session_start();
 require_once '../server/database.php';
 
+/* Controllo di sicurezza: accesso consentito solo ai diportisti loggati */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') { 
     header("Location: auth.php"); 
     exit; 
@@ -11,14 +15,18 @@ if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
 $nome_utente = $_SESSION['nome_utente'] ?? 'Capitano';
 $utente_id = $_SESSION['utente_id'];
 
+/* Recupero delle barche dell'utente dal database */
 $stmtBarche = $pdo->prepare("SELECT * FROM barche WHERE utente_id = ?");
 $stmtBarche->execute([$utente_id]);
 $mie_barche = $stmtBarche->fetchAll();
 
+/* Recupero dei posti attualmente occupati (logica semplificata per la vista) */
 $stmtPren = $pdo->query("SELECT posto FROM prenotazioni");
 $posti_occupati = $stmtPren->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
-// Reintegrato il molo F come normale molo prenotabile per Maxi Yacht
+/* * Struttura e classificazione dei moli.
+ * Reintegrato il molo F come normale molo prenotabile per Maxi Yacht/Barche Medie
+ */
 $struttura_moli = [
     // --- GRANDI (Dai 21m in poi) ---
     'A' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 6, 'dimensione' => 'posto-yacht'],
@@ -41,12 +49,13 @@ $struttura_moli = [
     'N' => ['tipo' => 'Natanti (5-12m)', 'posti' => 6, 'dimensione' => 'posto-piccola']
 ];
 
+/**
+ * Determina le classi CSS per lo stato visivo di un posto barca.
+ */
 function statoPosto($codice, $occupati, $classe_dimensione) {
-    // FIX: Ora la classe dimensione viene assegnata SEMPRE, sia da libero che da occupato
     $stato = in_array($codice, $occupati) ? 'occupato' : 'libero';
     return "$stato $classe_dimensione"; 
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -60,14 +69,16 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="css/mappa-porto.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/footer.css?v=<?php echo time(); ?>">
 </head>
 <body class="booking-premium-theme">
 
     <header class="dash-header">
         <div class="nav-content container">
             <div class="logo-area">
-                <a href="index.php" class="text-logo" style="display:flex; align-items:baseline;">
-                    Nautic<span class="gradient-logo-accent">Hub</span> <span class="port-location" style="color:var(--text-muted); font-size:1.1rem; margin-left:10px; font-style:normal;">Genova</span>
+                <a href="index.php" class="text-logo logo-flessibile">
+                    Nautic<span class="gradient-logo-accent">Hub</span> 
+                    <span class="port-location testo-luogo-porto">Genova</span>
                 </a>
             </div>
             <div class="user-info">
@@ -83,35 +94,32 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
             <div class="sidebar-drag-indicator"></div>
             
             <div class="sidebar-header">
-                <h2><i class="fa-solid fa-compass cyan-text"></i> Prepara la Rotta</h2>
+                <h2><i class="fa-solid fa-compass testo-ciano"></i> Prepara la Rotta</h2>
                 <button id="btn-close-drawer" class="btn-close-icon"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div id="notifica-sidebar" class="sys-msg" style="display: none;"></div>
+            <div id="notifica-sidebar" class="sys-msg nascosto"></div>
 
             <div class="sidebar-content-scroll">
                 
                 <div class="filter-section">
                     <h3 class="filter-title">1. Periodo di Sosta</h3>
-                    
-
                     <div class="date-grid">
                         <div class="input-glass-premium">
                             <label>Arrivo</label>
                             <div class="input-with-icon">
-                                <i class="fa-regular fa-calendar-check cyan-text"></i>
+                                <i class="fa-regular fa-calendar-check testo-ciano"></i>
                                 <input type="date" id="filtro-dal" min="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                         </div>
                         <div class="input-glass-premium">
                             <label>Partenza</label>
                             <div class="input-with-icon">
-                                <i class="fa-regular fa-calendar-xmark cyan-text"></i>
+                                <i class="fa-regular fa-calendar-xmark testo-ciano"></i>
                                 <input type="date" id="filtro-al" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="filter-section">
@@ -121,6 +129,7 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                             <div class="sys-msg sys-error"><i class="fa-solid fa-triangle-exclamation"></i> Nessuna barca registrata nel garage.</div>
                         <?php else: ?>
                             <?php foreach($mie_barche as $barca): 
+                                // Gestione immagini miniatura
                                 $img_mini = 'img/vela.jpeg';
                                 if($barca['tipo'] == 'Gommone') $img_mini = 'img/gommone.jpeg';
                                 if($barca['tipo'] == 'Barca a Motore') $img_mini = 'img/motore.jpeg';
@@ -130,9 +139,9 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
 
                             <label class="boat-radio-item">
                                 <input type="radio" class="radio-barca" name="seleziona_barca" value="<?php echo $barca['id']; ?>" data-lunghezza="<?php echo $barca['lunghezza']; ?>" data-nome="<?php echo htmlspecialchars($barca['nome']); ?>">
-                                <div class="boat-card-mini" style="display:flex; align-items:center; gap: 15px;">
-                                    <div style="width: 50px; height: 50px; border-radius: 8px; background-image: url('<?php echo $img_mini; ?>'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);"></div>
-                                    <div class="boat-info-mini" style="flex: 1;">
+                                <div class="boat-card-mini riga-miniatura-barca">
+                                    <div class="box-immagine-barca" style="background-image: url('<?php echo $img_mini; ?>');"></div>
+                                    <div class="boat-info-mini dettagli-barca-flex">
                                         <strong class="boat-name"><?php echo htmlspecialchars($barca['nome']); ?></strong>
                                         <span class="boat-specs"><?php echo $barca['lunghezza']; ?>m &bull; <?php echo $barca['tipo']; ?></span>
                                     </div>
@@ -164,12 +173,13 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
             <div class="scenic-banner" style="background-image: url('img/vista.jpeg');">
                 <div class="banner-overlay"></div>
                 <div class="banner-text">
-                    <h2>Planimetria <span class="cyan-text">Darsena</span></h2>
+                    <h2>Planimetria <span class="testo-ciano">Darsena</span></h2>
                     <p>Seleziona i parametri a sinistra e clicca sui moli illuminati per visualizzare i posti disponibili.</p>
                 </div>
             </div>
 
             <div class="map-container-glass">
+                
                 <div id="vista-immagine-porto" class="interactive-map-wrapper">
                     <div class="responsive-map-container">
                         <img src="img/mappa-porto.webp" alt="Planimetria Porto NauticHub" class="porto-base-image" onerror="this.src='img/mappa-porto.jpeg'">
@@ -189,14 +199,13 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                         <div class="letter-pin" id="lettera-K" data-min="5" data-max="12" data-380v="true" data-acqua="true" data-lavaggio="false" data-target="Molo-K">K</div>
                         <div class="letter-pin" id="lettera-L" data-min="5" data-max="12" data-380v="true" data-acqua="false" data-lavaggio="true" data-target="Molo-L">L</div>
                         <div class="letter-pin" id="lettera-M" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="true"  data-target="Molo-M">M</div>
-                        <div class="letter-pin" id="lettera-N" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-N">N</div>
-                                                
+                        <div class="letter-pin" id="lettera-N" data-min="5" data-max="12" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-N">N</div>                                              
                     </div>
                 </div>
 
                 <div id="dettaglio-molo-container" class="pier-board" style="display: none;">
                     <div class="pier-header">
-                        <h2>Esplora <span class="cyan-text">Banchina</span></h2>
+                        <h2>Esplora <span class="testo-ciano">Banchina</span></h2>
                         <button id="btn-indietro" class="btn-outline-premium"><i class="fa-solid fa-arrow-left-long"></i> Visione Aerea</button>
                     </div>
                     
@@ -248,18 +257,18 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
     <div id="prenotazioneModal" class="modal-overlay nascosto" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
-                <h2>Riepilogo <span class="cyan-text">Ormeggio</span></h2>
+                <h2>Riepilogo <span class="testo-ciano">Ormeggio</span></h2>
                 <button type="button" class="btn-close-icon" id="btn-annulla"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div id="notifica-modal" class="sys-msg sys-error" style="display: none;"></div>
 
-            <div class="booking-summary-glass" style="text-align: left;">
-                <p style="margin-bottom: 10px; font-size: 1.05rem; color: #E2E8F0;">Confermi di voler prenotare presso <strong>Smart Marina di Genova</strong>?</p>
-                <ul style="list-style: none; padding: 0; color: var(--text-soft); font-size: 0.95rem; line-height: 1.8;">
-                    <li><i class="fa-solid fa-ship cyan-text" style="width:20px;"></i> Barca: <strong id="recap-barca" class="text-pure">--</strong></li>
-                    <li><i class="fa-solid fa-location-dot cyan-text" style="width:20px;"></i> Molo assegnato: <strong id="posto-selezionato-id" class="cyan-text">--</strong></li>
-                    <li><i class="fa-regular fa-calendar cyan-text" style="width:20px;"></i> Dal: <strong id="recap-dal" class="text-pure">--</strong> al <strong id="recap-al" class="text-pure">--</strong></li>
+            <div class="booking-summary-glass testo-sinistra">
+                <p class="testo-riepilogo-conferma">Confermi di voler prenotare presso <strong>Smart Marina di Genova</strong>?</p>
+                <ul class="lista-riepilogo-prenotazione">
+                    <li><i class="fa-solid fa-ship testo-ciano icona-fissa"></i> Barca: <strong id="recap-barca" class="testo-primario">--</strong></li>
+                    <li><i class="fa-solid fa-location-dot testo-ciano icona-fissa"></i> Molo assegnato: <strong id="posto-selezionato-id" class="testo-ciano">--</strong></li>
+                    <li><i class="fa-regular fa-calendar testo-ciano icona-fissa"></i> Dal: <strong id="recap-dal" class="testo-primario">--</strong> al <strong id="recap-al" class="testo-primario">--</strong></li>
                 </ul>
             </div>
             
@@ -267,17 +276,17 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                 <input type="hidden" name="posto" id="input-posto-prenotato">
                 <input type="hidden" name="barca_id" id="input-barca-id">
                 
-                <div class="form-group-modal full-width" style="margin-bottom: 2rem;">
-                    <label style="font-family: 'Montserrat', sans-serif;">Equipaggio a Bordo (Facoltativo)</label>
+                <div class="form-group-modal full-width margine-inferiore-medio">
+                    <label class="etichetta-secondaria">Equipaggio a Bordo (Facoltativo)</label>
                     <div class="input-glass-premium">
                         <div class="input-with-icon">
-                            <i class="fa-solid fa-users cyan-text"></i>
+                            <i class="fa-solid fa-users testo-ciano"></i>
                             <input type="number" id="input-numero-persone" placeholder="Comunicabile all'arrivo">
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" id="btn-conferma" class="btn-premium-solid" style="width: 100%;"><i class="fa-solid fa-anchor"></i> Autorizza Attracco</button>
+                <button type="submit" id="btn-conferma" class="btn-premium-solid larghezza-totale"><i class="fa-solid fa-anchor"></i> Autorizza Attracco</button>
             </form>
         </div>
     </div>

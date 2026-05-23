@@ -1,13 +1,15 @@
 <?php
-/* sessione */
+/**
+ * Inizializzazione della sessione e verifica dello stato di autenticazione.
+ * Queste variabili gestiscono dinamicamente la navigazione nella navbar.
+ */
 session_start();
 
-/* check login */
-$is_logged = isset($_SESSION['loggato']) && $_SESSION['loggato'] === true;
+$utente_autenticato = isset($_SESSION['loggato']) && $_SESSION['loggato'] === true;
 
-/* link */
-$link_auth = $is_logged ? 'dashboard.php' : 'auth.php';
-$testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
+/* Definizione dei parametri per i link di autenticazione in base allo stato utente */
+$url_autenticazione = $utente_autenticato ? 'dashboard.php' : 'auth.php';
+$etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'Accedi / Registrati';
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -17,12 +19,11 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
     <title>NauticHub | Il Tuo Ormeggio Smart</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/footer.css?v=<?php echo time(); ?>">
 </head>
 <body class="nautic-theme">
 
@@ -36,7 +37,7 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
                 <a href="#il-progetto">Il Progetto</a>
             </nav>
             <div class="auth-buttons">
-                <a href="<?php echo $link_auth; ?>" class="btn-primary-glow"><?php echo $testo_auth; ?></a>
+                <a href="<?php echo $url_autenticazione; ?>" class="btn-primary-glow"><?php echo $etichetta_pulsante_autenticazione; ?></a>
             </div>
         </div>
     </header>
@@ -52,7 +53,7 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
                 <h1>Il tuo ormeggio, <br><span class="gold-gradient-text">a portata di rotta.</span></h1>
                 <p>Esplora le darsene, filtra per dimensioni della barca e servizi, e blocca il posto perfetto. Zero stress via radio, pagamento comodamente in capitaneria.</p>
                 <div class="hero-actions">
-                    <a href="<?php echo $link_auth; ?>" class="btn-gold btn-large">Inizia a Navigare <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="<?php echo $url_autenticazione; ?>" class="btn-gold btn-large">Inizia a Navigare <i class="fa-solid fa-arrow-right"></i></a>
                     <a href="#come-funziona" class="btn-outline-light btn-large">Scopri come funziona</a>
                 </div>
             </div>
@@ -125,7 +126,7 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
                         <li><i class="fa-solid fa-check"></i> Posto compatibile garantito</li>
                         <li><i class="fa-solid fa-check"></i> Pagamento flessibile in struttura</li>
                     </ul>
-                    <a href="<?php echo $link_auth; ?>" class="btn-outline-light mt-4" style="margin-top: 1.5rem; display: inline-block;">Accedi al sistema</a>
+                    <a href="<?php echo $url_autenticazione; ?>" class="btn-outline-light mt-4" style="margin-top: 1.5rem; display: inline-block;">Accedi al sistema</a>
                 </div>
             </div>
         </section>
@@ -135,7 +136,7 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
             <div class="container text-center cta-content" data-aos="zoom-in">
                 <h2>Pronto a tracciare la rotta?</h2>
                 <p>Crea il tuo account gratuito, inserisci la tua barca nel garage navale e scopri quanto è facile prenotare il tuo prossimo ormeggio a Genova.</p>
-                <a href="<?php echo $link_auth; ?>" class="btn-gold btn-large glow-effect">Accedi a NauticHub</a>
+                <a href="<?php echo $url_autenticazione; ?>" class="btn-gold btn-large glow-effect">Accedi a NauticHub</a>
             </div>
         </section>
     </main>
@@ -146,7 +147,6 @@ $testo_auth = $is_logged ? 'Area Personale' : 'Accedi / Registrati';
     <script>
         AOS.init({ once: true, offset: 50 });
     </script>
-    
     <script src="js/index.js"></script>
 </body>
 </html>
