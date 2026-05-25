@@ -1,18 +1,16 @@
 <?php
-/**
- * Inizializzazione della sessione e verifica dello stato di autenticazione.
- * Queste variabili gestiscono dinamicamente la navigazione nella navbar.
- */
-session_start();
 
+session_start();
+/*controllo se l'utente è loggato*/
 $utente_autenticato = isset($_SESSION['loggato']) && $_SESSION['loggato'] === true;
 
-/* Definizione dei parametri per i link di autenticazione in base allo stato utente */
+/* se l'utente è loggato lo manda alla pagina dash,s enno all'auth */
 $url_autenticazione = $utente_autenticato ? 'dashboard.php' : 'auth.php';
 $etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'Accedi / Registrati';
 ?>
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +22,13 @@ $etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'A
     
     <link rel="stylesheet" href="css/index.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="css/footer.css?v=<?php echo time(); ?>">
+    
 </head>
-<body class="nautic-theme">
 
+
+
+<body class="nautic-theme">
+    
     <header class="navbar-landing" data-aos="fade-down" data-aos-duration="800">
         <div class="nav-content container">
             <a href="index.php" class="text-logo">
