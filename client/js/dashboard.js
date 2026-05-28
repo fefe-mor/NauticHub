@@ -1,9 +1,3 @@
-/**
- * File: js/dashboard.js
- * Logica lato client della Dashboard: Gestione Schede, Mappa Leaflet, Modali e chiamate AJAX.
- * Scritto interamente in Vanilla JS per massimizzare le prestazioni.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // =========================================

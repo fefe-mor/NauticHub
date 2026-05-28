@@ -335,26 +335,27 @@ a { text-decoration: none; }
 
 
 
-/*  7. GRIGILIA CARATTERISTICHE (griglia a scompartimenti asimmetrici */
+/* 7. GRIGLIA CARATTERISTICHE */
 .features-section { padding: 8rem 0; }
 .section-header { text-align: center; margin-bottom: 5rem; } 
-.section-title { font-size: 3rem; margin-bottom: 1rem; } /*titolo*/
+.section-title { font-size: 3rem; margin-bottom: 1rem; }
 
-/*sottotitolo*/
 .section-subtitle { 
     color: var(--testo-secondario); 
     font-size: 1.1rem; 
     max-width: 600px; 
     margin: 0 auto; 
 }
-/*di default imposto che ci deve essere una sola colonna che occupa tutto lo spazio */
+
+/* DI DEFAULT (Desktop): La griglia nasce direttamente a 3 colonne */
 .features-bento-grid { 
     display: grid; 
-    grid-template-columns: 1fr; 
+    grid-template-columns: repeat(3, 1fr); 
     gap: 2rem; 
 }
 
-/*stile ETICHETTE */
+
+/* Stile base delle card (invariato) */
 .bento-card {
     background: var(--sfondo-schede); 
     border: 1px solid var(--bordo-effetto-vetro); 
@@ -378,13 +379,13 @@ a { text-decoration: none; }
     font-family: var(--font-interfaccia); 
     font-weight: 600; 
 }
-/*titolo card*/
+
 .bento-card p { 
     color: var(--testo-secondario); 
     font-size: 1rem; 
     line-height: 1.7; 
 }
-/*quadrato che contiene l'icona in alto a sinistra*/
+
 .icon-wrapper {
     width: 60px; 
     height: 60px; 
@@ -399,12 +400,14 @@ a { text-decoration: none; }
     border: 1px solid var(--bordo-effetto-vetro);
 }
 
-/*quando lo schermo supera  i 992 px si trasforma in una griglia a 3 colonne*/
-@media (min-width: 992px) { 
-    .features-bento-grid { grid-template-columns: repeat(3, 1fr); } 
-    .highlight-card { grid-column: span 2; } 
-}
+/* COSA SUCCEDE SUL TELEFONO: Regole applicate solo sotto i 992px di larghezza */
+@media (max-width: 992px) { 
+    .features-bento-grid { 
+        grid-template-columns: 1fr; /* La griglia collassa in una colonna verticale singola */
+    } 
+    
 
+}
 /* 8. SEZIONE CHI SIAMO*/
 .about-section { padding: 8rem 0; position: relative; }
 

@@ -607,18 +607,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     border-color: #7a1c1c; 
 }
 
-.posto-ui.occupato.posto-piccola { background-image: url('../img/barca_piccola.png'); }
-.posto-ui.occupato.posto-media { background-image: url('../img/barca_media.png'); }
-.posto-ui.occupato.posto-yacht { background-image: url('../img/barca_yacht.png'); }
-
-.posto-ui.occupato:nth-child(even) { animation-delay: -1.5s; animation-duration: 3.6s; }
-.posto-ui.occupato:nth-child(3n) { animation-delay: -3s; animation-duration: 4.8s; }
-
-@keyframes galleggiaInDarsena {
-    0%, 100% { background-position: center 45px; }
-    50% { background-position: center 40px; }
+/* Stile statico di fallback per i posti non disponibili */
+.posto-ui.occupato { 
+    background-color: rgba(255, 255, 255, 0.05); /* Lo rende un po' più scuro/spento */
+    cursor: not-allowed; /* Fa comparire il simbolo di divieto al mouse */
+    opacity: 0.4; /* Lo rende semi-trasparente rispetto a quelli liberi */
 }
-
 /* ==========================================================================
    6. RIEPILOGO COMPONENTE MODALE E TOAST
    ========================================================================= */
@@ -855,5 +849,5 @@ body.booking-premium-theme.no-scroll { overflow: hidden; }
 }
 
 .nascosto {
-    display: none !important;
+    display: none;
 }

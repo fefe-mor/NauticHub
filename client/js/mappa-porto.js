@@ -1,7 +1,3 @@
-/**
- * File: js/mappa-porto.js
- * Logica interattiva per la Mappa del Porto: Filtri dinamici, visualizzazione darsene e chiamate AJAX per le prenotazioni.
- */
 document.addEventListener('DOMContentLoaded', () => {
 
     // =========================================

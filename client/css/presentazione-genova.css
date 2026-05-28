@@ -1,5 +1,5 @@
 /* =========================================
-   1. VARIABILI GLOBALI (Ice & Platinum Theme) E BASE
+   1. VARIABILI GLOBALI
    ========================================= */
 :root {
     /* Colori di Sfondo */
@@ -45,9 +45,9 @@ body.presentazione-theme {
     overflow-x: hidden;
 }
 
-/* =========================================
-   2. HEADER / NAVBAR PREMIUM
-   ========================================= */
+/* ======================
+   2. HEADER / NAVBAR 
+   ====================== */
 .dash-header {
     background: rgba(3, 11, 23, 0.85);
     backdrop-filter: blur(20px); 
@@ -251,7 +251,7 @@ body.presentazione-theme {
 .cta-bottom { margin-top: 2rem; }
 
 /* =========================================
-   6. RESPONSIVE DESIGN (OTTIMIZZAZIONE MOBILE)
+   OTTIMIZZAZIONE MOBILE
    ========================================= */
 @media (max-width: 992px) {
     .port-details { grid-template-columns: 1fr; padding: 3rem 2rem; margin-top: -40px; gap: 3rem; }

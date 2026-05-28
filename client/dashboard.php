@@ -234,7 +234,7 @@ $mie_prenotazioni = $stmt->fetchAll();
 
         <section id="tab-prenotazioni" class="tab-content">
             <div class="tab-header">
-                <h2>Le tue Prenotazioni</h2>
+                <h2>Le mie Prenotazioni</h2>
                 <p>Tieni traccia dei tuoi ormeggi futuri e passati.</p>
             </div>
             

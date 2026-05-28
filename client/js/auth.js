@@ -1,7 +1,3 @@
-/**
- * File: js/auth.js
- * Gestione della logica lato client per la pagina di Autenticazione (Login/Registrazione).
- */
 document.addEventListener('DOMContentLoaded', () => {
     // AZZERA LA MEMORIA DELLE SCHEDE AL LOGIN (Risolve il problema del reindirizzamento alla scheda errata)
     sessionStorage.removeItem('schedaAttivaDashboard');

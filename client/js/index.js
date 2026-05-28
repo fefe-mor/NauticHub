@@ -1,5 +1,4 @@
 
-// Mettiamo in ascolto il caricamento completo del documento
 document.addEventListener('DOMContentLoaded', inizializzaPaginaLanding);
 
 

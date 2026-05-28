@@ -1,6 +1,4 @@
-/* =========================================
-   1. VARIABILI GLOBALI (ROOT) E IMPOSTAZIONI BASE
-   ========================================= */
+
 :root {
     /* Colori di Sfondo */
     --sfondo-principale: #030B17;
@@ -654,5 +652,5 @@ body.dashboard-theme {
 }
 
 .nascosto {
-    display: none !important;
+    display: none;
 }
