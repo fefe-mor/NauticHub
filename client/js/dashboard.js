@@ -222,8 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem('ajax_toast_success');
         const nuovoToast = document.createElement('div');
         nuovoToast.className = 'toast-premium successo';
+        
+        // FIX: Lo facciamo nascere fuori dallo schermo
+        nuovoToast.style.transform = 'translateX(120%)'; 
+        
         nuovoToast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${toastSuccessoSalvato}</span>`;
         document.body.appendChild(nuovoToast);
+        
+        // FIX: Dopo 50 millisecondi, lo facciamo scivolare morbidamente dentro
+        setTimeout(() => {
+            nuovoToast.style.transform = 'translateX(0)';
+        }, 50);
         
         setTimeout(() => {
             nuovoToast.classList.add('nascondi');

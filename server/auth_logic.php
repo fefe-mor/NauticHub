@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $email = trim($_POST['email']);
         $password = trim($_POST['password']);
         
-        // Validazione di sicurezza Server-Side (minimo 8 caratteri, 1 maiuscola, 1 simbolo)
+        // Validazione di sicurezza nel caso in cui il js fallisse
         if (!preg_match('/^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/', $password)) {
             $errore = "La password non rispetta i requisiti minimi di sicurezza.";
         } else {

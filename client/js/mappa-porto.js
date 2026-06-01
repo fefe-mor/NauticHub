@@ -332,7 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (datiDecodificati.success) {
                     sessionStorage.setItem('ajax_toast_success', datiDecodificati.message);
-                    sessionStorage.setItem('activeTab', 'tab-prenotazioni');
                     window.location.href = 'dashboard.php?tab=prenotazioni';
                 } else {
                     mostraAvvisoDiSistema(datiDecodificati.message, "error", "notifica-modal");

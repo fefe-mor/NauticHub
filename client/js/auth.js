@@ -63,8 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Se la password è corretta o il campo è vuoto
             else {
                 messaggioErrorePassword.style.display = 'none';
-                // Utilizza la nuova variabile CSS in italiano
-                inputPassword.style.borderColor = 'var(--ombra-luce-ciano)';
+                
+                // FIX: Se l'utente cancella tutto, togliamo il colore ciano
+                if (passwordDigitata.length === 0) {
+                    inputPassword.style.borderColor = ''; 
+                } else {
+                    // Se la password è corretta, mettiamo il colore ciano
+                    inputPassword.style.borderColor = 'var(--ombra-luce-ciano)';
+                }
             }
         });
 

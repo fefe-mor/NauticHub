@@ -20,9 +20,8 @@ $stmtBarche = $pdo->prepare("SELECT * FROM barche WHERE utente_id = ?");
 $stmtBarche->execute([$utente_id]);
 $mie_barche = $stmtBarche->fetchAll();
 
-/* Recupero dei posti attualmente occupati (logica semplificata per la vista) */
-$stmtPren = $pdo->query("SELECT posto FROM prenotazioni");
-$posti_occupati = $stmtPren->fetchAll(PDO::FETCH_COLUMN) ?: [];
+// I posti occupati vengono calcolati dinamicamente in base alle date da JS
+$posti_occupati = [];
 
 /* * Struttura e classificazione dei moli.
  * Reintegrato il molo F come normale molo prenotabile per Maxi Yacht/Barche Medie
@@ -182,7 +181,7 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                 
                 <div id="vista-immagine-porto" class="interactive-map-wrapper">
                     <div class="responsive-map-container">
-                        <img src="img/mappa-porto.webp" alt="Planimetria Porto NauticHub" class="porto-base-image" onerror="this.src='img/mappa-porto.jpeg'">
+                        <img src="img/mappa-porto.jpeg" alt="Planimetria Porto NauticHub" class="porto-base-image">
                         
                         <div class="letter-pin" id="lettera-A" data-min="21" data-max="99" data-380v="true" data-acqua="true"  data-lavaggio="false" data-target="Molo-A">A</div>
                         <div class="letter-pin" id="lettera-B" data-min="21" data-max="99" data-380v="true" data-acqua="true"  data-lavaggio="true"  data-target="Molo-B">B</div>
@@ -289,11 +288,6 @@ function statoPosto($codice, $occupati, $classe_dimensione) {
                 <button type="submit" id="btn-conferma" class="btn-premium-solid larghezza-totale"><i class="fa-solid fa-anchor"></i> Autorizza Attracco</button>
             </form>
         </div>
-    </div>
-
-    <div id="toast-sistema" class="toast-premium nascondi">
-        <i class="fa-solid" id="toast-icona"></i>
-        <span id="toast-testo"></span>
     </div>
 
     <script src="js/mappa-porto.js"></script>

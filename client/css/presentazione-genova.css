@@ -137,7 +137,7 @@ body.presentazione-theme {
 .port-hero {
     position: relative; 
     height: 75vh;
-    background: url('../img/Genova.jpg') center/cover no-repeat fixed;
+    background: url('../img/Genova.jpeg') center/cover no-repeat fixed;
     display: flex; 
     align-items: center; 
     justify-content: center; 

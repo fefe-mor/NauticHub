@@ -1,6 +1,3 @@
-/* ==========================================================================
-   NAUTICHUB PREMIUM - CSS MAPPA INTERATTIVA E DARSENA
-   ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;600;800&display=swap');
 
@@ -392,7 +389,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     pointer-events: none; 
 }
 
-/* Le tue esatte 14 Coordinate percentuali dei moli sulla foto */
+/*  Coordinate percentuali dei moli sulla foto */
 #lettera-A { top: 74%; left: 10%; } 
 #lettera-B { top: 55.5%; left: 22%; } 
 #lettera-C { top: 79%; left: 28%; } 
@@ -474,7 +471,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     position: relative; 
 }
 
-/* Luci ad impulsi (boe banchina) */
+/* Luci ad impulsi  */
 .slot-wrapper::after {
     content: ''; 
     position: absolute; 

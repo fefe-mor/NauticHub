@@ -557,12 +557,13 @@ body.dashboard-theme {
     position: fixed; bottom: 30px; right: 30px; background: #061224; color: var(--testo-primario);
     padding: 1.2rem 2rem; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     display: flex; align-items: center; gap: 15px; z-index: 10000; font-size: 1rem; font-weight: 600;
-    transform: translateX(120%); border: 1px solid var(--bordo-effetto-vetro); border-left: 6px solid;
+    transform: translateX(0); border: 1px solid var(--bordo-effetto-vetro); border-left: 6px solid;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .toast-premium i { font-size: 1.4rem; }
 .toast-premium.successo { border-left-color: var(--verde-successo); }
+.toast-premium.errore { border-left-color: var(--rosso-errore); }
 .toast-premium.nascondi { transform: translateX(120%); opacity: 0; }
 
 /* =========================================

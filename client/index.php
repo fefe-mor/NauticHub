@@ -46,7 +46,7 @@ $etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'A
 
     <main>
         <section class="hero-section">
-            <div class="hero-video-bg" style="background-image: url('img/foto-porto.jpeg?v=<?php echo time(); ?>');">
+            <div class="hero-video-bg" style="background-image: url('img/foto-porto.jpeg');">
                 <div class="hero-image-overlay"></div>
             </div>
             
@@ -149,6 +149,6 @@ $etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'A
     <script>
         AOS.init({ once: true, offset: 50 });
     </script>
-    <script src="js/index.js"></script>
+    
 </body>
 </html>

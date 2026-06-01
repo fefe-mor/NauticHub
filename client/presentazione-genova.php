@@ -107,7 +107,7 @@ $nome_utente = $_SESSION['nome_utente'];
 
     <?php include 'footer.php'; ?>
 
-    <script src="js/presentazione-genova.js"></script>
+    
 
 </body>
 </html>
