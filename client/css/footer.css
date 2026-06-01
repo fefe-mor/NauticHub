@@ -1,6 +1,6 @@
 
 .footer-principale {
-    background-color: var(--sfondo-scuro-assoluto, #01060e); /* Fallback inserito per sicurezza */
+    background-color: var(--sfondo-scuro-assoluto, #01060e); 
     padding: 2.5rem 5%; 
     text-align: center; 
     border-top: 1px solid var(--bordo-effetto-vetro, rgba(255, 255, 255, 0.08)); 
@@ -52,7 +52,6 @@
     transition: color 0.3s ease;
 }
 
-/* Effetto al passaggio del mouse sui link legali */
 .link-legale:hover {
     color: var(--ombra-luce-ciano, #00F2FE);
 }

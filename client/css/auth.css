@@ -1,27 +1,21 @@
-/* =========================================
-   1. VARIABILI GLOBALI (ROOT)
-   ========================================= */
+
 :root {
-    /* Sfondi */
     --sfondo-principale: #030B17;
     --sfondo-vetro: rgba(10, 18, 35, 0.65); 
-    
-    /* Bordi ed Effetti */
+ 
     --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
     --ombra-effetto-vetro: 0 30px 60px rgba(0, 0, 0, 0.6);
     
-    /* Colori Accento e Gradienti */
+
     --accento-oro-base: #D4AF37;
     --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
     --ombra-luce-ciano: #00F2FE;
 
-    /* Colori Testo e Stati (Successo/Errore) */
     --testo-primario: #F8FAFC; 
     --testo-secondario: #94A3B8; 
     --rosso-errore: #ff4c4c; 
     --verde-successo: #00e676;
 
-    /* Tipografia */
     --font-interfaccia: 'Inter', sans-serif;
     --font-titoli: 'Playfair Display', serif;
 }
@@ -42,10 +36,8 @@ body {
     position: relative;
 }
 
-/* =========================================
-   2. SFONDO IMMERSIVO A TUTTO SCHERMO
-   ========================================= */
 
+/*sfondo*/
 .auth-bg-image {
     position: fixed; 
     top: 0; 
@@ -68,16 +60,14 @@ body {
     z-index: -1;
 }
 
-/* =========================================
-   3. STRUTTURA PRINCIPALE (SPLIT LAYOUT)
-   ========================================= */
+/*layout principale*/
+
 .split-layout { 
     display: flex; 
     min-height: 100vh; 
     width: 100%; 
 }
 
-/* PARTE SINISTRA (Brand) */
 .split-brand { 
     width: 45%; 
     display: flex; 
@@ -125,7 +115,7 @@ body {
     margin-top: 10px; 
 }
 
-/* PARTE DESTRA (Moduli di Accesso) */
+
 .split-form { 
     width: 55%; 
     display: flex; 
@@ -159,9 +149,7 @@ body {
     to { opacity: 1; transform: translateY(0); } 
 }
 
-/* =========================================
-   4. TIPOGRAFIA E LINK DEL FORM
-   ========================================= */
+/* struttura forum */
 
 .back-link { 
     display: inline-flex; 
@@ -202,9 +190,6 @@ body {
     font-weight: 400; 
 }
 
-/* =========================================
-   5. STILE DEGLI INPUT
-   ========================================= */
 .form-row { display: flex; gap: 1.5rem; }
 .form-group { margin-bottom: 2rem; position: relative; width: 100%; }
 .form-group.half { width: 50%; }
@@ -240,7 +225,7 @@ body {
     transition: all 0.3s; 
 }
 
-/* Nei campi senza icona (Nome, Cognome) il padding torna normale */
+
 .form-group.half input { padding: 1.1rem; } 
 
 .form-group input:focus { 
@@ -250,7 +235,6 @@ body {
     box-shadow: 0 0 20px rgba(0, 242, 254, 0.15); 
 }
 
-/* Quando l'input è a fuoco, l'icona interna si illumina */
 .form-group input:focus + i, 
 .input-wrapper:focus-within i { 
     color: var(--ombra-luce-ciano); 
@@ -264,9 +248,7 @@ body {
     font-weight: 500; 
 }
 
-/* =========================================
-   6. BOTTONI E SWITCH DI REGISTRAZIONE
-   ========================================= */
+/* bottoni di login <-> registrazione */
 .btn-gold { 
     width: 100%; 
     background: var(--gradiente-oro-primario); 
@@ -314,9 +296,7 @@ body {
     text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); 
 }
 
-/* =========================================
-   7. MESSAGGI DI SISTEMA (PHP)
-   ========================================= */
+/* messaggi di sistema */
 .sys-msg { 
     padding: 1rem 1.5rem; 
     margin-bottom: 2rem; 
@@ -344,9 +324,7 @@ body {
     display: none; 
 }
 
-/* =========================================
-   8. RESPONSIVE
-   ========================================= */
+/* adatamento per schermi piccoli */
 @media (max-width: 992px) {
     .split-layout { flex-direction: column; } 
     

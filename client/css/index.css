@@ -1,19 +1,17 @@
-/* 1. VARIABILI GLOBALI: gestione dei colori e font di tutto il sito */
+
 :root {
-    /* Colori di Sfondo */
+
     --sfondo-principale: #030B17;
     --sfondo-schede: rgba(15, 25, 45, 0.6); 
     
-    /* Bordi ed Effetti */
+
     --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
     --ombra-luce-ciano: #00F2FE;
     
-    /* Colori Accento (Oro) */
     --accento-oro-base: #D4AF37;
     --accento-oro-hover: #F3CA45;
     --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
     
-    /* Tipografia e Colori Testo */
     --testo-primario: #F8FAFC;        
     --testo-secondario: #94A3B8;       
     --font-interfaccia: 'Inter', sans-serif;
@@ -25,7 +23,7 @@
     box-sizing: border-box; 
     scroll-behavior: smooth; 
 }
-/* stile del body della pagina*/
+
 body { 
     font-family: var(--font-interfaccia); 
     background-color: var(--sfondo-principale); 
@@ -33,7 +31,7 @@ body {
     line-height: 1.6; 
     overflow-x: hidden; 
 }
-/*imposto i font dei titoli */
+
 h1, h2, h3, h4 { 
     font-family: var(--font-titoli); 
     font-weight: 600; 
@@ -45,8 +43,6 @@ h1, h2, h3, h4 {
 }
 
 
-
-/* 2. TESTO E SCROLLBAR */
 .gold-text { 
     color: var(--accento-oro-base); 
     font-style: italic; 
@@ -64,7 +60,7 @@ h1, h2, h3, h4 {
     margin-bottom: 1.5rem; 
     font-weight: 300; 
 }
-/* Barra di Scorrimento laterale  */
+
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--sfondo-principale); }
 ::-webkit-scrollbar-thumb { background: var(--accento-oro-base); border-radius: 10px; }
@@ -72,10 +68,10 @@ h1, h2, h3, h4 {
 
 
 
-/*  3. BOTTONI GENERALI E ANIMAZIONI */
+
 a { text-decoration: none; }
 
-/* Bottone "Inizia a Navigare" */
+
 .btn-gold {
     background: var(--gradiente-oro-primario); 
     color: #000; 
@@ -90,18 +86,18 @@ a { text-decoration: none; }
     border: none; 
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
 }
-/* cosa succede se passo sopra al bottone (si alza leggermente e compare la sua ombra*/
+
 .btn-gold:hover { 
     transform: translateY(-3px); 
     box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); 
 }
-/*regola grendezza pulsante e font*/
+
 .btn-large { 
     padding: 1.2rem 3rem; 
     font-size: 1.1rem; 
 }
 
-/* Bottone "Scopri come Funziona */
+
 .btn-outline-light {
     border: 1px solid var(--bordo-effetto-vetro); 
     color: var(--testo-primario);
@@ -110,7 +106,7 @@ a { text-decoration: none; }
     border-radius: 50px;
     font-weight: 500; 
     transition: all 0.3s ease; 
-    backdrop-filter: blur(5px);  /*sfoca leggermente lo sfondo sotto al bottone per rpendelo più visibile*/
+    backdrop-filter: blur(5px);  
 }
  
 .btn-outline-light:hover { 
@@ -118,7 +114,7 @@ a { text-decoration: none; }
     border-color: var(--testo-primario); 
 }
 
-/* Bottone per il Login (Navbar) con effetto azzurrato */
+
 .btn-primary-glow {
     background: transparent; 
     color: var(--testo-primario); 
@@ -129,7 +125,7 @@ a { text-decoration: none; }
     font-weight: 500;
     transition: all 0.3s ease;
 }
-/*quando passo il mouse sopra il tasto accedi/registrati compare un'onda azzurra*/
+
 .btn-primary-glow:hover {
     background: rgba(255, 255, 255, 0.1); 
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
@@ -143,23 +139,23 @@ a { text-decoration: none; }
     100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
 }
 
-/* 4. HEADER  */
+/* HEADER  */
 .navbar-landing {
-    background: rgba(3, 11, 23, 0.7);  /*uso uno sfondo semitrasprente*/
+    background: rgba(3, 11, 23, 0.7);  
     backdrop-filter: blur(15px); 
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid var(--bordo-effetto-vetro);
     padding: 0.5rem 0;
-    position: fixed;  /*per tenere ferma la barra in alto*/
+    position: fixed; 
     top: 0; 
     left: 0; 
     width: 100%; 
-    z-index: 1000; /*molto alto così tutto rimane al di sotto*/
+    z-index: 1000; 
 }
 /*gestione allineamento elementi nell'header*/
 .navbar-landing .nav-content { 
-    display: flex; /*utilizziamo FlexBox per mettere in riga tutti gli elementi dell'header */ 
-    justify-content: space-between; /*distruibuisce lo spazio tra gli elementi principali */
+    display: flex; 
+    justify-content: space-between; 
     align-items: center;
     width: 100%; 
     max-width: 100%; 
@@ -192,7 +188,7 @@ a { text-decoration: none; }
     font-weight: 800; 
     font-style: italic;
 }
- /*come funziona, il progetto*/
+
 .main-nav { 
     display: flex; 
     gap: 2.5rem; 
@@ -213,18 +209,17 @@ a { text-decoration: none; }
 
 
 
-
-/*  5. SEZIONE HERO (COPERTINA PRINCIPALE) */
+/*  SEZIONE HERO (COPERTINA PRINCIPALE) */
 
 .hero-section {
-    position: relative; /*crea un recinto di riferimento per gli elementi all'interno*/
+    position: relative; 
     min-height: 100vh; 
     display: flex; 
-    align-items: center; /*centra tutto il testo all'interno della foto*/
+    align-items: center; 
     padding-top: 80px; 
     overflow: hidden;
 }
-/*inserisco la foto come ssfondo e la fisso all'internod ella hero */
+
 .hero-video-bg { 
     position: absolute; 
     top: 0; 
@@ -235,7 +230,7 @@ a { text-decoration: none; }
     background-position: center; 
     z-index: -2; 
 }
-/* sovrappongo alla foto uno sfondo trasparente sfumato */
+
 .hero-image-overlay { 
     position: absolute; 
     top: 0; 
@@ -245,20 +240,20 @@ a { text-decoration: none; }
     background: linear-gradient(180deg, rgba(3, 11, 23, 0.7) 0%, rgba(3, 11, 23, 1) 100%); 
     z-index: -1; 
 }
-/*contenuti in primo piano*/
+
 .hero-content { 
     max-width: 900px; 
     z-index: 1; 
     text-align: center; 
     margin: 0 auto; 
 }
-/* titolo h1*/
+
 .hero-content h1 { 
     font-size: 4.5rem; 
     line-height: 1.1; 
     margin-bottom: 1.5rem; 
 }
-/*descrizione*/
+
 .hero-content p { 
     font-size: 1.2rem; 
     color: var(--testo-secondario); 
@@ -266,13 +261,13 @@ a { text-decoration: none; }
     max-width: 700px; 
     margin-inline: auto; 
 }
-/*contiene i bottoni*/
+
 .hero-actions { 
     display: flex; 
     gap: 1.5rem; 
     justify-content: center; 
 }
-/*etichetta di nuova apertura con animazione pulsazione azzurra */
+
 .badge-tech {
     display: inline-block; 
     background: rgba(0, 242, 254, 0.1); 
@@ -290,14 +285,13 @@ a { text-decoration: none; }
 
 
 
-/*  6. BARRA A SCORRIMENTO PORTI */
+/* BARRA A SCORRIMENTO PORTI */
 .partners-section {
     padding: 3rem 0; 
     border-bottom: 1px solid var(--bordo-effetto-vetro); 
-    overflow: hidden; /*taglia il testo che esce dai margini*/
+    overflow: hidden; 
     background: linear-gradient(90deg, rgba(3,11,23,1) 0%, rgba(10,25,47,0.5) 50%, rgba(3,11,23,1) 100%);
 }
-/*formattiamo il testo all'interno della barra */
 .partners-title { 
     text-align: center; 
     color: var(--testo-secondario); 
@@ -306,14 +300,14 @@ a { text-decoration: none; }
     letter-spacing: 2px; 
     margin-bottom: 2rem; 
 }
-/* mi assicuro che i due blocchi di testo (duplicati) si dispongano in riga uno accanto all'altro*/
+
 .partners-ticker { 
     display: flex; 
     width: fit-content; 
 }
 
 .ticker-track { 
-    display: flex; /*mette tutti in fila e li distanzia in modo uguale*/
+    display: flex; 
     align-items: center; 
     gap: 4rem; 
     padding-right: 4rem; 
@@ -335,7 +329,7 @@ a { text-decoration: none; }
 
 
 
-/* 7. GRIGLIA CARATTERISTICHE */
+/* GRIGLIA CARATTERISTICHE */
 .features-section { padding: 8rem 0; }
 .section-header { text-align: center; margin-bottom: 5rem; } 
 .section-title { font-size: 3rem; margin-bottom: 1rem; }
@@ -347,15 +341,12 @@ a { text-decoration: none; }
     margin: 0 auto; 
 }
 
-/* DI DEFAULT (Desktop): La griglia nasce direttamente a 3 colonne */
 .features-bento-grid { 
     display: grid; 
     grid-template-columns: repeat(3, 1fr); 
     gap: 2rem; 
 }
 
-
-/* Stile base delle card (invariato) */
 .bento-card {
     background: var(--sfondo-schede); 
     border: 1px solid var(--bordo-effetto-vetro); 
@@ -400,18 +391,16 @@ a { text-decoration: none; }
     border: 1px solid var(--bordo-effetto-vetro);
 }
 
-/* COSA SUCCEDE SUL TELEFONO: Regole applicate solo sotto i 992px di larghezza */
+
 @media (max-width: 992px) { 
     .features-bento-grid { 
-        grid-template-columns: 1fr; /* La griglia collassa in una colonna verticale singola */
+        grid-template-columns: 1fr; 
     } 
     
 
 }
-/* 8. SEZIONE CHI SIAMO*/
-.about-section { padding: 8rem 0; position: relative; }
+/* SEZIONE CHI SIAMO*/
 
-/* divido lo schermo in due colonne uguali all'interno dele quali inserisco gli elementi centrati */
 .about-grid { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -421,19 +410,18 @@ a { text-decoration: none; }
 
 .about-image-wrapper { position: relative; }
 
-/*box immagine*/
 .about-image-placeholder { 
     width: 100%; 
     height: 500px; 
     background-size: cover; 
     background-position: center; 
-    border-radius: 30px; /*arrotonda gli angoli dell'immagine*/ 
+    border-radius: 30px; 
     position: relative; 
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5); /*ombra per far risaltare l'immagine dallo sfondo*/
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
     border: 1px solid var(--bordo-effetto-vetro); 
 }
 
-/*icona "paga all'arrivo"*/
+
 .floating-badge {
     position: absolute; 
     bottom: -20px; 
@@ -448,27 +436,27 @@ a { text-decoration: none; }
     gap: 15px; 
     box-shadow: 0 15px 30px rgba(0,0,0,0.4);
 }
-/*imposto la grandezza dell'icona*/
+
 .floating-badge i { 
     font-size: 2rem; 
     color: var(--accento-oro-base); 
 }
-/*rende il testo interno in grassetto*/ 
+
 .floating-badge span { 
     font-weight: 600; 
     font-family: var(--font-interfaccia); 
 }
-/*riquadro a destra*/
+
 .about-text p { 
     color: var(--testo-secondario); 
     margin-bottom: 1.5rem; 
 }
 
 .about-list { 
-    list-style: none; /*togliamo i classici pallini neri della lista*/
+    list-style: none; 
     margin-bottom: 2rem; 
 }
-/*per ogni icona ho usato Fleaxbox per inserire l'icona della spunta*/
+
 .about-list li { 
     margin-bottom: 1rem; 
     color: var(--testo-primario); 
@@ -476,12 +464,12 @@ a { text-decoration: none; }
     align-items: center; 
     gap: 10px; 
 }
-/*colora l'icona di azzurro*/
+
 .about-list i { color: var(--ombra-luce-ciano); }
 
 
 
-/* 9. RIQUADRO FINALE*/
+/* RIQUADRO FINALE*/
 
 .cta-section { 
     padding: 8rem 0; 
@@ -489,7 +477,7 @@ a { text-decoration: none; }
     text-align: center; 
     background: url('../img/sfondo.jpeg') center/cover fixed; 
 }
-/*aggiungiamo una patina sopra la immagine*/
+
 .cta-overlay { 
     position: absolute; 
     top: 0; 
@@ -500,7 +488,7 @@ a { text-decoration: none; }
     backdrop-filter: blur(5px); 
 }
 
-/*assegno al contenitore del testo z-index:2 così che possa essere al di sopra dell'immagine e dell'overly*/
+
 .cta-content { position: relative; z-index: 2; }
 
 .cta-content h2 { 
@@ -516,14 +504,13 @@ a { text-decoration: none; }
     margin-inline: auto; 
 }
 
-/* 10. RESPONSIVE DESIGN (OTTIMIZZAZIONE MOBILE) */
-/*quando lo schermo ha grandezza interiore ai 992px*/
+/* adattamento schermi piccoli*/
 @media (max-width: 992px) {
-    .about-grid { grid-template-columns: 1fr; gap: 4rem; }/*la griglia a due colonne scivola in una sola colonna e si posiziona il testo in alto e la scritta in basso */
+    .about-grid { grid-template-columns: 1fr; gap: 4rem; }
     .about-image-placeholder { height: 400px; }
     .floating-badge { right: 20px; bottom: -20px; }
 }
-/*quando lo schermo è più piccolo di 768px (cellulare)*/
+
 @media (max-width: 768px) {
     .navbar-landing .nav-content, 
     .navbar-landing .nav-content.container { 

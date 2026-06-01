@@ -1,11 +1,7 @@
 <?php
-/**
- * File: presentazione-genova.php
- * Pagina vetrina dei servizi e dettagli per la Smart Marina di Genova.
- */
+
 session_start();
 
-/* Controllo accesso: se non è loggato o non è diportista, torna al login */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
     header("Location: auth.php");
     exit;

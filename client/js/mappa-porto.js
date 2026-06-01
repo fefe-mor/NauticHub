@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // =========================================
-    // 1. SELEZIONE ELEMENTI DOM
-    // =========================================
+
     const pulsantiRadioBarca = document.querySelectorAll('.radio-barca');
     const checkboxServiziBanchina = document.querySelectorAll('.checkbox-servizio');
     const lettereMoli = document.querySelectorAll('.letter-pin'); 
@@ -15,19 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const pulsanteAnnullaModale = document.getElementById('btn-annulla');
     const moduloPrenotazione = document.getElementById('form-prenotazione');
 
-    // Elementi per la gestione del cassetto filtri su dispositivi mobili
     const pulsanteApriFiltriMobile = document.getElementById('fab-open-filters');
     const pulsanteChiudiFiltriMobile = document.getElementById('btn-close-drawer');
     const cassettoFiltriMobile = document.getElementById('mobile-filter-drawer');
     const pulsanteApplicaFiltri = document.getElementById('btn-apply-filters');
 
-    // =========================================
-    // 2. GESTIONE MENU LATERALE SU SMARTPHONE
-    // =========================================
+
+    // GESTIONE MENU LATERALE SU SMARTPHONE
+   
     if(pulsanteApriFiltriMobile) {
         pulsanteApriFiltriMobile.addEventListener('click', () => {
             cassettoFiltriMobile.classList.add('drawer-open');
-            document.body.classList.add('no-scroll'); // Blocca lo scorrimento dello sfondo
+            document.body.classList.add('no-scroll'); 
         });
     }
     
@@ -45,11 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // =========================================
-    // 3. FUNZIONI DI UTILITÀ (DATE E NOTIFICHE)
-    // =========================================
+
     
-    // Mostra avvisi di errore o successo nei pannelli predefiniti
     const mostraAvvisoDiSistema = (messaggio, tipo = 'error', targetId = 'notifica-sidebar') => {
         const contenitoreAvviso = document.getElementById(targetId);
         if(!contenitoreAvviso) return;
@@ -62,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         contenitoreAvviso.style.display = 'flex';
         contenitoreAvviso.style.opacity = '1';
         
-        // Nascondi automaticamente dopo 4 secondi
         setTimeout(() => {
             contenitoreAvviso.style.opacity = '0';
             contenitoreAvviso.style.transition = 'opacity 0.3s ease';
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     };
 
-    // Formattazione data sicura per evitare fusi orari sballati (Bug iOS)
     const formattaDataTestuale = (dataInserita) => {
         const d = new Date(dataInserita);
         const anno = d.getFullYear();
@@ -97,13 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${parti[2]}/${parti[1]}/${parti[0]}`;
     };
 
-    // Imposta le date minime nei calendari al momento del caricamento
     campoDataArrivo.min = stringaOggi;
     campoDataPartenza.min = ottieniGiornoSuccessivo(stringaOggi); 
 
-    // =========================================
-    // 4. CHIAMATA AJAX PER DISPONIBILITÀ POSTI
-    // =========================================
     const aggiornaStatoPostiMappa = async () => {
         let dataArrivo = campoDataArrivo.value;
         let dataPartenza = campoDataPartenza.value;
@@ -115,12 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.querySelectorAll('.posto-ui').forEach(posto => {
                 let codicePosto = posto.getAttribute('data-codice');
-                
-                // Resetta lo stato a libero
+               
                 posto.classList.remove('occupato');
                 posto.classList.add('libero', 'posto-cliccabile');
                 
-                // Se il server lo segnala come occupato, cambia lo stato visivo
                 if (postiOccupati.includes(codicePosto)) {
                     posto.classList.remove('libero', 'posto-cliccabile');
                     posto.classList.add('occupato');
@@ -131,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Gestione reattiva dei calendari
     campoDataArrivo.addEventListener('change', () => {
         if(campoDataArrivo.value) {
             if (campoDataArrivo.value < stringaOggi) {
@@ -158,14 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
         applicaFiltriIntelligenti(); 
     });
 
-    // =========================================
-    // 5. MOTORE DEI FILTRI INTELLIGENTI
-    // =========================================
     const applicaFiltriIntelligenti = () => {
         let dataArrivo = campoDataArrivo.value;
         let dataPartenza = campoDataPartenza.value;
         
-        // Spegne i moli se le date mancano
         if (!dataArrivo || !dataPartenza) {
             lettereMoli.forEach(lettera => {
                 lettera.classList.remove('compatibile');
@@ -176,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let barcaSelezionata = document.querySelector('input[name="seleziona_barca"]:checked');
         
-        // Spegne i moli se manca la barca
         if (!barcaSelezionata) {
             lettereMoli.forEach(lettera => {
                 lettera.classList.remove('compatibile');
@@ -215,15 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Ascoltatori per l'aggiornamento in tempo reale
     pulsantiRadioBarca.forEach(radio => radio.addEventListener('change', applicaFiltriIntelligenti));
     checkboxServiziBanchina.forEach(chk => chk.addEventListener('change', applicaFiltriIntelligenti));
     
-    applicaFiltriIntelligenti(); // Esecuzione iniziale al caricamento della pagina
+    applicaFiltriIntelligenti(); 
 
-    // =========================================
-    // 6. NAVIGAZIONE MAPPA (CLIC SUI MOLI)
-    // =========================================
     lettereMoli.forEach(lettera => {
         lettera.addEventListener('click', function() {
             if(!campoDataArrivo.value || !campoDataPartenza.value) {
@@ -250,9 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // =========================================
-    // 7. GESTIONE MODALE DI PRENOTAZIONE
-    // =========================================
     document.addEventListener('click', function(evento) {
         let elementoPosto = evento.target.closest('.posto-cliccabile');
         
@@ -269,11 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let idBarcaSelezionata = barcaSelezionata.value;
             let nomeBarcaScelta = barcaSelezionata.getAttribute('data-nome');
 
-            // Passaggio dati ai campi nascosti del form
             document.getElementById('input-barca-id').value = idBarcaSelezionata;
             document.getElementById('input-posto-prenotato').value = idPostoSelezionato;
             
-            // Popolamento dinamico etichette riepilogative
             document.getElementById('recap-barca').innerText = nomeBarcaScelta;
             document.getElementById('posto-selezionato-id').innerText = idPostoSelezionato;
             document.getElementById('recap-dal').innerText = convertiDataItaliana(campoDataArrivo.value);
@@ -281,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.getElementById('notifica-modal').style.display = 'none';
             
-            // Visualizza modale rimuovendo la classe nascosto
             modalePrenotazione.style.display = 'flex';
             setTimeout(() => { modalePrenotazione.classList.remove('nascosto'); }, 10);
         }
@@ -298,9 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (evento.target === modalePrenotazione) chiudiModalePrenotazione();
     });
 
-    // =========================================
-    // 8. INVIO PRENOTAZIONE TRAMITE AJAX
-    // =========================================
+
+    
     if(moduloPrenotazione) {
         moduloPrenotazione.addEventListener('submit', async (evento) => {
             evento.preventDefault();

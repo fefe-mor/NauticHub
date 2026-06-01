@@ -1,9 +1,5 @@
 <?php
-/**
- * File: footer.php
- * Piè di pagina globale del portale NauticHub.
- * Viene incluso dinamicamente in fondo alle altre pagine.
- */
+
 ?>
 <footer class="footer-principale">
     <div class="footer-contenitore">

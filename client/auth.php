@@ -1,10 +1,5 @@
 <?php
-/**
- * File: auth.php
- * Gestisce l'interfaccia utente per il Login e la Registrazione.
- * La logica di autenticazione e le variabili di stato ($errore, $messaggio_successo)
- * vengono elaborate e importate dal file auth_logic.php.
- */
+
 require_once '../server/auth_logic.php';
 ?>
 

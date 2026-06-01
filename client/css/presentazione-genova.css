@@ -1,22 +1,17 @@
-/* =========================================
-   1. VARIABILI GLOBALI
-   ========================================= */
+
 :root {
-    /* Colori di Sfondo */
+ 
     --sfondo-principale: #030B17;
     --sfondo-scuro-assoluto: #01060e;
-    
-    /* Effetto Vetro (Glassmorphism) */
+
     --sfondo-vetro: rgba(15, 25, 45, 0.65); 
     --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
     --ombra-effetto-vetro: 0 30px 60px rgba(0, 0, 0, 0.6);
-    
-    /* Palette Premium (Ciano e Platino) */
+
     --ombra-luce-ciano: #00F2FE;
     --gradiente-ciano: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
     --platino-argento: #E2E8F0;
-    
-    /* Tipografia e Colori Testo */
+
     --testo-primario: #F8FAFC; 
     --testo-secondario: #94A3B8; 
     --font-interfaccia: 'Inter', sans-serif;
@@ -30,7 +25,6 @@
     font-family: var(--font-interfaccia); 
 }
 
-/* Personalizzazione Barra di Scorrimento */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--sfondo-scuro-assoluto); }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
@@ -45,9 +39,7 @@ body.presentazione-theme {
     overflow-x: hidden;
 }
 
-/* ======================
-   2. HEADER / NAVBAR 
-   ====================== */
+/*  HEADER  */
 .dash-header {
     background: rgba(3, 11, 23, 0.85);
     backdrop-filter: blur(20px); 
@@ -131,9 +123,7 @@ body.presentazione-theme {
     color: var(--ombra-luce-ciano); 
 }
 
-/* =========================================
-   3. SEZIONE HERO (SFONDO COPERTINA E TITOLI)
-   ========================================= */
+/*  SEZIONE HERO */
 .port-hero {
     position: relative; 
     height: 75vh;
@@ -190,9 +180,7 @@ body.presentazione-theme {
     border-color: transparent; 
 }
 
-/* =========================================
-   4. DETTAGLI PORTO E GALLERIA IN VETRO
-   ========================================= */
+/*  DETTAGLI PORTO  */
 .port-details-container { padding: 0 2rem; }
 
 .port-details {
@@ -226,9 +214,7 @@ body.presentazione-theme {
 .gallery-img:hover { transform: scale(1.03); border-color: var(--ombra-luce-ciano); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.15); z-index: 2; position: relative; }
 .gallery-img.large { grid-column: span 2; height: 320px; }
 
-/* =========================================
-   5. SERVIZI INCLUSI (GRIGLIA SCHEDE)
-   ========================================= */
+/* SERVIZI INCLUSI (GRIGLIA SCHEDE)*/
 .services-section { padding: 5rem 2rem 8rem 2rem; text-align: center; max-width: 1400px; margin: 0 auto; }
 .services-header { margin-bottom: 4rem; }
 .services-header h2 { font-family: var(--font-titoli); font-size: 2.8rem; color: var(--platino-argento); margin-bottom: 10px; }
@@ -250,9 +236,7 @@ body.presentazione-theme {
 
 .cta-bottom { margin-top: 2rem; }
 
-/* =========================================
-   OTTIMIZZAZIONE MOBILE
-   ========================================= */
+/* adattamento schermi piccoli */
 @media (max-width: 992px) {
     .port-details { grid-template-columns: 1fr; padding: 3rem 2rem; margin-top: -40px; gap: 3rem; }
     .hero-content h1 { font-size: 3.5rem; }

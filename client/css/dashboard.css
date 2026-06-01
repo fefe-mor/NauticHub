@@ -1,22 +1,19 @@
 
 :root {
-    /* Colori di Sfondo */
+
     --sfondo-principale: #030B17;
     --sfondo-scuro-assoluto: #01060e;
     --sfondo-schede: rgba(15, 25, 45, 0.6); 
     
-    /* Bordi ed Effetti Vetro (Glassmorphism) */
     --bordo-effetto-vetro: rgba(255, 255, 255, 0.08);
     --ombra-effetto-vetro: 0 20px 40px rgba(0, 0, 0, 0.5);
     
-    /* Colori Accento e Gradienti */
     --accento-oro-base: #D4AF37;
     --gradiente-oro-primario: linear-gradient(135deg, #F6D365 0%, #D4AF37 100%);
     --ombra-luce-ciano: #00F2FE;
     --rosso-errore: #ff4c4c;
     --verde-successo: #00e676;
     
-    /* Tipografia e Testi */
     --testo-primario: #F8FAFC; 
     --testo-secondario: #94A3B8; 
     --font-interfaccia: 'Inter', sans-serif;
@@ -30,7 +27,6 @@
     font-family: var(--font-interfaccia); 
 }
 
-/* Personalizzazione Barra di Scorrimento */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--sfondo-scuro-assoluto); }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
@@ -44,9 +40,7 @@ body.dashboard-theme {
     flex-direction: column;
 }
 
-/* =========================================
-   2. HEADER / NAVBAR DELLA DASHBOARD
-   ========================================= */
+/* header */
 .dash-header {
     background: rgba(3, 11, 23, 0.85);
     backdrop-filter: blur(20px); 
@@ -118,9 +112,7 @@ body.dashboard-theme {
     color: var(--rosso-errore); 
 }
 
-/* =========================================
-   3. MENU NAVIGAZIONE SCHEDE (TAB MENU)
-   ========================================= */
+/* tab-menu */
 .tab-menu-container { background: var(--sfondo-scuro-assoluto); border-bottom: 1px solid var(--bordo-effetto-vetro); }
 
 .tab-menu {
@@ -163,9 +155,7 @@ body.dashboard-theme {
     text-shadow: 0 0 10px rgba(0, 242, 254, 0.3); 
 }
 
-/* =========================================
-   4. CONTENUTI SCHEDE E MAPPA LEAFLET
-   ========================================= */
+/* CONTENUTI SCHEDE E MAPPA LEAFLET*/
 .dash-main-content { flex: 1; padding: 3rem 4rem; width: 100%; margin: 0 auto; }
 
 .tab-content { display: none; animation: fadeIn 0.4s ease; }
@@ -183,7 +173,6 @@ body.dashboard-theme {
 .map-container-glass { background: var(--sfondo-schede); border: 1px solid var(--bordo-effetto-vetro); padding: 1rem; border-radius: 24px; box-shadow: var(--ombra-effetto-vetro); }
 #mappa-vera { width: 100%; height: 600px; border-radius: 16px; z-index: 1; background-color: var(--sfondo-scuro-assoluto); }
 
-/* Popup Leaflet Custom Stile Tech Dark */
 .leaflet-popup-content-wrapper { background: #050e1a; color: var(--testo-primario); border: 1px solid var(--bordo-effetto-vetro); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .leaflet-popup-tip { background: #050e1a; }
 .custom-popup { padding: 5px; }
@@ -217,9 +206,7 @@ body.dashboard-theme {
     color: #000000; 
 }
 
-/* =========================================
-   5. SEZIONE FLOTTA (GRIGLIA E CARD BARCHE)
-   ========================================= */
+/* griglia e card barche */
 .griglia-barche { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2.5rem; }
 
 .boat-card-premium {
@@ -342,9 +329,7 @@ body.dashboard-theme {
 .add-boat-card-new h3 { font-size: 1.4rem; color: var(--testo-primario); margin-bottom: 0.4rem; }
 .add-boat-card-new p { font-size: 0.9rem; color: var(--testo-secondario); font-weight: 300; }
 
-/* =========================================
-   6. SCHEDA PRENOTAZIONI EFFETTUATE
-   ========================================= */
+/* scheda prenotazioni effettuate */
 .empty-state { text-align: center; padding: 5rem 2rem; background: var(--sfondo-schede); border-radius: 24px; border: 1px dashed var(--bordo-effetto-vetro); }
 .empty-state i { font-size: 4rem; color: var(--testo-secondario); margin-bottom: 1.5rem; opacity: 0.4; }
 .empty-state p { font-size: 1.15rem; color: var(--testo-secondario); font-weight: 300; }
@@ -423,9 +408,7 @@ body.dashboard-theme {
     transform: translateY(-2px);
 }
 
-/* =========================================
-   7. FINESTRE MODALI E SELEZIONI OPTION
-   ========================================= */
+/* finestre modali */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(2, 6, 12, 0.85); backdrop-filter: blur(12px);
@@ -493,7 +476,7 @@ body.dashboard-theme {
     padding: 10px;                    
 }
 
-/* Gruppo Selezioni Radio */
+/* Gruppo Selezioni Radio button*/
 .box-immatricolazione-container { background: rgba(255,255,255,0.01); border: 1px solid var(--bordo-effetto-vetro); padding: 1.5rem; border-radius: 16px; }
 .radio-group { display: flex; gap: 25px; margin-top: 10px; }
 .radio-glass { display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none !important; font-size: 1rem !important; color: var(--testo-primario) !important; font-weight: 500 !important; }
@@ -549,7 +532,6 @@ body.dashboard-theme {
 .btn-danger-modal { background: var(--rosso-errore); color: white; border: none; }
 .btn-danger-modal:hover { background: #d32f2f; box-shadow: 0 10px 20px rgba(255,76,76,0.3); }
 
-/* Notifiche Toast di Sistema Dinamiche */
 .sys-msg { padding: 1rem 1.5rem; margin-bottom: 2rem; font-size: 0.95rem; border-radius: 14px; display: flex; align-items: center; gap: 12px; font-weight: 500; }
 .sys-error { background: rgba(255, 76, 76, 0.08); border: 1px solid var(--rosso-errore); color: var(--rosso-errore); }
 
@@ -566,9 +548,7 @@ body.dashboard-theme {
 .toast-premium.errore { border-left-color: var(--rosso-errore); }
 .toast-premium.nascondi { transform: translateX(120%); opacity: 0; }
 
-/* =========================================
-   8. MEDIA QUERIES (OTTIMIZZAZIONE CELLULARI)
-   ========================================= */
+/* ridimensionamento schermi piccoli*/
 @media (max-width: 1200px) {
     .dash-header .nav-content, .tab-menu { padding: 0 2rem; }
     .dash-main-content { padding: 3rem 2rem; }
@@ -613,9 +593,8 @@ body.dashboard-theme {
     .btn-prenota-popup { padding: 6px 14px; font-size: 0.75rem; width: 100%; box-sizing: border-box; }
 }
 
-/* =========================================
-   9. NUOVE CLASSI DI UTILITÀ (Estrazione Inline CSS)
-   ========================================= */
+
+
 .blocco-immatricolazione-evidenza {
     grid-column: span 2; 
     background: rgba(0, 242, 254, 0.05); 

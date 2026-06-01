@@ -2,34 +2,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Montserrat:wght@300;400;600;800&display=swap');
 
 :root {
-    /* Colori di Sfondo e Superfici */
+
     --sfondo-principale: #030B17;
     --sfondo-scuro-assoluto: #01060e;
     --sfondo-vetro: rgba(6, 18, 36, 0.75);
     --superficie-brillante: rgba(255, 255, 255, 0.04);
     
-    /* Bordi ed Effetti */
+
     --bordo-effetto-vetro: rgba(255, 255, 255, 0.07);
     --ombra-effetto-vetro: 0 30px 60px rgba(0, 0, 0, 0.6);
     
-    /* Palette Premium Accenti (Ciano, Platino e Oro) */
+
     --ombra-luce-ciano: #00F2FE;
     --gradiente-ciano: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
     --platino-argento: #E2E8F0;
     --accento-oro-base: #D4AF37;
     
-    /* Stati Funzionali Posti Barca */
+
     --verde-successo: #00E676;
     --rosso-errore: #FF4C4C;
     
-    /* Tipografia e Colori Testo */
+
     --testo-primario: #F8FAFC;
     --testo-secondario: #94A3B8;
     --font-interfaccia: 'Inter', sans-serif;
     --font-titoli: 'Playfair Display', serif;
     --font-nautico: 'Montserrat', sans-serif;
-    
-    /* Transizioni e Raggi */
+
     --transizione-fluida: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     --raggio-premium: 24px;
 }
@@ -49,15 +48,13 @@ body.booking-premium-theme {
     min-height: 100vh;
 }
 
-/* Custom Scrollbar */
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--sfondo-scuro-assoluto); }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ombra-luce-ciano); }
 
-/* ==========================================================================
-   1. HEADER / NAVBAR
-   ========================================================================== */
+/* HEADER  */
 .dash-header {
     background: rgba(3, 11, 23, 0.95);
     backdrop-filter: blur(10px);
@@ -127,9 +124,7 @@ body.booking-premium-theme {
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
 }
 
-/* ==========================================================================
-   2. INTERFACCIA PRINCIPALE E SIDEBAR FILTRI
-   ========================================================================== */
+/* INTERFACCIA PRINCIPALE E SIDEBAR FILTRI */
 .booking-main-layout {
     display: grid; 
     grid-template-columns: 380px 1fr;
@@ -175,7 +170,7 @@ body.booking-premium-theme {
 .sidebar-content-scroll::-webkit-scrollbar { width: 4px; }
 .sidebar-content-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-/* Elementi e Campi Input */
+
 .filter-section { display: flex; flex-direction: column; gap: 0.8rem; width: 100%; }
 .filter-title { font-family: var(--font-nautico); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--testo-secondario); }
 
@@ -294,9 +289,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
 .btn-close-icon, .sidebar-drag-indicator, .mobile-apply-wrapper, .fab-mobile-filters { display: none; }
 
-/* ==========================================================================
-   3. CONTAINER MAPPA E COPERTINA SUPERIORE
-   ========================================================================== */
+/*  CONTAINER MAPPA E COPERTINA SUPERIORE*/
 .booking-map-area { padding: 1.5rem 3rem; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; overflow-y: auto; }
 
 .scenic-banner {
@@ -336,9 +329,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     text-align: center; 
 }
 
-/* ==========================================================================
-   4. POSIZIONAMENTO LETTERE E COORDINATE PERCENTUALI ESATTE
-   ========================================================================== */
+/* POSIZIONAMENTO LETTERE E COORDINATE PERCENTUALI ESATTE*/
 .interactive-map-wrapper { width: 100%; display: flex; justify-content: center; }
 
 .responsive-map-container { 
@@ -353,7 +344,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
 .porto-base-image { width: 100%; height: auto; display: block; filter: brightness(0.85); }
 
-/* Stile della lettera originale del porto */
+
 .letter-pin { 
     position: absolute; 
     color: var(--rosso-errore); 
@@ -369,7 +360,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     z-index: 10; 
 }
 
-/* Lettera Attiva e Compatibile con i Filtri Scelti */
+
 .letter-pin.compatibile { 
     color: var(--verde-successo); 
     cursor: pointer; 
@@ -383,7 +374,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     transform: translate(-50%, -50%) scale(1.5); 
 }
 
-/* Lettera Incompatibile */
+
 .letter-pin.incompatibile { 
     color: #7f8c8d; 
     pointer-events: none; 
@@ -405,9 +396,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 #lettera-M { top: 54.5%; left: 90%; } 
 #lettera-N { top: 59%; left: 87%; }
 
-/* ==========================================================================
-   5. DETTAGLIO BANCONA E STRUTTURA DEL PONTILI (VISTA GEOMETRICA ACQUA)
-   ========================================================================== */
+/* DETTAGLIO BANCHINA E STRUTTURA DEL PONTILI */
 .pier-board { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
 .pier-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bordo-effetto-vetro); padding-bottom: 0.8rem; }
 .pier-header h2 { font-family: var(--font-titoli); font-size: 1.5rem; font-weight: 500; }
@@ -585,7 +574,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     animation: pulseText 1.5s infinite;
 }
 
-/* STATO MOORING: OCCUPATO (Galleggiamento scafo personalizzato) */
+
 .posto-ui.occupato { 
     background-color: rgba(10, 25, 47, 0.4); 
     border-color: rgba(255, 255, 255, 0.15);
@@ -604,15 +593,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     border-color: #7a1c1c; 
 }
 
-/* Stile statico di fallback per i posti non disponibili */
+
 .posto-ui.occupato { 
-    background-color: rgba(255, 255, 255, 0.05); /* Lo rende un po' più scuro/spento */
-    cursor: not-allowed; /* Fa comparire il simbolo di divieto al mouse */
-    opacity: 0.4; /* Lo rende semi-trasparente rispetto a quelli liberi */
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed; 
+    opacity: 0.4; 
 }
-/* ==========================================================================
-   6. RIEPILOGO COMPONENTE MODALE E TOAST
-   ========================================================================= */
+
+
+
 .modal-overlay { 
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(3, 11, 23, 0.8); 
@@ -648,7 +637,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
 .modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
 
-/* Notifiche ed errori interni */
+
 .sys-msg { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
 .sys-error { background: rgba(255, 76, 76, 0.1); border: 1px solid var(--rosso-errore); color: var(--rosso-errore); }
 .sys-success { background: rgba(0, 230, 118, 0.1); border: 1px solid var(--verde-successo); color: var(--verde-successo); }
@@ -662,9 +651,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 .notifica-toast.successo { border-left-color: var(--verde-successo); }
 .notifica-toast.errore { border-left-color: var(--rosso-errore); }
 
-/* ==========================================================================
-   7. DISPOSITIVI MOBILI E OTTIMIZZAZIONE RESPONSIVE PERFECT
-   ========================================================================== */
+/*adattamnto schermi piccoli */
 @media (max-width: 1200px) {
     .booking-main-layout { grid-template-columns: 340px 1fr; }
     .dash-header .nav-content { padding: 0 1.5rem; }
@@ -715,7 +702,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     .scenic-banner { height: 100px; padding: 0 1.5rem; }
     .banner-text h2 { font-size: 1.5rem; }
     
-    /* Sticky mobile button */
+    
     .mobile-apply-wrapper { 
         display: block; 
         position: sticky; 
@@ -777,9 +764,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
 body.booking-premium-theme.no-scroll { overflow: hidden; }
 
-/* ==========================================================================
-   8. UTILITY CLASSES AGGIUNTIVE (Estrazione Inline CSS)
-   ========================================================================== */
+
 .logo-flessibile {
     display: flex; 
     align-items: baseline;

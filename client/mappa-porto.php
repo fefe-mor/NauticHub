@@ -1,12 +1,8 @@
 <?php
-/**
- * File: mappa-porto.php
- * Gestione interattiva della mappa, filtri disponibilità e prenotazione posti barca.
- */
+
 session_start();
 require_once '../server/database.php';
 
-/* Controllo di sicurezza: accesso consentito solo ai diportisti loggati */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') { 
     header("Location: auth.php"); 
     exit; 
@@ -15,17 +11,13 @@ if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
 $nome_utente = $_SESSION['nome_utente'] ?? 'Capitano';
 $utente_id = $_SESSION['utente_id'];
 
-/* Recupero delle barche dell'utente dal database */
 $stmtBarche = $pdo->prepare("SELECT * FROM barche WHERE utente_id = ?");
 $stmtBarche->execute([$utente_id]);
 $mie_barche = $stmtBarche->fetchAll();
 
-// I posti occupati vengono calcolati dinamicamente in base alle date da JS
 $posti_occupati = [];
 
-/* * Struttura e classificazione dei moli.
- * Reintegrato il molo F come normale molo prenotabile per Maxi Yacht/Barche Medie
- */
+
 $struttura_moli = [
     // --- GRANDI (Dai 21m in poi) ---
     'A' => ['tipo' => 'Maxi Yacht (21m+)', 'posti' => 6, 'dimensione' => 'posto-yacht'],
@@ -48,9 +40,7 @@ $struttura_moli = [
     'N' => ['tipo' => 'Natanti (5-12m)', 'posti' => 6, 'dimensione' => 'posto-piccola']
 ];
 
-/**
- * Determina le classi CSS per lo stato visivo di un posto barca.
- */
+
 function statoPosto($codice, $occupati, $classe_dimensione) {
     $stato = in_array($codice, $occupati) ? 'occupato' : 'libero';
     return "$stato $classe_dimensione"; 

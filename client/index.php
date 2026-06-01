@@ -1,10 +1,8 @@
 <?php
 
 session_start();
-/*controllo se l'utente è loggato*/
 $utente_autenticato = isset($_SESSION['loggato']) && $_SESSION['loggato'] === true;
 
-/* se l'utente è loggato lo manda alla pagina dash,s enno all'auth */
 $url_autenticazione = $utente_autenticato ? 'dashboard.php' : 'auth.php';
 $etichetta_pulsante_autenticazione = $utente_autenticato ? 'Area Personale' : 'Accedi / Registrati';
 ?>

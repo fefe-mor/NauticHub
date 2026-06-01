@@ -1,14 +1,9 @@
 <?php
-/**
- * File: dashboard.php
- * Gestione Area Personale (Garage Navale, Prenotazioni e Mappa)
- */
+
 session_start();
 
-/* Inclusione del database */
 require_once '../server/database.php';
 
-/* Controllo di sicurezza: se non loggato o non diportista, rimanda al login */
 if (!isset($_SESSION['loggato']) || $_SESSION['ruolo'] !== 'diportista') {
     header("Location: auth.php");
     exit;
@@ -18,9 +13,7 @@ $nome_utente = $_SESSION['nome_utente'];
 $email_utente = $_SESSION['email_utente'];
 $utente_id = $_SESSION['utente_id']; 
 
-/* =========================================
-   GESTIONE RICHIESTE POST (Salvataggio, Eliminazione, Annullamento)
-   ========================================= */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
     
     // AZIONE: Aggiungi o Modifica Barca
@@ -74,12 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['azione'])) {
         $_SESSION['toast_type'] = "successo";
     }
     
-    // Ricarica la pagina pulita per evitare il re-invio del form al refresh
     header("Location: dashboard.php");
     exit;
 }
 
-/* Gestione Messaggi (Toast) */
 $messaggio_toast = '';
 $tipo_toast = '';
 if (isset($_SESSION['toast_msg'])) {
@@ -89,9 +80,6 @@ if (isset($_SESSION['toast_msg'])) {
     unset($_SESSION['toast_type']);
 }
 
-/* =========================================
-   LETTURA DATI DAL DATABASE PER LA VISTA
-   ========================================= */
 $stmt = $pdo->prepare("SELECT * FROM barche WHERE utente_id = ?");
 $stmt->execute([$utente_id]);
 $mie_barche = $stmt->fetchAll();
